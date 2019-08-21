@@ -1,0 +1,24 @@
+html, body{
+	height: 100%;
+}
+
+body{
+	/*background-repeat: no-repeat;*/
+	/*background-size: cover;*/
+	display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
+
+main {
+	flex: 1 0 auto;
+}
+
+nav ul.level_2{
+  display: none;
+  position: absolute;
+}
+
+nav ul.level_1 > li:hover ul.level_2{
+  display: block;
+}

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="zh-TW" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>GuaneiArk</title>
+
+    <link rel="shortcut icon" href="image/icon.ico">
+
+    <!--Let browser know website is optimized for mobile-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+    <!--[if lt IE 9]>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js">
+    </script>
+    <![endif]-->
+
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+    <link rel="stylesheet" href="css/style.css">
+  <body>
+    <nav class="#00b0ff light-blue accent-3">
+      <div class="nav-wrapper  container">
+        <a href="index.html" class="brand-logo">GuaneiArk</a>
+        <a href="JavaScript:void(0)" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+        <ul class="right hide-on-med-and-down level_1">
+          <li>
+            <a href="member.html">👤會員</a>
+            <ul class="#64b5f6 blue lighten-2 center hide-on-med-and-down level_2">
+              <li><a href="#">登入/註冊</a> </li>
+              <li><a href="#">帳戶管理</a> </li>
+              <li><a href="#">系統設定</a> </li>
+              <li><a href="#">使用教學</a> </li>
+            </ul>
+          </li>
+          <li>
+            <a href="event.html">💼差事</a>
+            <ul class="#64b5f6 blue lighten-2 level_2">
+              <li><a href="#">差事清單</a> </li>
+              <li><a href="#">差事地圖</a> </li>
+              <li><a href="#">差事提出</a> </li>
+              <li><a href="#">差事申請</a> </li>
+              <li><a href="#">差事進行</a> </li>
+              <li><a href="#">差事完成</a> </li>
+            </ul>
+          </li>
+          <li>
+            <a href="message.html">💬訊息</a>
+            <ul class="#64b5f6 blue lighten-2 level_2">
+              <li><a href="#">提交的差事</a> </li>
+              <li><a href="#">委託的差事</a> </li>
+            </ul>
+          </li>
+          <li>
+            <a href="notification.html">🔔通知</a>
+            <ul class="#64b5f6 blue lighten-2 level_2">
+              <li><a href="#">活動</a> </li>
+              <li><a href="#">差事</a> </li>
+            </ul>
+          </li>
+          <li>
+            <a class="waves-effect waves-light btn" href="login.html">登入</a>
+          </li>
+        </ul>
+        <ul class="sidenav" id="mobile-demo">
+          <li><a href="login.html">登入</a></li>
+          <li><a href="member.html">👤會員</a></li>
+          <li><a href="event.html">💼差事</a></li>
+          <li><a href="message.html">💬訊息</a></li>
+          <li><a href="notification.html">🔔通知</a></li>
+        </ul>
+      </div>
+    </nav>
+
+
+    <div class="container">
+      <div class="row">
+         <div class="col s12 m4">
+           <div class="sidebar">
+            <p>子選單</p>
+            <p>子選單</p>
+            <p>子選單</p>
+            <p>子選單</p>
+            <p>子選單</p>
+           </div>
+         </div>
+         <div class="col s12 m8">
+           <div class="content">
+             <p>內容</p>
+             <p>內容</p>
+             <p>內容</p>
+             <p>內容</p>
+             <p>內容</p>
+           </div>
+         </div>
+       </div>
+    </div>
+
+
+    <footer class="page-footer #00b0ff light-blue accent-3">
+      <div class="container">
+        <div class="row">
+          <div class="col l6 s12">
+            <h5 class="white-text">Footer Content</h5>
+            <p class="grey-text text-lighten-4">You can use rows and columns here to organize your footer content.</p>
+          </div>
+          <div class="col l4 offset-l2 s12">
+            <h5 class="white-text">Links</h5>
+            <ul>
+              <li><a class="grey-text text-lighten-3" href="#!">Link 1</a></li>
+              <li><a class="grey-text text-lighten-3" href="#!">Link 2</a></li>
+              <li><a class="grey-text text-lighten-3" href="#!">Link 3</a></li>
+              <li><a class="grey-text text-lighten-3" href="#!">Link 4</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="footer-copyright">
+        <div class="container">
+          © 2019 GuaneiArk
+          <a class="grey-text text-lighten-4 right" href="#!">More Links</a>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      $(document).ready(function(){
+        $(".sidenav").sidenav();
+      });
+    </script>
+  </body>
+</html>
