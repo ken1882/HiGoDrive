@@ -6,8 +6,8 @@ body{
 	/*background-repeat: no-repeat;*/
 	/*background-size: cover;*/
 	display: flex;
-  min-height: 100vh;
-  flex-direction: column;
+	min-height: 100%;
+	flex-direction: column;
 }
 
 main {
@@ -21,4 +21,12 @@ nav ul.level_2{
 
 nav ul.level_1 > li:hover ul.level_2{
   display: block;
+}
+
+.login{
+	margin-top:10%;
+}
+
+.register{
+	margin-top: 10%;
 }
