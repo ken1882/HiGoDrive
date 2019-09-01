@@ -25,46 +25,16 @@
     <link rel="stylesheet" href="css/style.css">
   <body>
     <main>
+
       <!--導覽列-->
-      <nav class="#00b0ff light-blue accent-3">
+      <nav class="nav-extended #00b0ff light-blue accent-3">
         <div class="nav-wrapper  container">
           <a href="index.html" class="brand-logo">GuaneiArk</a>
           <a href="JavaScript:void(0)" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
           <ul class="right hide-on-med-and-down level_1">
-            <li>
-              <a href="member.html">👤會員</a>
-              <ul class="#64b5f6 blue lighten-2 center hide-on-med-and-down level_2">
-                <li><a href="#">登入/註冊</a> </li>
-                <li><a href="#">帳戶管理</a> </li>
-                <li><a href="#">系統設定</a> </li>
-                <li><a href="#">使用教學</a> </li>
-              </ul>
-            </li>
-            <li>
-              <a href="event.html">💼差事</a>
-              <ul class="#64b5f6 blue lighten-2 level_2">
-                <li><a href="#">差事清單</a> </li>
-                <li><a href="#">差事地圖</a> </li>
-                <li><a href="#">差事提出</a> </li>
-                <li><a href="#">差事申請</a> </li>
-                <li><a href="#">差事進行</a> </li>
-                <li><a href="#">差事完成</a> </li>
-              </ul>
-            </li>
-            <li>
-              <a href="message.html">💬訊息</a>
-              <ul class="#64b5f6 blue lighten-2 level_2">
-                <li><a href="#">提交的差事</a> </li>
-                <li><a href="#">委託的差事</a> </li>
-              </ul>
-            </li>
-            <li>
-              <a href="notification.html">🔔通知</a>
-              <ul class="#64b5f6 blue lighten-2 level_2">
-                <li><a href="#">活動</a> </li>
-                <li><a href="#">差事</a> </li>
-              </ul>
-            </li>
+            <li><a href="member.html">👤會員</a></li>
+            <li><a href="event.html">💼差事</a></li>
+            <li><a href="notification.html">🔔通知</a></li>
             <li>
               <a class="waves-effect waves-light btn" href="login.html">登入</a>
             </li>
@@ -73,11 +43,14 @@
             <li><a href="login.html">登入</a></li>
             <li><a href="member.html">👤會員</a></li>
             <li><a href="event.html">💼差事</a></li>
-            <li><a href="message.html">💬訊息</a></li>
             <li><a href="notification.html">🔔通知</a></li>
+            <li>
+              <a class="waves-effect waves-light btn" href="login.html">登入</a>
+            </li>
           </ul>
         </div>
       </nav>
+
       <!--內容-->
       <div class="container login">
         <div class="row">
@@ -87,22 +60,22 @@
                 <div class="card-content white-text">
                   <div class="row">
                     <div class="input-field col s12">
-                      <input placeholder="" name="username" type="text" class="validate">
+                      <input placeholder="" id="username" name="username" type="text" class="validate" minlength="1">
                       <label for="username">帳號</label>
                     </div>
                   </div>
                   <div class="row">
                     <div class="input-field col s12">
-                      <input placeholder="" id="password" type="text" class="validate">
+                      <input placeholder="" id="password" name="passward" type="text" class="validate" minlength="8">
                       <label for="disabled">密碼</label>
                     </div>
                   </div>
                   <div class="row">
-                    <div class="col s2">
+                    <div class="col s3">
                       <a class="waves-effect waves-light btn" href="register.html">註冊</a>
                     </div>
-                    <div class="col s2 offset-s8">
-                      <button class="btn waves-effect waves-light" type="submit" name="action">登入</button>
+                    <div class="col s3 offset-s6">
+                      <button class="btn waves-effect waves-light" type="submit" name="action">登入<i class="material-icons right">send</i></button>
                     </div>
                   </div>
                 </div>
@@ -112,6 +85,7 @@
         </div>
       </div>
     </main>
+
     <!--置底說明-->
     <footer class="page-footer #00b0ff light-blue accent-3">
       <div class="container">
