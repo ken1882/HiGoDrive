@@ -26,45 +26,14 @@
   <body>
     <main>
       <!--導覽列-->
-      <nav class="#00b0ff light-blue accent-3">
+      <nav class="nav-extended #00b0ff light-blue accent-3">
         <div class="nav-wrapper  container">
           <a href="index.html" class="brand-logo">GuaneiArk</a>
           <a href="JavaScript:void(0)" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
           <ul class="right hide-on-med-and-down level_1">
-            <li>
-              <a href="member.html">👤會員</a>
-              <ul class="#64b5f6 blue lighten-2 center hide-on-med-and-down level_2">
-                <li><a href="#">登入/註冊</a> </li>
-                <li><a href="#">帳戶管理</a> </li>
-                <li><a href="#">系統設定</a> </li>
-                <li><a href="#">使用教學</a> </li>
-              </ul>
-            </li>
-            <li>
-              <a href="event.html">💼差事</a>
-              <ul class="#64b5f6 blue lighten-2 level_2">
-                <li><a href="#">差事清單</a> </li>
-                <li><a href="#">差事地圖</a> </li>
-                <li><a href="#">差事提出</a> </li>
-                <li><a href="#">差事申請</a> </li>
-                <li><a href="#">差事進行</a> </li>
-                <li><a href="#">差事完成</a> </li>
-              </ul>
-            </li>
-            <li>
-              <a href="message.html">💬訊息</a>
-              <ul class="#64b5f6 blue lighten-2 level_2">
-                <li><a href="#">提交的差事</a> </li>
-                <li><a href="#">委託的差事</a> </li>
-              </ul>
-            </li>
-            <li>
-              <a href="notification.html">🔔通知</a>
-              <ul class="#64b5f6 blue lighten-2 level_2">
-                <li><a href="#">活動</a> </li>
-                <li><a href="#">差事</a> </li>
-              </ul>
-            </li>
+            <li><a href="member.html">👤會員</a></li>
+            <li><a href="event.html">💼差事</a></li>
+            <li><a href="notification.html">🔔通知</a></li>
             <li>
               <a class="waves-effect waves-light btn" href="login.html">登入</a>
             </li>
@@ -73,39 +42,49 @@
             <li><a href="login.html">登入</a></li>
             <li><a href="member.html">👤會員</a></li>
             <li><a href="event.html">💼差事</a></li>
-            <li><a href="message.html">💬訊息</a></li>
             <li><a href="notification.html">🔔通知</a></li>
+            <li>
+              <a class="waves-effect waves-light btn" href="login.html">登入</a>
+            </li>
           </ul>
         </div>
       </nav>
       <!--內容-->
       <div class="container register">
         <div class="row">
-          <form class="col s12"  method="post" action="index.html">
+          <form class="col s12" id="register" method="post" action="index.html">
             <div class="col s12 m8 offset-m2">
               <div class="card light-blue lighten-5">
                 <div class="card-content white-text">
                   <div class="row">
                     <div class="input-field col s12">
-                      <input placeholder="" name="username" type="text" class="validate">
-                      <label for="first_name">帳號名稱</label>
+                      <input placeholder="" id="username" name="username" type="text" class="validate">
+                      <label for="username">帳號名稱</label>
                     </div>
                   </div>
                   <div class="row">
                     <div class="input-field col s12">
-                      <input placeholder="" name=="email" type="email" class="validate">
+                      <input placeholder="" id="email" name=="email" type="email" class="validate">
                       <label for="email">Email</label>
+                      <span class="helper-text" data-error="信箱格式不正確" data-success=""></span>
                     </div>
                   </div>
                   <div class="row">
                     <div class="input-field col s12">
-                    <input placeholder="" name=="password" type="password" class="validate" minlength="8">
+                    <input placeholder="" id="password" name=="password" type="password" class="validate" minlength="8">
                     <label for="password">請輸入密碼(請多於8個字元)</label>
                   </div>
                 </div>
+                <div class="row">
+                  <div class="input-field col s12">
+                  <input placeholder="" id="confirm_password" name=="password" type="password" class="validate" minlength="8">
+                  <label for="password">請再次輸入密碼</label>
+                  <span class="helper-text" data-error="兩次密碼輸入不一樣，請確認" data-success=""></span>
+                </div>
+              </div>
                   <div class="row">
-                    <div class="input-field col s2 offset-s10">
-                      <button class="btn waves-effect waves-light" type="submit" name="action">
+                    <div class="input-field col s3 offset-s9">
+                      <button class="btn waves-effect waves-light disabled" id="submit" type="submit" name="action">
                         註冊<i class="material-icons right">send</i>
                       </button>
                     </div>
@@ -150,6 +129,39 @@
     <script>
       $(document).ready(function(){
         $(".sidenav").sidenav();
+        //帳號檢查是否重複
+        $("#username").on("keyup", function(){
+          if($(this).val() != ''){
+            //alert("test");
+            //$("#submit").removeClass("disabled");
+          }else{
+            $("#submit").addClass("disabled");
+          }
+        });
+        //信箱輸入是否正確
+        $("#email").on("keyup", function(){
+          if($(this).val() != ''){
+            //alert("test");
+            //$("#submit").removeClass("disabled");
+          }else{
+            $("#submit").addClass("disabled");
+          }
+        });
+        //驗證密碼輸入是否正確
+        $("#confirm_password").on("keyup", function(){
+          if ($("#password").val() != $("#confirm_password").val()) {
+            //$("#password").addClass("invalid");
+            $("#confirm_password").addClass("invalid");
+            //若密碼都不一樣就警告。
+            //alert("兩次密碼輸入不一樣，請確認");
+            //回傳 false 為了要阻止 from 繼續把資料送出去。
+            $("#submit").addClass("disabled");
+            //return false;
+          }else{
+            $("#confirm_password").removeClass("invalid");
+            $("#submit").removeClass("disabled");
+          }
+        });
       });
     </script>
   </body>
