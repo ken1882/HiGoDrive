@@ -19,7 +19,7 @@ nav ul.level_2{
   position: absolute;
 }
 
-nav ul.level_1 > li:hover ul.level_2{
+nav .level_1 > li:hover ul.level_2{
   display: block;
 }
 
@@ -30,3 +30,7 @@ nav ul.level_1 > li:hover ul.level_2{
 .register{
 	margin-top: 10%;
 }
+
+.parallax-container {
+		height: 800px;
+	}
