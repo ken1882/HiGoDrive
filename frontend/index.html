@@ -26,80 +26,61 @@
   <body>
     <main>
       <!--導覽列-->
-      <nav class="#00b0ff light-blue accent-3">
-        <div class="nav-wrapper  container">
-          <a href="index.html" class="brand-logo">GuaneiArk</a>
-          <a href="JavaScript:void(0)" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
-          <ul class="right hide-on-med-and-down level_1">
-            <li>
-              <a href="member.html">👤會員</a>
-              <ul class="#64b5f6 blue lighten-2 center hide-on-med-and-down level_2">
-                <li><a href="#">登入/註冊</a> </li>
-                <li><a href="#">帳戶管理</a> </li>
-                <li><a href="#">系統設定</a> </li>
-                <li><a href="#">使用教學</a> </li>
-              </ul>
-            </li>
-            <li>
-              <a href="event.html">💼差事</a>
-              <ul class="#64b5f6 blue lighten-2 level_2">
-                <li><a href="#">差事清單</a> </li>
-                <li><a href="#">差事地圖</a> </li>
-                <li><a href="#">差事提出</a> </li>
-                <li><a href="#">差事申請</a> </li>
-                <li><a href="#">差事進行</a> </li>
-                <li><a href="#">差事完成</a> </li>
-              </ul>
-            </li>
-            <li>
-              <a href="message.html">💬訊息</a>
-              <ul class="#64b5f6 blue lighten-2 level_2">
-                <li><a href="#">提交的差事</a> </li>
-                <li><a href="#">委託的差事</a> </li>
-              </ul>
-            </li>
-            <li>
-              <a href="notification.html">🔔通知</a>
-              <ul class="#64b5f6 blue lighten-2 level_2">
-                <li><a href="#">活動</a> </li>
-                <li><a href="#">差事</a> </li>
-              </ul>
-            </li>
-            <li>
-              <a class="waves-effect waves-light btn" href="login.html">登入</a>
-            </li>
-          </ul>
-          <ul class="sidenav" id="mobile-demo">
-            <li><a href="login.html">登入</a></li>
-            <li><a href="member.html">👤會員</a></li>
-            <li><a href="event.html">💼差事</a></li>
-            <li><a href="message.html">💬訊息</a></li>
-            <li><a href="notification.html">🔔通知</a></li>
-          </ul>
+      <nav class="nav-extended">
+        <div class="nav-wrapper  #00b0ff light-blue accent-3">
+          <div class="container">
+            <a href="index.html" class="brand-logo">GuaneiArk</a>
+            <a href="JavaScript:void(0)" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+            <ul class="right hide-on-med-and-down level_1">
+              <li><a href="member.html">👤會員</a></li>
+              <li><a href="event.html">💼差事</a></li>
+              <li><a href="notification.html">🔔通知</a></li>
+              <li>
+                <a class="waves-effect waves-light btn" href="login.html">登入</a>
+              </li>
+            </ul>
+
+            <ul class="sidenav" id="mobile-demo">
+              <li><a href="member.html">👤會員</a></li>
+              <li><a href="event.html">💼差事</a></li>
+              <li><a href="notification.html">🔔通知</a></li>
+              <li>
+                <a class="waves-effect waves-light btn" href="login.html">登入</a>
+              </li>
+            </ul>
+          </div>
         </div>
+        <!--
+        <div class="nav-content #0091ea light-blue accent-4">
+          <div class="container">
+            <ul class="tabs tabs-transparent">
+              <li class="tab"><a class="active" href="#test0">Test0</a></li>
+              <li class="tab"><a href="#test1">Test1</a></li>
+              <li class="tab"><a href="#test2">Test2/a></li>
+              <li class="tab"><a href="#test3">Test3</a></li>
+              <li class="tab"><a href="#test4">Test4</a></li>
+            </ul>
+          </div>
+        </div>
+        -->
       </nav>
+
       <!--內容-->
-      <div class="container">
-        <div class="row">
-           <div class="col s12 m4">
-             <div class="sidebar">
-              <p>子選單</p>
-              <p>子選單</p>
-              <p>子選單</p>
-              <p>子選單</p>
-              <p>子選單</p>
-             </div>
-           </div>
-           <div class="col s12 m8">
-             <div class="content">
-               <p>內容</p>
-               <p>內容</p>
-               <p>內容</p>
-               <p>內容</p>
-               <p>內容</p>
-             </div>
-           </div>
-         </div>
+      <div class="parallax-container">
+       <div class="parallax"><img src="image/service.png"></div>
+      </div>
+      <div class="section white">
+        <div class="row container">
+          <h2 class="header">專案摘要</h2>
+          <p class="grey-text text-darken-3 lighten-3">建立台灣之服務共享平台，
+            讓供應者提供多餘實體物品與非實體服務讓需求者能夠選擇使用，
+            能使擁有多餘資源且願意回饋於社會的供應者，
+            提供如教育、照顧、共乘、租賃服務，
+            建立供應者與需求者溝通的橋樑。</p>
+        </div>
+      </div>
+      <div class="parallax-container">
+        <div class="parallax"><img src="image/service.png"></div>
       </div>
     </main>
     <!--置底說明-->
@@ -135,6 +116,7 @@
     <script>
       $(document).ready(function(){
         $(".sidenav").sidenav();
+        $('.parallax').parallax();
       });
     </script>
   </body>
