@@ -1,4 +1,4 @@
-!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-TW">
   <head>
     <meta charset="utf-8">
@@ -25,6 +25,7 @@
     <link rel="stylesheet" href="css/style.css">
   <body>
     <main>
+
       <!--導覽列-->
       <nav class="nav-extended">
         <div class="nav-wrapper  #00b0ff light-blue accent-3">
@@ -53,23 +54,146 @@
         <div class="nav-content #0091ea light-blue accent-4">
           <div class="container">
             <ul class="tabs tabs-transparent">
-              <li class="tab"><a class="active" href="#test0">我的差事</a></li>
-              <li class="tab"><a href="#test1">差事清單</a></li>
-              <li class="tab"><a href="#test2">差事地圖</a></li>
+              <li class="tab"><a class="active" href="#myEvent">我的差事</a></li>
+              <li class="tab"><a href="#eventList">差事清單</a></li>
+              <li class="tab disabled"><a href="#eventMap">差事地圖</a></li>
             </ul>
           </div>
         </div>
       </nav>
 
       <!--內容-->
-      <div class="container">
-        <div class="row">
-           <div class="col s12">
 
-           </div>
-         </div>
+      <div class="myEvent" id="myEvent">
+        <div class="container">
+          <a class="waves-effect waves-light btn-large" href="eventThrow.html">我要提出</a>
+          <!--提出的差事-->
+          <div class="eventThrow">
+              <h4>提出的差事</h4>
+              <hr>
+              <table class="highlight centered responsive-table">
+                <thead>
+                  <tr>
+                      <th>申請人</th>
+                      <th>需求類別</th>
+                      <th>截止時間</th>
+                      <th>地點</th>
+                      <th>需求備註</th>
+                      <th></th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  <tr>
+                    <td>Alvin</td>
+                    <td>跑腿</td>
+                    <td>2019/09/02 16:28</td>
+                    <td>海大男二舍</td>
+                    <td>倒垃圾</td>
+                    <td>
+                      <a class="waves-effect waves-light btn-small amber" href="Messege.html">傳送訊息</a>
+                      <a class="waves-effect waves-light btn-small red eventDelete" href="JavaScript:void(0);" data-id="">取消差事</a>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Alan</td>
+                    <td>租賃</td>
+                    <td>2019/09/02 17:28</td>
+                    <td>海大圖書館</td>
+                    <td>行動電源</td>
+                    <td>
+                      <a class="waves-effect waves-light btn-small amber" href="Messege.html">傳送訊息</a>
+                      <a class="waves-effect waves-light btn-small red eventDelete" href="JavaScript:void(0);" data-id="">取消差事</a>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td></td>
+                    <td>送餐</td>
+                    <td>2019/09/02 18:28</td>
+                    <td>巴塞隆納社區 A棟</td>
+                    <td>麥當勞 1號餐</td>
+                    <td>
+                      <a class="waves-effect waves-light btn-small blue" href="eventEdit.html">編輯差事</a>
+                      <a class="waves-effect waves-light btn-small red eventDelete" href="JavaScript:void(0);" data-id="">取消差事</a>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+          </div>
+
+          <!--申請的差事-->
+          <div class="eventApply">
+              <h4>申請的差事</h4>
+              <hr>
+              <table class="highlight centered responsive-table">
+                <thead>
+                  <tr>
+                    <th>需求類別</th>
+                    <th>截止時間</th>
+                    <th>地點</th>
+                    <th>差事進度</th>
+                    <th></th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  <tr>
+                    <td colspan="5">無資料</td>
+                  </tr>
+                </tbody>
+              </table>
+          </div>
+
+        </div>
       </div>
+
+      <!--差事清單-->
+      <div class="eventList" id="eventList">
+        <div class="container">
+          <a class="waves-effect waves-light btn-large" href="eventThrow.html">我要提出</a>
+          <div class="eventList">
+            <h4>目前差事</h4>
+            <hr>
+            <table class="highlight centered responsive-table">
+              <thead>
+                <tr>
+                  <th>需求者</th>
+                  <th>需求類別</th>
+                  <th>截止時間</th>
+                  <th>地點</th>
+                  <th>需求備註</th>
+                  <th></th>
+                </tr>
+              </thead>
+
+              <tbody>
+                <tr>
+                  <td>Jonathan</td>
+                  <td>送餐</td>
+                  <td>2019/09/02 18:28</td>
+                  <td>巴塞隆納社區 A棟</td>
+                  <td>麥當勞 1號餐</td>
+                  <td>
+                    <a class="waves-effect waves-light btn-small blue" href="eventApply.html">申請差事</a>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+          </div>
+        </div>
+      </div>
+
+      <!--差事地圖-->
+      <div class="eventMap" id="eventMap">
+        <div class="container">
+
+        </div>
+      </div>
+
+
     </main>
+
     <!--置底說明-->
     <footer class="page-footer #00b0ff light-blue accent-3">
       <div class="container">
@@ -104,6 +228,39 @@
       $(document).ready(function(){
         $(".sidenav").sidenav();
         $('.tabs').tabs();
+
+        $("a.eventDelete").on("click", function(){
+          //宣告變數
+          var c = confirm("您確定要刪除嗎？"),
+              this_tr = $(this).parent().parent();
+          if(c){
+            $.ajax({
+            type : "POST",
+            url : "event.html", //後端處理
+            data : {
+              id : $(this).attr("data-id") //文章id
+            },
+            dataType : 'html' //設定該網頁回應的會是 html 格式
+          }).done(function(data) {
+            //成功的時候
+            if(data == "yes")
+            {
+              //註冊新增成功，轉跳到登入頁面。
+              alert("刪除成功，點擊確認從列表移除");
+              this_tr.fadeOut();
+            }else{
+              alert("刪除錯誤:"+data);
+              this_tr.fadeOut();
+            }
+          }).fail(function(jqXHR, textStatus, errorThrown) {
+            //失敗的時候
+            alert("有錯誤產生，請看 console log");
+            console.log(jqXHR.responseText);
+          });
+          }
+          return false;
+        });
+
       });
     </script>
   </body>
