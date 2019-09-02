@@ -40,7 +40,6 @@
             </li>
           </ul>
           <ul class="sidenav" id="mobile-demo">
-            <li><a href="login.html">登入</a></li>
             <li><a href="member.html">👤會員</a></li>
             <li><a href="event.html">💼差事</a></li>
             <li><a href="notification.html">🔔通知</a></li>
@@ -52,12 +51,12 @@
       </nav>
 
       <!--內容-->
-      <div class="container login">
+      <div class="container">
         <div class="row">
-          <form class="col s12"  method="post" action="index.html">
+          <form class="textForm">
             <div class="col s12 m8 offset-m2">
               <div class="card light-blue lighten-5">
-                <div class="card-content white-text">
+                <div class="card-content grey-text">
                   <div class="row">
                     <div class="input-field col s12">
                       <input placeholder="" id="username" name="username" type="text" class="validate" minlength="1">
@@ -75,7 +74,7 @@
                       <a class="waves-effect waves-light btn" href="register.html">註冊</a>
                     </div>
                     <div class="col s3 offset-s6">
-                      <button class="btn waves-effect waves-light" type="submit" name="action">登入<i class="material-icons right">send</i></button>
+                      <button class="btn waves-effect waves-light" type="submit">登入</button>
                     </div>
                   </div>
                 </div>
@@ -119,6 +118,36 @@
     <script>
       $(document).ready(function(){
         $(".sidenav").sidenav();
+
+
+        $("form.login").on("submit" , function(){
+          $.ajax({
+            type:"post",
+            url:"index.html",//後端處理
+            data:{
+              un:$("#username").val(),
+              pw:$("#password").val()
+            },
+            datatype:'html'//設定網頁回應是 html 格式
+          }).done(function(data){
+            //成功
+            console.log(data);
+            if(data == "yes"){
+              //註冊成功
+              window.location.href ="index.html";
+            }else{
+              alert("登入失敗,請確認帳號密碼");
+              //測試
+              window.location.href ="index.html";
+            }
+          }).fail(function(jqXHR, textStatus, errorThrow){
+            //失敗
+            alert("有錯誤產生，請看 console log");
+            console.log(jqXHR.responseText);
+          });
+          return false;
+        });
+
       });
     </script>
   </body>

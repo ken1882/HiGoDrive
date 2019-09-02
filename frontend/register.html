@@ -39,7 +39,6 @@
             </li>
           </ul>
           <ul class="sidenav" id="mobile-demo">
-            <li><a href="login.html">登入</a></li>
             <li><a href="member.html">👤會員</a></li>
             <li><a href="event.html">💼差事</a></li>
             <li><a href="notification.html">🔔通知</a></li>
@@ -50,12 +49,12 @@
         </div>
       </nav>
       <!--內容-->
-      <div class="container register">
+      <div class="container">
         <div class="row">
-          <form class="col s12" id="register" method="post" action="index.html">
+          <form class="textForm">
             <div class="col s12 m8 offset-m2">
               <div class="card light-blue lighten-5">
-                <div class="card-content white-text">
+                <div class="card-content grey-text">
                   <div class="row">
                     <div class="input-field col s12">
                       <input placeholder="" id="username" name="username" type="text" class="validate">
@@ -84,7 +83,7 @@
               </div>
                   <div class="row">
                     <div class="input-field col s3 offset-s9">
-                      <button class="btn waves-effect waves-light disabled" id="submit" type="submit" name="action">
+                      <button class="btn waves-effect waves-light" id="submit" type="submit" name="action">
                         註冊<i class="material-icons right">send</i>
                       </button>
                     </div>
@@ -153,15 +152,40 @@
             //$("#password").addClass("invalid");
             $("#confirm_password").addClass("invalid");
             //若密碼都不一樣就警告。
-            //alert("兩次密碼輸入不一樣，請確認");
-            //回傳 false 為了要阻止 from 繼續把資料送出去。
-            $("#submit").addClass("disabled");
+
             //return false;
           }else{
             $("#confirm_password").removeClass("invalid");
-            $("#submit").removeClass("disabled");
           }
         });
+
+        /*
+                $("form.login").on("submit" , function(){
+                  $.ajax({
+                    type:"post",
+                    url:"",
+                    data:{
+                      un:$("#username").val(),
+                      pw:$("#password").val()
+                    },
+                    datatype:'html'//設定網頁回應是 html 格式
+                  }).done(function(data){
+                    //成功
+                    console.log(data);
+                    if(data == "yes"){
+                      //註冊成功
+                      window.location.href ="index.html";
+                    }else{
+                      alert("登入失敗,請確認照號密碼");
+                    }
+                  }).fail(function(jqXHR, textStatus, errorThrow){
+                    //失敗
+                    alert("有錯誤產生，請看 console log");
+                    console.log(jqXHR.responseText);
+                  });
+                  return false;
+                });
+        */
       });
     </script>
   </body>
