@@ -14,23 +14,59 @@ main {
 	flex: 1 0 auto;
 }
 
+/*disabled*/
 nav ul.level_2{
   display: none;
   position: absolute;
 }
-
+/*disabled*/
 nav .level_1 > li:hover ul.level_2{
   display: block;
 }
 
-.login{
-	margin-top:10%;
-}
-
-.register{
-	margin-top: 10%;
+.textForm{
+	margin-top: 15%;
 }
 
 .parallax-container {
 		height: 800px;
 	}
+
+.card{
+	padding-top:25px;
+}
+
+div.eventThrow{
+	margin-top: 50px;
+	margin-bottom: 50px;
+}
+
+div.eventApply{
+	margin-top: 50px;
+	margin-bottom: 50px;
+}
+
+div.myEvent{
+	margin-top: 50px;
+	margin-bottom: 50px;
+}
+
+div.eventList{
+	margin-top: 50px;
+	margin-bottom: 50px;
+}
+
+div.accountManagement{
+	margin-top: 50px;
+	margin-bottom: 50px;
+}
+
+div.setting{
+	margin-top: 50px;
+	margin-bottom: 50px;
+}
+
+div.tutorial{
+	margin-top: 50px;
+	margin-bottom: 50px;
+}

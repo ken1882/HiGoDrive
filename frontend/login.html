@@ -53,7 +53,7 @@
       <!--內容-->
       <div class="container">
         <div class="row">
-          <form class="textForm">
+          <form class="textForm login">
             <div class="col s12 m8 offset-m2">
               <div class="card light-blue lighten-5">
                 <div class="card-content grey-text">
@@ -61,12 +61,14 @@
                     <div class="input-field col s12">
                       <input placeholder="" id="username" name="username" type="text" class="validate" minlength="1">
                       <label for="username">帳號</label>
+                      <span class="helper-text" data-error="帳號不得為空" data-success=""></span>
                     </div>
                   </div>
                   <div class="row">
                     <div class="input-field col s12">
-                      <input placeholder="" id="password" name="passward" type="text" class="validate" minlength="8">
+                      <input placeholder="" id="password" name="passward" type="password" class="validate" minlength="8">
                       <label for="disabled">密碼</label>
+                      <span class="helper-text" data-error="密碼不得為空" data-success=""></span>
                     </div>
                   </div>
                   <div class="row">
@@ -121,30 +123,39 @@
 
 
         $("form.login").on("submit" , function(){
-          $.ajax({
-            type:"post",
-            url:"index.html",//後端處理
-            data:{
-              un:$("#username").val(),
-              pw:$("#password").val()
-            },
-            datatype:'html'//設定網頁回應是 html 格式
-          }).done(function(data){
-            //成功
-            console.log(data);
-            if(data == "yes"){
-              //註冊成功
-              window.location.href ="index.html";
-            }else{
-              alert("登入失敗,請確認帳號密碼");
-              //測試
-              window.location.href ="index.html";
+          if($("#username").val() != '' && $("#password").val()!= ''){
+            $.ajax({
+              type:"post",
+              url:"index.html",//後端處理
+              data:{
+                username:$("#username").val(),
+                password:$("#password").val()
+              },
+              datatype:'html'//設定網頁回應是 html 格式
+            }).done(function(data){
+              //成功
+              console.log(data);
+              if(data == "yes"){
+                //註冊成功
+                window.location.href ="index.html";
+              }else{
+                alert("登入失敗,請確認帳號密碼");
+                //測試
+                window.location.href ="index.html";
+              }
+            }).fail(function(jqXHR, textStatus, errorThrow){
+              //失敗
+              alert("有錯誤產生，請看 console log");
+              console.log(jqXHR.responseText);
+            });
+          }else{
+            if($("#username").val() == ''){
+                $("#username").addClass("invalid");
             }
-          }).fail(function(jqXHR, textStatus, errorThrow){
-            //失敗
-            alert("有錯誤產生，請看 console log");
-            console.log(jqXHR.responseText);
-          });
+            if($("#password").val() == ''){
+                $("#password").addClass("invalid");
+            }
+          }
           return false;
         });
 

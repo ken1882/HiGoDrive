@@ -51,25 +51,25 @@
       <!--內容-->
       <div class="container">
         <div class="row">
-          <form class="textForm">
+          <form class="textForm eventThrow">
             <div class="col s12 m8 offset-m2">
               <div class="card light-blue lighten-5">
                 <div class="card-content grey-text">
                   <div class="row">
                     <div class="input-field col s12">
-                      <select>
+                      <select id="category">
                         <option value="" disabled selected>選擇你的需求類別</option>
-                        <option value="1">跑腿</option>
-                        <option value="2">送餐</option>
-                        <option value="3">租賃</option>
-                        <option value="4">贈送</option>
+                        <option value="跑腿">跑腿</option>
+                        <option value="送餐">送餐</option>
+                        <option value="租賃">租賃</option>
+                        <option value="贈送">贈送</option>
                       </select>
                       <label>服務類別</label>
                     </div>
                   </div>
                   <div class="row">
                     <div class="input-field col s12">
-                      <input type="text" class="timepicker">
+                      <input id="time" type="text" class="timepicker">
                       <label for="timepicker">時間</label>
                     </div>
                   </div>
@@ -86,7 +86,12 @@
                     </div>
                   </div>
                   <div class="row">
-                    <div class="input-field col s2 offset-s10">
+                    <div class="col s2">
+                        <button class="btn waves-effect waves-light" id="back" type="button" onclick="history.back();">
+                          返回
+                        </button>
+                    </div>
+                    <div class="col s2 offset-s8">
                       <button class="btn waves-effect waves-light" id="submit" type="submit" name="action">
                         送出
                       </button>
@@ -137,33 +142,38 @@
         $('textarea#remarks').characterCounter();
 
 
-        /*
-                $("form.login").on("submit" , function(){
-                  $.ajax({
-                    type:"post",
-                    url:"",
-                    data:{
-                      un:$("#username").val(),
-                      pw:$("#password").val()
-                    },
-                    datatype:'html'//設定網頁回應是 html 格式
-                  }).done(function(data){
-                    //成功
-                    console.log(data);
-                    if(data == "yes"){
-                      //註冊成功
-                      window.location.href ="index.html";
-                    }else{
-                      alert("登入失敗,請確認照號密碼");
-                    }
-                  }).fail(function(jqXHR, textStatus, errorThrow){
-                    //失敗
-                    alert("有錯誤產生，請看 console log");
-                    console.log(jqXHR.responseText);
-                  });
-                  return false;
-                });
-        */
+
+        $("form.eventThrow").on("submit" , function(){
+          $.ajax({
+            type:"post",
+            url:"index.html",//後端處理
+            data : {
+	            	//id : $("#id").val(),
+	              category : $("#category").val(),
+	              time : $("#time").val(),
+	              location : $("#location").val(),
+                remarks : $("#remarks").val(),
+	            },
+            datatype:'html'//設定網頁回應是 html 格式
+          }).done(function(data){
+            //成功
+            console.log(data);
+            if(data == "yes"){
+              //註冊成功
+              window.location.href ="index.html";
+            }else{
+              alert("提出失敗,請與系統人員聯繫");
+              //測試
+              window.location.href ="index.html";
+            }
+          }).fail(function(jqXHR, textStatus, errorThrow){
+            //失敗
+            alert("有錯誤產生，請看 console log");
+            console.log(jqXHR.responseText);
+          });
+          return false;
+        });
+
       });
     </script>
   </body>

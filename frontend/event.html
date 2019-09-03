@@ -54,7 +54,7 @@
         <div class="nav-content #0091ea light-blue accent-4">
           <div class="container">
             <ul class="tabs tabs-transparent">
-              <li class="tab"><a class="active" href="#myEvent">我的差事</a></li>
+              <li class="tab"><a href="#myEvent">我的差事</a></li>
               <li class="tab"><a href="#eventList">差事清單</a></li>
               <li class="tab disabled"><a href="#eventMap">差事地圖</a></li>
             </ul>
@@ -91,7 +91,7 @@
                     <td>海大男二舍</td>
                     <td>倒垃圾</td>
                     <td>
-                      <a class="waves-effect waves-light btn-small amber" href="Messege.html">傳送訊息</a>
+                      <a class="waves-effect waves-light btn-small amber" href="message.html">傳送訊息</a>
                       <a class="waves-effect waves-light btn-small red eventDelete" href="JavaScript:void(0);" data-id="">取消差事</a>
                     </td>
                   </tr>
@@ -102,7 +102,7 @@
                     <td>海大圖書館</td>
                     <td>行動電源</td>
                     <td>
-                      <a class="waves-effect waves-light btn-small amber" href="Messege.html">傳送訊息</a>
+                      <a class="waves-effect waves-light btn-small amber" href="message.html">傳送訊息</a>
                       <a class="waves-effect waves-light btn-small red eventDelete" href="JavaScript:void(0);" data-id="">取消差事</a>
                     </td>
                   </tr>
@@ -174,7 +174,7 @@
                   <td>巴塞隆納社區 A棟</td>
                   <td>麥當勞 1號餐</td>
                   <td>
-                    <a class="waves-effect waves-light btn-small blue" href="eventApply.html">申請差事</a>
+                    <a class="waves-effect waves-light btn-small blue eventApply" href="JavaScript:void(0);" data-id="">申請差事</a>
                   </td>
                 </tr>
               </tbody>
@@ -229,6 +229,7 @@
         $(".sidenav").sidenav();
         $('.tabs').tabs();
 
+        //差事刪除
         $("a.eventDelete").on("click", function(){
           //宣告變數
           var c = confirm("您確定要刪除嗎？"),
@@ -250,6 +251,39 @@
               this_tr.fadeOut();
             }else{
               alert("刪除錯誤:"+data);
+              this_tr.fadeOut();
+            }
+          }).fail(function(jqXHR, textStatus, errorThrown) {
+            //失敗的時候
+            alert("有錯誤產生，請看 console log");
+            console.log(jqXHR.responseText);
+          });
+          }
+          return false;
+        });
+
+        //差事申請
+        $("a.eventApply").on("click", function(){
+          //宣告變數
+          var c = confirm("您確定要申請嗎？"),
+              this_tr = $(this).parent().parent();
+          if(c){
+            $.ajax({
+            type : "POST",
+            url : "event.html", //後端處理
+            data : {
+              id : $(this).attr("data-id") //文章id
+            },
+            dataType : 'html' //設定該網頁回應的會是 html 格式
+          }).done(function(data) {
+            //成功的時候
+            if(data == "yes")
+            {
+              //註冊新增成功，轉跳到登入頁面。
+              alert("申請成功，點擊確認開始服務");
+              this_tr.fadeOut();
+            }else{
+              alert("申請錯誤:"+data);
               this_tr.fadeOut();
             }
           }).fail(function(jqXHR, textStatus, errorThrown) {

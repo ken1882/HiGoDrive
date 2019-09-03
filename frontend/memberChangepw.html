@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <!--網頁標題-->
-    <title>GuaneiArk | 會員中心</title>
+    <title>GuaneiArk | 修改密碼</title>
     <!--網頁圖標-->
     <link rel="shortcut icon" href="image/icon.ico">
     <!--Let browser know website is optimized for mobile-->
@@ -51,111 +51,51 @@
           </div>
         </div>
 
-        <div class="nav-content #0091ea light-blue accent-4">
-          <div class="container">
-            <ul class="tabs tabs-transparent">
-              <li class="tab"><a href="#accountManagement">帳戶管理</a></li>
-              <li class="tab"><a href="#setting">通知設定</a></li>
-              <li class="tab"><a href="#tutorial">使用教學</a></li>
-            </ul>
-          </div>
-        </div>
-
       </nav>
 
       <!--內容-->
-      <!--帳戶管理-->
-      <div class="accountManagement" id="accountManagement">
-        <div class="container">
-          <table class="highlight centered responsive-table">
-            <thead>
-              <tr>
-                <th>帳號暱稱</th>
-                <th>信箱</th>
-                <th>已提出差事</th>
-                <th>已申請差事</th>
-                <th></th>
-              </tr>
-            </thead>
-
-            <tbody>
-              <tr>
-                <td>Jonathan</td>
-                <td>jonathan@mail.com</td>
-                <td>3</td>
-                <td>0</td>
-                <td>
-                  <a class="waves-effect waves-light btn-small green" href="memberChangeac.html" user-id="">帳號編輯</a>
-                  <a class="waves-effect waves-light btn-small cyan" href="memberChangepw.html" user-id="">修改密碼</a>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <!--系統設定-->
-      <div class="setting" id="setting">
-        <div class="container">
-          <form class="setting" method="post">
-            <table class="highlight centered responsive-table">
-              <thead>
-                <tr>
-                  <th></th>
-                  <th></th>
-                </tr>
-              </thead>
-
-              <tbody>
-                <tr>
-                  <td>通知提示</td>
-                  <td>
-                    <div class="switch">
-                     <label>
-                       Off
-                       <input type="checkbox">
-                       <span class="lever"></span>
-                       On
-                     </label>
-                   </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td>訊息提示</td>
-                  <td>
-                    <div class="switch">
-                     <label>
-                       Off
-                       <input type="checkbox">
-                       <span class="lever"></span>
-                       On
-                     </label>
-                   </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td>服務提示</td>
-                  <td>
-                    <div class="switch">
-                     <label>
-                       Off
-                       <input type="checkbox">
-                       <span class="lever"></span>
-                       On
-                     </label>
-                   </div>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+      <div class="container">
+        <div class="row">
+          <form class="textForm">
+            <div class="col s12 m8 offset-m2">
+              <div class="card light-blue lighten-5">
+                <div class="card-content grey-text">
+                  <div class="row">
+                    <div class="input-field col s12">
+                      <input placeholder="" id="pre_password" name=="pre_password" type="password" class="validate" minlength="8">
+                      <label for="password">請輸入舊密碼(請多於8個字元)</label>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="input-field col s12">
+                      <input placeholder="" id="password" name=="password" type="password" class="validate" minlength="8">
+                      <label for="password">請輸入新密碼(請多於8個字元)</label>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="input-field col s12">
+                      <input placeholder="" id="confirm_password" name=="password" type="password" class="validate" minlength="8">
+                      <label for="password">請再次輸入新密碼</label>
+                      <span class="helper-text" data-error="兩次密碼輸入不一樣，請確認" data-success=""></span>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col s2">
+                        <button class="btn waves-effect waves-light" id="back" type="button" onclick="history.back();">
+                          返回
+                        </button>
+                    </div>
+                    <div class="col s2 offset-s8">
+                      <button class="btn waves-effect waves-light" id="submit" type="submit" name="action">
+                        修改
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </form>
-
         </div>
-      </div>
-
-      <!--使用教學-->
-      <div class="tutorial" id="tutorial">
-
       </div>
     </main>
 

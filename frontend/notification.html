@@ -55,8 +55,8 @@
         <div class="nav-content #0091ea light-blue accent-4">
           <div class="container">
             <ul class="tabs tabs-transparent">
-              <li class="tab"><a class="active" href="#test0">差事</a></li>
-              <li class="tab"><a href="#test1">訊息</a></li>
+              <li class="tab"><a href="#test0">差事通知</a></li>
+              <li class="tab"><a target="_self" href="message.html">差事訊息</a></li>
             </ul>
           </div>
         </div>
@@ -67,7 +67,43 @@
       <div class="container">
         <div class="row">
            <div class="col s12">
+             <table class="highlight centered responsive-table">
+               <thead>
+                 <tr>
+                   <th colspan="4">通知內容</th>
+                   <th></th>
+                 </tr>
+               </thead>
 
+               <tbody>
+                 <tr>
+                   <td colspan="4">您的"逼時熱狗"由於違反社群守則已被下架</td>
+                   <td>
+                     <a class="waves-effect waves-light btn-small red notificationDelete" href="JavaScript:void(0);" data-id="">
+                       <i class="material-icons">clear</i>
+                     </a>
+                   </td>
+                 </tr>
+
+                 <tr>
+                   <td colspan="4">火車站代買便當 差事已過期</td>
+                   <td>
+                     <a class="waves-effect waves-light btn-small red" href="JavaScript:void(0);" data-id="">
+                       <i class="material-icons">clear</i>
+                     </a>
+                   </td>
+                 </tr>
+
+                 <tr>
+                   <td colspan="4">Alan 已接受您的 行動電源 租賃</td>
+                   <td>
+                     <a class="waves-effect waves-light btn-small red" href="JavaScript:void(0);" data-id="">
+                       <i class="material-icons">clear</i>
+                     </a>
+                   </td>
+                 </tr>
+               </tbody>
+             </table>
            </div>
       </div>
     </main>
@@ -106,6 +142,38 @@
       $(document).ready(function(){
         $(".sidenav").sidenav();
         $('.tabs').tabs();
+
+        $("a.notificationDelete").on("click", function(){
+          //宣告變數
+          var c = confirm("您確定要刪除嗎？"),
+              this_tr = $(this).parent().parent();
+          if(c){
+            $.ajax({
+            type : "POST",
+            url : "notification.html", //後端處理
+            data : {
+              id : $(this).attr("data-id") //文章id
+            },
+            dataType : 'html' //設定該網頁回應的會是 html 格式
+          }).done(function(data) {
+            //成功的時候
+            if(data == "yes")
+            {
+              //註冊新增成功，轉跳到登入頁面。
+              alert("刪除成功，點擊確認從列表移除");
+              this_tr.fadeOut();
+            }else{
+              alert("刪除錯誤:"+data);
+              this_tr.fadeOut();
+            }
+          }).fail(function(jqXHR, textStatus, errorThrown) {
+            //失敗的時候
+            alert("有錯誤產生，請看 console log");
+            console.log(jqXHR.responseText);
+          });
+          }
+          return false;
+        });
       });
     </script>
   </body>

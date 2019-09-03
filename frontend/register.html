@@ -51,14 +51,22 @@
       <!--內容-->
       <div class="container">
         <div class="row">
-          <form class="textForm">
+          <form class="textForm register">
             <div class="col s12 m8 offset-m2">
               <div class="card light-blue lighten-5">
                 <div class="card-content grey-text">
                   <div class="row">
                     <div class="input-field col s12">
-                      <input placeholder="" id="username" name="username" type="text" class="validate">
+                      <input placeholder="" id="username" name="username" type="text" class="validate" minlength="1">
                       <label for="username">帳號名稱</label>
+                      <span class="helper-text" data-error="帳號有誤" data-success=""></span>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="input-field col s12">
+                      <input placeholder="" id="nickname" name="nickname" type="text" class="validate" minlength="1">
+                      <label for="username">暱稱</label>
+                      <span class="helper-text" data-error="暱稱不得為空" data-success=""></span>
                     </div>
                   </div>
                   <div class="row">
@@ -70,20 +78,21 @@
                   </div>
                   <div class="row">
                     <div class="input-field col s12">
-                    <input placeholder="" id="password" name=="password" type="password" class="validate" minlength="8">
-                    <label for="password">請輸入密碼(請多於8個字元)</label>
+                      <input placeholder="" id="password" name=="password" type="password" class="validate" minlength="8">
+                      <label for="password">請輸入密碼(請多於8個字元)</label>
+                      <span class="helper-text" data-error="密碼不得為空" data-success=""></span>
+                    </div>
                   </div>
-                </div>
-                <div class="row">
-                  <div class="input-field col s12">
-                  <input placeholder="" id="confirm_password" name=="password" type="password" class="validate" minlength="8">
-                  <label for="password">請再次輸入密碼</label>
-                  <span class="helper-text" data-error="兩次密碼輸入不一樣，請確認" data-success=""></span>
-                </div>
-              </div>
+                  <div class="row">
+                    <div class="input-field col s12">
+                      <input placeholder="" id="confirm_password" name=="password" type="password" class="validate" minlength="8">
+                      <label for="password">請再次輸入密碼</label>
+                      <span class="helper-text" data-error="兩次密碼輸入不一樣，請確認" data-success=""></span>
+                    </div>
+                  </div>
                   <div class="row">
                     <div class="input-field col s3 offset-s9">
-                      <button class="btn waves-effect waves-light" id="submit" type="submit" name="action">
+                      <button class="btn waves-effect waves-light" id="submit" type="submit">
                         註冊<i class="material-icons right">send</i>
                       </button>
                     </div>
@@ -95,6 +104,7 @@
         </div>
       </div>
     </main>
+
     <!--置底說明-->
     <footer class="page-footer #00b0ff light-blue accent-3">
       <div class="container">
@@ -128,6 +138,8 @@
     <script>
       $(document).ready(function(){
         $(".sidenav").sidenav();
+
+        /*
         //帳號檢查是否重複
         $("#username").on("keyup", function(){
           if($(this).val() != ''){
@@ -137,6 +149,7 @@
             $("#submit").addClass("disabled");
           }
         });
+
         //信箱輸入是否正確
         $("#email").on("keyup", function(){
           if($(this).val() != ''){
@@ -146,6 +159,51 @@
             $("#submit").addClass("disabled");
           }
         });
+        */
+
+        //當帳號的input keyup的時候，透過ajax檢查
+      	$("#username").on("keyup", function(){
+      		//取得輸入的值
+      		var keyin_value = $(this).val();
+      		//當keyup的時候，裡面的值不是空字串的話，就檢查。
+      		if(keyin_value != '')
+      		{
+      			//$.ajax 是 jQuery 的方法，裡面使用的是物件。
+	      		$.ajax({
+			        type : "POST",	//表單傳送的方式 同 form 的 method 屬性
+			        url : "index.html",  //目標給哪個檔案 同 form 的 action 屬性
+			        data : {	//為要傳過去的資料，使用物件方式呈現，因為變數key值為英文的關係，所以用物件方式送。ex: {name : "輸入的名字", password : "輸入的密碼"}
+			          n : $(this).val()	//代表要傳一個 n 變數值為，username 文字方塊裡的值
+			        },
+			        dataType : 'html' //設定該網頁回應的會是 html 格式
+			      }).done(function(data) {
+			        //成功的時候
+			        //console.log(data); //透過 console 看回傳的結果
+			        if(data == "yes")
+			        {
+			        	//如果為 yes username 文字方塊的復元素先移除 has-error 類別，再加入 has-success 類別
+			        	$("#username").removeClass("invalid")
+			        }
+			        else
+			        {
+			        	alert("帳號有重複，不可以註冊");
+			        	$("#username").addClass("invalid");
+			        }
+
+			      }).fail(function(jqXHR, textStatus, errorThrown) {
+			      	//失敗的時候
+			      	alert("有錯誤產生，請看 console log");
+			        console.log(jqXHR.responseText);
+			      });
+      		}
+      		else
+      		{
+      			//若為空字串，就移除 has-error 跟 has-success 類別
+      			$("#username").removeClass("invalid")
+      		}
+
+      	});
+
         //驗證密碼輸入是否正確
         $("#confirm_password").on("keyup", function(){
           if ($("#password").val() != $("#confirm_password").val()) {
@@ -159,33 +217,54 @@
           }
         });
 
-        /*
-                $("form.login").on("submit" , function(){
-                  $.ajax({
-                    type:"post",
-                    url:"",
-                    data:{
-                      un:$("#username").val(),
-                      pw:$("#password").val()
-                    },
-                    datatype:'html'//設定網頁回應是 html 格式
-                  }).done(function(data){
-                    //成功
-                    console.log(data);
-                    if(data == "yes"){
-                      //註冊成功
-                      window.location.href ="index.html";
-                    }else{
-                      alert("登入失敗,請確認照號密碼");
-                    }
-                  }).fail(function(jqXHR, textStatus, errorThrow){
-                    //失敗
-                    alert("有錯誤產生，請看 console log");
-                    console.log(jqXHR.responseText);
-                  });
-                  return false;
-                });
-        */
+        $("form.register").on("submit" , function(){
+
+          if($("#password").val() == $("#confirm_password").val() && $("#username").val() != '' && $("#password").val()!= '' && $("#nickname").val() != '' && $("#email").val()!= ''){
+            $.ajax({
+              type:"post",
+              url:"index.html",
+              data:{
+                username:$("#username").val(),
+                nickname:$("#nickname").val(),
+                email:$("#email").val(),
+                password:$("#password").val()
+              },
+              datatype:'html'//設定網頁回應是 html 格式
+            }).done(function(data){
+              //成功
+              console.log(data);
+              if(data == "yes"){
+                //註冊成功
+                window.location.href ="index.html";
+              }else{
+                alert("登入失敗,請確認帳號密碼");
+                //測試
+                window.location.href ="index.html";
+              }
+            }).fail(function(jqXHR, textStatus, errorThrow){
+              //失敗
+              alert("有錯誤產生，請看 console log");
+              console.log(jqXHR.responseText);
+            });
+          }else{
+            if($("#username").val() == ''){
+                $("#username").addClass("invalid");
+            }
+            if($("#password").val() == ''){
+                $("#password").addClass("invalid");
+            }
+            if($("#password").val() == ''){
+                $("#password").addClass("invalid");
+            }
+            if($("#nickname").val() == ''){
+                $("#nickname").addClass("invalid");
+            }
+            if($("#email").val() == ''){
+                $("#email").addClass("invalid");
+            }
+          }
+          return false;
+        });
       });
     </script>
   </body>
