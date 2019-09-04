@@ -69,6 +69,12 @@
                   </div>
                   <div class="row">
                     <div class="input-field col s12">
+                      <input id="date" type="text" class="datepicker">
+                      <label for="timepicker">日期</label>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="input-field col s12">
                       <input id="time" type="text" class="timepicker">
                       <label for="timepicker">時間</label>
                     </div>
@@ -138,6 +144,7 @@
       $(document).ready(function(){
         $(".sidenav").sidenav();
         $('select').formSelect();
+         $('.datepicker').datepicker();
         $('.timepicker').timepicker();
         $('textarea#remarks').characterCounter();
 
@@ -150,6 +157,7 @@
             data : {
 	            	//id : $("#id").val(),
 	              category : $("#category").val(),
+                date : $("#date").val(),
 	              time : $("#time").val(),
 	              location : $("#location").val(),
                 remarks : $("#remarks").val(),

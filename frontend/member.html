@@ -113,7 +113,7 @@
                     <div class="switch">
                      <label>
                        Off
-                       <input type="checkbox">
+                       <input type="checkbox" id="notificationSetting" value="Off">
                        <span class="lever"></span>
                        On
                      </label>
@@ -126,7 +126,7 @@
                     <div class="switch">
                      <label>
                        Off
-                       <input type="checkbox">
+                       <input type="checkbox" id="messageSetting" value="Off">
                        <span class="lever"></span>
                        On
                      </label>
@@ -139,7 +139,7 @@
                     <div class="switch">
                      <label>
                        Off
-                       <input type="checkbox">
+                       <input type="checkbox" id="serviceSetting" value="Off">
                        <span class="lever"></span>
                        On
                      </label>
@@ -148,15 +148,42 @@
                 </tr>
               </tbody>
             </table>
+            <div class="row">
+              <div class="input-field col s2 offset-s10">
+                <button class="btn waves-effect waves-light" id="submit" type="submit">
+                  確認修改
+                </button>
+              </div>
+            </div>
           </form>
-
         </div>
       </div>
 
       <!--使用教學-->
       <div class="tutorial" id="tutorial">
-
+        <div class="container">
+          <div class="row">
+            <div class="col s12">
+              <h4>差事提出教學</h4>
+              <hr>
+            </div>
+            <div class="col s12">
+              <h4>差事申請教學</h4>
+              <hr>
+            </div>
+            <div class="col s12">
+              <h4>其他教學</h4>
+              <hr>
+            </div>
+            <div class="col s12">
+              <div class="video-container">
+                <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/Q8TXgCzxEnw" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
+
     </main>
 
     <!--置底說明-->
@@ -193,6 +220,44 @@
       $(document).ready(function(){
         $(".sidenav").sidenav();
         $('.tabs').tabs();
+
+        $("span.lever").on("click" ,function() {
+          if($(this).siblings("input").val()=="On"){
+            $(this).siblings("input").val("Off");
+          }else{
+            $(this).siblings("input").val("On");
+          }
+        })
+        $("form.setting").on("submit" , function(){
+          $.ajax({
+            type:"post",
+            url:"member.html",//後端
+            data:{
+              notificationSetting:$("#notificationSetting").val(),
+              messageSetting:$("#messageSetting").val(),
+              serviceSetting:$("#serviceSetting").val(),
+            },
+            datatype:'html'//設定網頁回應是 html 格式
+          }).done(function(data){
+            //成功
+            console.log(data);
+            if(data == "yes"){
+              //註冊成功
+              window.location.href ="member.html";
+            }else{
+              alert("登入失敗,請確認帳號密碼");
+              //測試
+              window.location.href ="member.html";
+              alert($("#notificationSetting").val()+$("#messageSetting").val()+$("#serviceSetting").val())
+            }
+          }).fail(function(jqXHR, textStatus, errorThrow){
+            //失敗
+            alert("有錯誤產生，請看 console log");
+            console.log(jqXHR.responseText);
+          });
+          return false;
+        });
+
       });
     </script>
   </body>
