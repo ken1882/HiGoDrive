@@ -51,18 +51,18 @@
       <!--內容-->
       <div class="container">
         <div class="row">
-          <form class="textForm">
+          <form class="textForm eventEdit">
             <div class="col s12 m8 offset-m2">
               <div class="card light-blue lighten-5">
                 <div class="card-content grey-text">
                   <div class="row">
                     <div class="input-field col s12">
-                      <select>
-                        <option value="" disabled selected>選擇你的需求類別</option>
-                        <option value="1">跑腿</option>
-                        <option value="2">送餐</option>
-                        <option value="3">租賃</option>
-                        <option value="4">贈送</option>
+                      <select id="category">
+                        <option value="未選" disabled selected>選擇你的需求類別</option>
+                        <option value="跑腿">跑腿</option>
+                        <option value="送餐">送餐</option>
+                        <option value="租賃">租賃</option>
+                        <option value="贈送">贈送</option>
                       </select>
                       <label>服務類別</label>
                     </div>
@@ -71,31 +71,35 @@
                     <div class="input-field col s12">
                       <input id="date" type="text" class="datepicker">
                       <label for="timepicker">日期</label>
+                      <span class="helper-text" data-error="日期不得為空" data-success=""></span>
                     </div>
                   </div>
                   <div class="row">
                     <div class="input-field col s12">
-                      <input type="text" class="timepicker">
+                      <input id="time" type="text" class="timepicker">
                       <label for="timepicker">時間</label>
+                      <span class="helper-text" data-error="時間不得為空" data-success=""></span>
                     </div>
                   </div>
                   <div class="row">
                     <div class="input-field col s12">
                       <input id="location" type="text" class="validate">
                       <label for="location">地點</label>
+                      <span class="helper-text" data-error="地點不得為空" data-success=""></span>
                     </div>
                   </div>
                   <div class="row">
                     <div class="input-field col s12">
                       <textarea id="remarks" class="materialize-textarea" data-length="120"></textarea>
                       <label for="remarks">需求備註</label>
+                      <span class="helper-text" data-error="需求不得為空" data-success=""></span>
                     </div>
                   </div>
                   <div class="row">
                     <div class="col s2">
-                        <button class="btn waves-effect waves-light" id="back" type="button" onclick="history.back();">
+                        <a class="btn waves-effect waves-light" href="event.html">
                           返回
-                        </button>
+                        </a>
                     </div>
                     <div class="col s2 offset-s8">
                       <button class="btn waves-effect waves-light" id="submit" type="submit" name="action">
@@ -144,37 +148,62 @@
       $(document).ready(function(){
         $(".sidenav").sidenav();
         $('select').formSelect();
+        $('.datepicker').datepicker();
         $('.timepicker').timepicker();
         $('textarea#remarks').characterCounter();
 
 
-        /*
-                $("form.login").on("submit" , function(){
-                  $.ajax({
-                    type:"post",
-                    url:"",
-                    data:{
-                      un:$("#username").val(),
-                      pw:$("#password").val()
-                    },
-                    datatype:'html'//設定網頁回應是 html 格式
-                  }).done(function(data){
-                    //成功
-                    console.log(data);
-                    if(data == "yes"){
-                      //註冊成功
-                      window.location.href ="index.html";
-                    }else{
-                      alert("登入失敗,請確認帳號密碼");
-                    }
-                  }).fail(function(jqXHR, textStatus, errorThrow){
-                    //失敗
-                    alert("有錯誤產生，請看 console log");
-                    console.log(jqXHR.responseText);
-                  });
-                  return false;
-                });
-        */
+        $("form.eventEdit").on("submit" , function(){
+          if($("#category").val() != '' && $("#date").val() != '' && $("#time").val() != '' && $("#location").val() != '' && $("#remarks").val() != ''){
+            $.ajax({
+              type:"post",
+              url:"index.html",//後端處理
+              data : {
+  	            	//id : $("#id").val(),
+  	              category : $("#category").val(),
+                  date : $("#date").val(),
+  	              time : $("#time").val(),
+  	              location : $("#location").val(),
+                  remarks : $("#remarks").val(),
+  	            },
+              datatype:'html'//設定網頁回應是 html 格式
+            }).done(function(data){
+              //成功
+              console.log(data);
+              if(data == "yes"){
+                //註冊成功
+                window.location.href ="index.html";
+              }else{
+                alert("提出失敗,請與系統人員聯繫");
+                //測試
+                //window.location.href ="index.html";
+              }
+            }).fail(function(jqXHR, textStatus, errorThrow){
+              //失敗
+              alert("有錯誤產生，請看 console log");
+              console.log(jqXHR.responseText);
+            });
+          }else{
+            if($("#category").val() == null){
+              alert("服務類別未選!");
+              //$("#category").addClass("invalid");
+            }
+            if($("#date").val() == ''){
+              $("#date").addClass("invalid");
+            }
+            if($("#time").val() == ''){
+              $("#time").addClass("invalid");
+            }
+            if($("#location").val() == ''){
+              $("#location").addClass("invalid");
+            }
+            if($("#remarks").val() == ''){
+              $("#remarks").addClass("invalid");
+            }
+          }
+          return false;
+        });
+
       });
     </script>
   </body>

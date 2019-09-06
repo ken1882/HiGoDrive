@@ -85,8 +85,8 @@
                 <td>3</td>
                 <td>0</td>
                 <td>
-                  <a class="waves-effect waves-light btn-small green" href="memberChangeac.html" user-id="">帳號編輯</a>
-                  <a class="waves-effect waves-light btn-small cyan" href="memberChangepw.html" user-id="">修改密碼</a>
+                  <a class="waves-effect waves-light btn-small green" href="memberChangeac.html" data-id="">帳號編輯</a>
+                  <a class="waves-effect waves-light btn-small cyan" href="memberChangepw.html" data-id="">修改密碼</a>
                 </td>
               </tr>
             </tbody>
@@ -221,6 +221,7 @@
         $(".sidenav").sidenav();
         $('.tabs').tabs();
 
+        //通知選項邊更
         $("span.lever").on("click" ,function() {
           if($(this).siblings("input").val()=="On"){
             $(this).siblings("input").val("Off");
@@ -228,6 +229,8 @@
             $(this).siblings("input").val("On");
           }
         })
+
+        //通知設定
         $("form.setting").on("submit" , function(){
           $.ajax({
             type:"post",
@@ -235,17 +238,18 @@
             data:{
               notificationSetting:$("#notificationSetting").val(),
               messageSetting:$("#messageSetting").val(),
-              serviceSetting:$("#serviceSetting").val(),
+              serviceSetting:$("#serviceSetting").val()
             },
             datatype:'html'//設定網頁回應是 html 格式
           }).done(function(data){
             //成功
             console.log(data);
             if(data == "yes"){
-              //註冊成功
+              //設定成功
+              alert("設定成功");
               window.location.href ="member.html";
             }else{
-              alert("登入失敗,請確認帳號密碼");
+              alert("設定失敗,請確認帳號密碼");
               //測試
               window.location.href ="member.html";
               alert($("#notificationSetting").val()+$("#messageSetting").val()+$("#serviceSetting").val())

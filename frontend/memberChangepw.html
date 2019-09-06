@@ -56,7 +56,7 @@
       <!--內容-->
       <div class="container">
         <div class="row">
-          <form class="textForm">
+          <form class="textForm changePassword">
             <div class="col s12 m8 offset-m2">
               <div class="card light-blue lighten-5">
                 <div class="card-content grey-text">
@@ -64,12 +64,14 @@
                     <div class="input-field col s12">
                       <input placeholder="" id="pre_password" name=="pre_password" type="password" class="validate" minlength="8">
                       <label for="password">請輸入舊密碼(請多於8個字元)</label>
+                      <span class="helper-text" data-error="舊密碼不得為空" data-success=""></span>
                     </div>
                   </div>
                   <div class="row">
                     <div class="input-field col s12">
                       <input placeholder="" id="password" name=="password" type="password" class="validate" minlength="8">
                       <label for="password">請輸入新密碼(請多於8個字元)</label>
+                      <span class="helper-text" data-error="新密碼不得為空" data-success=""></span>
                     </div>
                   </div>
                   <div class="row">
@@ -133,6 +135,59 @@
       $(document).ready(function(){
         $(".sidenav").sidenav();
         $('.tabs').tabs();
+
+        //驗證密碼輸入是否正確
+        $("#confirm_password").on("keyup", function(){
+          if ($("#password").val() != $("#confirm_password").val()) {
+            //$("#password").addClass("invalid");
+            $("#confirm_password").addClass("invalid");
+            //若密碼都不一樣就警告。
+
+            //return false;
+          }else{
+            $("#confirm_password").removeClass("invalid");
+          }
+        });
+
+        $("form.changePassword").on("submit" , function(){
+          if($("#password").val() == $("#confirm_password").val() && $("#pre_password").val() != '' && $("#password").val() != ''){
+            $.ajax({
+              type:"post",
+              url:"member.html",//後端填寫
+              data:{
+                //userID:$("#userID").val(),
+                password:$("#password").val()
+              },
+              datatype:'html'//設定網頁回應是 html 格式
+            }).done(function(data){
+              //成功
+              console.log(data);
+              if(data == "yes"){
+                //註冊成功
+                window.location.href ="member.html";
+              }else{
+                alert("修改失敗,請確認填寫資料");
+              }
+            }).fail(function(jqXHR, textStatus, errorThrow){
+              //失敗
+              alert("有錯誤產生，請看 console log");
+              console.log(jqXHR.responseText);
+              window.location.href ="member.html";
+            });
+          }else{
+            if($("#pre_password").val() == ''){
+              $("#pre_password").addClass("invalid");
+            }
+            if($("#password").val() == ''){
+              $("#password").addClass("invalid");
+            }
+            if($("#password").val() != $("#confirm_password").val()){
+                $("#confirm_password").addClass("invalid");
+            }
+          }
+          return false;
+        });
+
       });
     </script>
   </body>

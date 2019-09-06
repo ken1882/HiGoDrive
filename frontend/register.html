@@ -59,7 +59,7 @@
                     <div class="input-field col s12">
                       <input placeholder="" id="username" name="username" type="text" class="validate" minlength="1">
                       <label for="username">帳號名稱</label>
-                      <span class="helper-text" data-error="帳號有誤" data-success=""></span>
+                      <span class="helper-text" data-error="帳號重複或為空" data-success=""></span>
                     </div>
                   </div>
                   <div class="row">
@@ -139,29 +139,7 @@
       $(document).ready(function(){
         $(".sidenav").sidenav();
 
-        /*
-        //帳號檢查是否重複
-        $("#username").on("keyup", function(){
-          if($(this).val() != ''){
-            //alert("test");
-            //$("#submit").removeClass("disabled");
-          }else{
-            $("#submit").addClass("disabled");
-          }
-        });
-
-        //信箱輸入是否正確
-        $("#email").on("keyup", function(){
-          if($(this).val() != ''){
-            //alert("test");
-            //$("#submit").removeClass("disabled");
-          }else{
-            $("#submit").addClass("disabled");
-          }
-        });
-        */
-
-        //當帳號的input keyup的時候，透過ajax檢查
+        //當帳號的input keyup的時候，透過ajax檢查帳號是否重複
       	$("#username").on("keyup", function(){
       		//取得輸入的值
       		var keyin_value = $(this).val();
@@ -218,8 +196,7 @@
         });
 
         $("form.register").on("submit" , function(){
-
-          if($("#password").val() == $("#confirm_password").val() && $("#username").val() != '' && $("#password").val()!= '' && $("#nickname").val() != '' && $("#email").val()!= ''){
+          if($("#password").val() == $("#confirm_password").val() && $("#username").val() != '' && $("#password").val() != '' && $("#nickname").val() != '' && $("#email").val() != ''){
             $.ajax({
               type:"post",
               url:"index.html",
@@ -237,7 +214,7 @@
                 //註冊成功
                 window.location.href ="index.html";
               }else{
-                alert("登入失敗,請確認帳號密碼");
+                alert("註冊失敗,請確填寫資訊");
                 //測試
                 window.location.href ="index.html";
               }
@@ -253,8 +230,8 @@
             if($("#password").val() == ''){
                 $("#password").addClass("invalid");
             }
-            if($("#password").val() == ''){
-                $("#password").addClass("invalid");
+            if($("#password").val() != $("#confirm_password").val()){
+                $("#confirm_password").addClass("invalid");
             }
             if($("#nickname").val() == ''){
                 $("#nickname").addClass("invalid");

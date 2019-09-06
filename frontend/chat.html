@@ -127,6 +127,34 @@
       $(document).ready(function(){
         $(".sidenav").sidenav();
         $('.tabs').tabs();
+
+        /*
+                $("form.login").on("submit" , function(){
+                  $.ajax({
+                    type:"post",
+                    url:"",
+                    data:{
+                      un:$("#username").val(),
+                      pw:$("#password").val()
+                    },
+                    datatype:'html'//設定網頁回應是 html 格式
+                  }).done(function(data){
+                    //成功
+                    console.log(data);
+                    if(data == "yes"){
+                      //註冊成功
+                      window.location.href ="index.html";
+                    }else{
+                      alert("登入失敗,請確認帳號密碼");
+                    }
+                  }).fail(function(jqXHR, textStatus, errorThrow){
+                    //失敗
+                    alert("有錯誤產生，請看 console log");
+                    console.log(jqXHR.responseText);
+                  });
+                  return false;
+                });
+        */
       });
     </script>
   </body>
