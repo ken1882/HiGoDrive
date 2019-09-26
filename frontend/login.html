@@ -74,6 +74,15 @@
                   </div>
                 </div>
                 <div class="row">
+                  <div class="input-field col s12">
+                    <label>
+                      <input type="checkbox" id="remember_me" class="filled-in" value="0" />
+                      <span>記住帳號</span>
+                    </label>
+                  </div>
+                </div>
+                <br>
+                <div class="row">
                   <div class="col s3">
                     <a class="waves-effect waves-light btn" href="register.html">註冊</a>
                   </div>
@@ -123,15 +132,21 @@
     $(document).ready(function() {
       $(".sidenav").sidenav();
 
-
       $("form.login").on("submit", function() {
+        //檢查記住帳號狀態
+        if($("#remember_me").is(":checked")){
+          $("#remember_me").val("1");
+        }else{
+          $("#remember_me").val("0");
+        }
         if ($("#username").val() != '' && $("#password").val() != '') {
           $.ajax({
             type: "post",
             url: "index.html", //後端處理
             data: {
               username: $("#username").val(),
-              password: $("#password").val()
+              password: $("#password").val(),
+              remember_me: $("#remember_me").val()
             },
             datatype: 'html' //設定網頁回應是 html 格式
           }).done(function(data) {

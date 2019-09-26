@@ -62,22 +62,22 @@
                 <div class="card-content grey-text">
                   <div class="row">
                     <div class="input-field col s12">
-                      <input placeholder="" id="pre_password" name=="pre_password" type="password" class="validate" minlength="8">
-                      <label for="password">請輸入舊密碼(請多於8個字元)</label>
+                      <input placeholder="" id="old_password" name=="old_password" type="password" class="validate" minlength="8">
+                      <label for="old_password">請輸入舊密碼(請多於8個字元)</label>
                       <span class="helper-text" data-error="舊密碼不得為空" data-success=""></span>
                     </div>
                   </div>
                   <div class="row">
                     <div class="input-field col s12">
-                      <input placeholder="" id="password" name=="password" type="password" class="validate" minlength="8">
-                      <label for="password">請輸入新密碼(請多於8個字元)</label>
+                      <input placeholder="" id="new_password" name=="new_password" type="password" class="validate" minlength="8">
+                      <label for="new_password">請輸入新密碼(請多於8個字元)</label>
                       <span class="helper-text" data-error="新密碼不得為空" data-success=""></span>
                     </div>
                   </div>
                   <div class="row">
                     <div class="input-field col s12">
-                      <input placeholder="" id="confirm_password" name=="password" type="password" class="validate" minlength="8">
-                      <label for="password">請再次輸入新密碼</label>
+                      <input placeholder="" id="confirm_password" name=="confirm_password" type="password" class="validate" minlength="8">
+                      <label for="confirm_password">請再次輸入新密碼</label>
                       <span class="helper-text" data-error="兩次密碼輸入不一樣，請確認" data-success=""></span>
                     </div>
                   </div>
@@ -138,7 +138,7 @@
 
         //驗證密碼輸入是否正確
         $("#confirm_password").on("keyup", function(){
-          if ($("#password").val() != $("#confirm_password").val()) {
+          if ($("#new_password").val() != $("#confirm_password").val()) {
             //$("#password").addClass("invalid");
             $("#confirm_password").addClass("invalid");
             //若密碼都不一樣就警告。
@@ -150,13 +150,13 @@
         });
 
         $("form.changePassword").on("submit" , function(){
-          if($("#password").val() == $("#confirm_password").val() && $("#pre_password").val() != '' && $("#password").val() != ''){
+          if($("#new_password").val() == $("#confirm_password").val() && $("#old_password").val() != '' && $("#new_password").val() != ''){
             $.ajax({
               type:"post",
               url:"member.html",//後端填寫
               data:{
                 //userID:$("#userID").val(),
-                password:$("#password").val()
+                password:$("#new_password").val()
               },
               datatype:'html'//設定網頁回應是 html 格式
             }).done(function(data){
@@ -175,13 +175,13 @@
               window.location.href ="member.html";
             });
           }else{
-            if($("#pre_password").val() == ''){
-              $("#pre_password").addClass("invalid");
+            if($("#old_password").val() == ''){
+              $("#old_password").addClass("invalid");
             }
-            if($("#password").val() == ''){
-              $("#password").addClass("invalid");
+            if($("#new_password").val() == ''){
+              $("#new_password").addClass("invalid");
             }
-            if($("#password").val() != $("#confirm_password").val()){
+            if($("#new_password").val() != $("#confirm_password").val()){
                 $("#confirm_password").addClass("invalid");
             }
           }
