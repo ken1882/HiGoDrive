@@ -1,72 +1,106 @@
-html, body{
-	height: 100%;
+html, body {
+  height: 100%;
 }
 
-body{
-	/*background-repeat: no-repeat;*/
-	/*background-size: cover;*/
-	display: flex;
-	min-height: 100%;
-	flex-direction: column;
+body {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
 }
 
 main {
-	flex: 1 0 auto;
+  flex: 1 0 auto;
 }
 
 /*disabled*/
-nav ul.level_2{
+nav ul.level_2 {
   display: none;
   position: absolute;
 }
+
 /*disabled*/
-nav .level_1 > li:hover ul.level_2{
+nav .level_1>li:hover ul.level_2 {
   display: block;
 }
 
-.textForm{
-	margin-top: 15%;
+.textForm {
+  margin-top: 15%;
 }
 
 .parallax-container {
-		height: 800px;
-	}
-
-.card{
-	padding-top:25px;
+  height: 800px;
 }
 
-div.eventThrow{
-	margin-top: 50px;
-	margin-bottom: 50px;
+.card {
+  padding-top: 20px;
 }
 
-div.eventApply{
-	margin-top: 50px;
-	margin-bottom: 50px;
+.eventThrow {
+  margin-top: 50px;
+  margin-bottom: 50px;
 }
 
-div.myEvent{
-	margin-top: 50px;
-	margin-bottom: 50px;
+.eventReview {
+  margin-top: 50px;
+  margin-bottom: 50px;
 }
 
-div.eventList{
-	margin-top: 50px;
-	margin-bottom: 50px;
+.eventApply {
+  margin-top: 50px;
+  margin-bottom: 50px;
 }
 
-div.accountManagement{
-	margin-top: 50px;
-	margin-bottom: 50px;
+.myEvent {
+  margin-top: 50px;
+  margin-bottom: 50px;
 }
 
-div.setting{
-	margin-top: 50px;
-	margin-bottom: 50px;
+.eventList {
+  margin-top: 50px;
+  margin-bottom: 50px;
 }
 
-div.tutorial{
-	margin-top: 50px;
-	margin-bottom: 50px;
+.accountManagement {
+  margin-top: 50px;
+  margin-bottom: 50px;
+}
+
+.setting {
+  margin-top: 50px;
+  margin-bottom: 50px;
+}
+
+.tutorial {
+  margin-top: 50px;
+  margin-bottom: 50px;
+}
+
+.notification {
+  margin-top: 50px;
+  margin-bottom: 50px;
+}
+
+.message {
+  margin-top: 50px;
+  margin-bottom: 50px;
+}
+
+.chat {
+  margin-top: 50px;
+  margin-bottom: 50px;
+}
+
+.chatroom {
+  margin:auto;
+  padding-left: 2%;
+  padding-right: 2%;
+}
+
+.chatroomShow {
+  margin:auto;
+  height: 50vh;
+}
+
+.chatroomTitle {
+  font-size: 24px;
 }
