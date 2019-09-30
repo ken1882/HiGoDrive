@@ -94,7 +94,7 @@
                 <td>倒垃圾</td>
                 <td colspan="2">
                   <a class="waves-effect waves-light btn-small amber" href="message.html" data-id="">傳送訊息</a>
-                  <a class="waves-effect waves-light btn-small red eventDelete" href="JavaScript:void(0);" data-id="">取消差事</a>
+                  <a class="waves-effect waves-light btn-small red eventDelete" href="JavaScript:void(0);" data-id="">下架差事</a>
                   <a class="waves-effect waves-light btn-small green eventFinished" href="JavaScript:void(0);" data-id="">完成差事</a>
                 </td>
               </tr>
@@ -106,7 +106,7 @@
                 <td>行動電源</td>
                 <td colspan="2">
                   <a class="waves-effect waves-light btn-small amber" href="message.html">傳送訊息</a>
-                  <a class="waves-effect waves-light btn-small red eventDelete" href="JavaScript:void(0);" data-id="">取消差事</a>
+                  <a class="waves-effect waves-light btn-small red eventDelete" href="JavaScript:void(0);" data-id="">下架差事</a>
                   <a class="waves-effect waves-light btn-small green eventFinished disabled" href="JavaScript:void(0);" data-id="">完成差事</a>
                 </td>
               </tr>
@@ -141,8 +141,7 @@
                 <td>麥當勞</td>
                 <td colspan="2">
                   <a class="waves-effect waves-light btn-small cyan eventStart" href="JavaScript:void(0);" data-id="">確認差事</a>
-                  <a class="waves-effect waves-light btn-small blue" href="eventEdit.html" data-id="">編輯差事</a>
-                  <a class="waves-effect waves-light btn-small red eventDelete" href="JavaScript:void(0);" data-id="">取消差事</a>
+                  <a class="waves-effect waves-light btn-small red eventDelete" href="JavaScript:void(0);" data-id="">下架差事</a>
                 </td>
               </tr>
             </tbody>
@@ -188,6 +187,26 @@
     <div class="eventList" id="eventList">
       <div class="container">
         <a class="waves-effect waves-light btn-large" href="eventThrow.html">我要提出</a>
+        <div class="searchbar row">
+          <div class="col s12">
+            <form>
+              <div class="input-field col s12 m6 offset-m2">
+                <input id="search" type="search" required>
+                <label class="label-icon" for="search"><i class="material-icons">search</i></label>
+              </div>
+              <div class="input-field col s12 m4">
+                <select id="category">
+                  <option value="未選" disabled selected>選擇你的需求類別</option>
+                  <option value="跑腿">跑腿</option>
+                  <option value="送餐">送餐</option>
+                  <option value="租賃">租賃</option>
+                  <option value="贈送">贈送</option>
+                </select>
+                <label>服務類別</label>
+              </div>
+            </form>
+          </div>
+        </div>
         <h4>目前差事</h4>
         <hr>
         <table class="highlight centered responsive-table">
@@ -302,6 +321,7 @@
     $(document).ready(function() {
       $(".sidenav").sidenav();
       $('.tabs').tabs();
+      $('select').formSelect();
 
       //差事確認
       $("a.eventStart").on("click", function() {
