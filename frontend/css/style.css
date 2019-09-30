@@ -24,76 +24,72 @@ nav .level_1>li:hover ul.level_2 {
 }
 
 .textForm {
-  margin-top: 15%;
-}
-
-.parallax-container {
-  height: 800px;
+  margin-top: 8vh;
 }
 
 .card {
-  padding-top: 20px;
+  padding-top: 2vh;
 }
 
 .eventThrow {
-  margin-top: 50px;
-  margin-bottom: 50px;
+  margin-top: 2vh;
+  margin-bottom: 2vh;
 }
 
 .eventReview {
-  margin-top: 50px;
-  margin-bottom: 50px;
+  margin-top: 2vh;
+  margin-bottom: 2vh;
 }
 
 .eventApply {
-  margin-top: 50px;
-  margin-bottom: 50px;
+  margin-top: 2vh;
+  margin-bottom: 2vh;
 }
 
 .myEvent {
-  margin-top: 50px;
-  margin-bottom: 50px;
+  margin-top: 2vh;
+  margin-bottom: 2vh;
 }
 
 .eventList {
-  margin-top: 50px;
-  margin-bottom: 50px;
+  margin-top: 2vh;
+  margin-bottom: 2vh;
 }
 
 .accountManagement {
-  margin-top: 50px;
-  margin-bottom: 50px;
+  margin-top: 2vh;
+  margin-bottom: 2vh;
 }
 
 .setting {
-  margin-top: 50px;
-  margin-bottom: 50px;
+  margin-top: 2vh;
+  margin-bottom: 2vh;
 }
 
 .tutorial {
-  margin-top: 50px;
-  margin-bottom: 50px;
+  margin-top: 2vh;
+  margin-bottom: 2vh;
 }
 
 .notification {
-  margin-top: 50px;
-  margin-bottom: 50px;
+  margin-top: 2vh;
+  margin-bottom: 2vh;
 }
 
 .message {
-  margin-top: 50px;
-  margin-bottom: 50px;
+  margin-top: 2vh;
+  margin-bottom: 2vh;
 }
 
 .chat {
-  margin-top: 50px;
-  margin-bottom: 50px;
+  margin-top: 2vh;
+  margin-bottom: 2vh;
 }
 
 .chatroom {
   margin:auto;
-  padding-left: 2%;
-  padding-right: 2%;
+  padding-left: 2vh;
+  padding-right: 2vh;
 }
 
 .chatroomShow {
