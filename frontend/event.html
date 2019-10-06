@@ -199,12 +199,12 @@
             </div>
             <form>
               <div class="input-field col s12 m6">
-                <input id="search" type="search" required>
+                <input id="search" class="search" type="search" required>
                 <label class="label-icon" for="search"><i class="material-icons">search</i></label>
               </div>
               <div class="input-field col s12 m4">
-                <select id="category">
-                  <option value="未選" disabled selected>選擇你的需求類別</option>
+                <select id="category" class="category">
+                  <option value="未選" selected>選擇你的需求類別</option>
                   <option value="跑腿">跑腿</option>
                   <option value="送餐">送餐</option>
                   <option value="租賃">租賃</option>
@@ -457,6 +457,65 @@
             //失敗的時候
             alert("有錯誤產生，請看 console log");
               window.location.href = "eventApply.html";
+            console.log(jqXHR.responseText);
+          });
+        }
+        return false;
+      });
+
+      $("input.search").on("keyup" , function(){
+        if($("#search").val() != '' ){
+          $.ajax({
+            type:"post",
+            url:"event.html",//後端處理
+            data : {
+                search : $("#search").val(),
+              },
+            datatype:'html'//設定網頁回應是 html 格式
+          }).done(function(data){
+            //成功
+            console.log(data);
+            if(data == "yes"){
+              //搜尋成功
+              window.location.href ="event.html";
+            }else{
+              alert("搜尋失敗,請與系統人員聯繫");
+              //測試
+              //window.location.href ="event.html";
+            }
+          }).fail(function(jqXHR, textStatus, errorThrow){
+            //失敗
+            alert("有錯誤產生，請看 console log");
+            console.log(jqXHR.responseText);
+          });
+        }
+        return false;
+      });
+
+      $("#category").on("change" , function(){
+        //alert($("#category").val());
+        if($("#category").val() != '' ){
+          $.ajax({
+            type:"post",
+            url:"event.html",//後端處理
+            data : {
+                category : $("#category").val(),
+              },
+            datatype:'html'//設定網頁回應是 html 格式
+          }).done(function(data){
+            //成功
+            console.log(data);
+            if(data == "yes"){
+              //搜尋成功
+              window.location.href ="event.html";
+            }else{
+              alert("搜尋失敗,請與系統人員聯繫");
+              //測試
+              //window.location.href ="event.html";
+            }
+          }).fail(function(jqXHR, textStatus, errorThrow){
+            //失敗
+            alert("有錯誤產生，請看 console log");
             console.log(jqXHR.responseText);
           });
         }
