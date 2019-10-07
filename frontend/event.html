@@ -24,6 +24,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
   <!--自定義CSS-->
   <link rel="stylesheet" href="css/style.css">
+</head>
 
 <body>
   <main>
@@ -93,10 +94,10 @@
 
             <tbody>
               <tr>
-                <td>Alvin</td>
+                <td>小華</td>
                 <td>跑腿</td>
-                <td>2019/09/02 16:28</td>
-                <td>海大男二舍</td>
+                <td>2019/09/02 20:39</td>
+                <td>海大男一舍</td>
                 <td>倒垃圾</td>
                 <td colspan="2">
                   <a class="waves-effect waves-light btn-small amber" href="message.html" data-id="">傳送訊息</a>
@@ -105,11 +106,11 @@
                 </td>
               </tr>
               <tr>
-                <td>Alan</td>
-                <td>租賃</td>
-                <td>2019/09/02 17:28</td>
-                <td>海大圖書館</td>
-                <td>行動電源</td>
+                <td>小陳</td>
+                <td>跑腿</td>
+                <td>2019/09/02 20:39</td>
+                <td>海大男一舍</td>
+                <td>晚餐</td>
                 <td colspan="2">
                   <a class="waves-effect waves-light btn-small amber" href="message.html">傳送訊息</a>
                   <a class="waves-effect waves-light btn-small red eventDelete" href="JavaScript:void(0);" data-id="">下架差事</a>
@@ -147,7 +148,55 @@
                 <td>麥當勞</td>
                 <td colspan="2">
                   <a class="waves-effect waves-light btn-small cyan eventStart" href="JavaScript:void(0);" data-id="">確認差事</a>
-                  <a class="waves-effect waves-light btn-small red eventDelete" href="JavaScript:void(0);" data-id="">下架差事</a>
+                  <a class="waves-effect waves-light btn-small red eventDelete" href="JavaScript:void(0);" data-id="">婉拒差事</a>
+                </td>
+              </tr>
+              <tr>
+                <td>小華</td>
+                <td>送餐</td>
+                <td>2019/09/02 18:28</td>
+                <td>海大男一舍</td>
+                <td></td>
+                <td>晚餐</td>
+                <td colspan="2">
+                  <a class="waves-effect waves-light btn-small cyan eventStart" href="JavaScript:void(0);" data-id="">確認差事</a>
+                  <a class="waves-effect waves-light btn-small red eventDelete" href="JavaScript:void(0);" data-id="">婉拒差事</a>
+                </td>
+              </tr>
+              <tr>
+                <td>小美</td>
+                <td>送餐</td>
+                <td>2019/09/02 18:28</td>
+                <td>海大男一舍</td>
+                <td>🍪餅乾</td>
+                <td>晚餐</td>
+                <td colspan="2">
+                  <a class="waves-effect waves-light btn-small cyan eventStart" href="JavaScript:void(0);" data-id="">確認差事</a>
+                  <a class="waves-effect waves-light btn-small red eventDelete" href="JavaScript:void(0);" data-id="">婉拒差事</a>
+                </td>
+              </tr>
+              <tr>
+                <td>小陳</td>
+                <td>送餐</td>
+                <td>2019/09/02 18:28</td>
+                <td>海大男一舍</td>
+                <td>30</td>
+                <td>晚餐</td>
+                <td colspan="2">
+                  <a class="waves-effect waves-light btn-small cyan eventStart" href="JavaScript:void(0);" data-id="">確認差事</a>
+                  <a class="waves-effect waves-light btn-small red eventDelete" href="JavaScript:void(0);" data-id="">婉拒差事</a>
+                </td>
+              </tr>
+              <tr>
+                <td>大雄</td>
+                <td>送餐</td>
+                <td>2019/09/02 18:28</td>
+                <td>海大男一舍</td>
+                <td></td>
+                <td>晚餐</td>
+                <td colspan="2">
+                  <a class="waves-effect waves-light btn-small cyan eventStart" href="JavaScript:void(0);" data-id="">確認差事</a>
+                  <a class="waves-effect waves-light btn-small red eventDelete" href="JavaScript:void(0);" data-id="">婉拒差事</a>
                 </td>
               </tr>
             </tbody>
@@ -166,6 +215,7 @@
                 <th>截止時間</th>
                 <th>地點</th>
                 <th>備註</th>
+                <th>差事狀態</th>
                 <th></th>
               </tr>
             </thead>
@@ -177,6 +227,7 @@
                 <td>2019/09/02 20:39</td>
                 <td>海大男一舍</td>
                 <td>腳踏車</td>
+                <td>進行中</td>
                 <td>
                   <a class="waves-effect waves-light btn-small amber" href="message.html">傳送訊息</a>
                   <a class="waves-effect waves-light btn-small green eventFinished" href="JavaScript:void(0);" data-id="">完成差事</a>
@@ -186,6 +237,40 @@
           </table>
         </div>
 
+
+        <!--已完成的差事-->
+        <div class="eventFinish">
+            <h4>差事已完成</h4>
+            <hr>
+            <table class="highlight centered responsive-table">
+              <thead>
+                <tr>
+                  <th>對象</th>
+                  <th>需求類別</th>
+                  <th>截止時間</th>
+                  <th>地點</th>
+                  <th>回饋</th>
+                  <th>需求備註</th>
+                  <th colspan="2"></th>
+                </tr>
+              </thead>
+    
+              <tbody>
+                  <tr>
+                      <td>胖虎</td>
+                      <td>送餐</td>
+                      <td>2019/09/02 18:28</td>
+                      <td>巴塞隆納社區 A棟</td>
+                      <td>50元</td>
+                      <td>麥當勞</td>
+                      <td colspan="2">
+                        <a class="waves-effect waves-light btn-small orange eventPresent" href="JavaScript:void(0);" data-id="">給予評價</a>
+                        <a class="waves-effect waves-light btn-small red eventAppeal" href="JavaScript:void(0);" data-id="">我要申訴</a>
+                      </td>
+                    </tr>
+              </tbody>
+            </table>
+          </div>
       </div>
     </div>
 
@@ -206,7 +291,7 @@
                 <select id="category" class="category">
                   <option value="未選" selected>選擇你的需求類別</option>
                   <option value="跑腿">跑腿</option>
-                  <option value="送餐">送餐</option>
+                  <option value="送餐">共乘</option>
                   <option value="租賃">租賃</option>
                   <option value="贈送">贈送</option>
                 </select>
@@ -280,6 +365,27 @@
                 <a class="waves-effect waves-light btn-small blue eventApplybtn" href="eventApply.html" data-id="">申請差事</a>
               </td>
             </tr>
+            <tr>
+              <td>小明</td>
+              <td>跑腿</td>
+              <td>2019/09/02 20:39</td>
+              <td>海大男一舍</td>
+              <td>倒垃圾</td>
+              <td>
+                <a class="waves-effect waves-light btn-small blue eventApplybtn" href="eventApply.html" data-id="">申請差事</a>
+             </td>
+            </tr>
+            <tr>
+              <td>小明</td>
+              <td>跑腿</td>
+              <td>2019/09/02 20:39</td>
+              <td>海大男一舍</td>
+              <td>晚餐</td>
+              <td>
+                <a class="waves-effect waves-light btn-small blue eventApplybtn" href="eventApply.html" data-id="">申請差事</a>
+             </td>
+            </tr>
+
           </tbody>
         </table>
       </div>
@@ -320,7 +426,7 @@
     <div class="footer-copyright">
       <div class="container">
         © 2019 GuaneiArk
-        <a class="grey-text text-lighten-4 right" href="#!">連略我們</a>
+        <a class="grey-text text-lighten-4 right" href="#!">聯絡我們</a>
       </div>
     </div>
   </footer>
@@ -400,7 +506,7 @@
       //差事刪除
       $("a.eventDelete").on("click", function() {
         //宣告變數
-        var c = confirm("您確定要刪除嗎？"),
+        var c = confirm("您確定要婉拒嗎？"),
           this_tr = $(this).parent().parent();
         if (c) {
           $.ajax({
@@ -414,10 +520,10 @@
             //成功的時候
             if (data == "yes") {
               //註冊新增成功，轉跳到登入頁面。
-              alert("刪除成功，點擊確認從列表移除");
+              alert("婉拒成功，點擊確認從列表移除");
               this_tr.fadeOut();
             } else {
-              alert("刪除錯誤:" + data);
+              alert("拒絕錯誤:" + data);
               this_tr.fadeOut();
             }
           }).fail(function(jqXHR, textStatus, errorThrown) {
