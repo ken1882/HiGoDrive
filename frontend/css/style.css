@@ -46,6 +46,11 @@ nav .level_1>li:hover ul.level_2 {
   margin-bottom: 2vh;
 }
 
+.eventFinish {
+  margin-top: 2vh;
+  margin-bottom: 2vh;
+}
+
 .myEvent {
   margin-top: 2vh;
   margin-bottom: 2vh;
