@@ -12,6 +12,10 @@ main {
   flex: 1 0 auto;
 }
 
+img {
+  border:2px gray solid;
+}
+
 /*disabled*/
 nav ul.level_2 {
   display: none;
@@ -24,88 +28,88 @@ nav .level_1>li:hover ul.level_2 {
 }
 
 .textForm {
-  margin-top: 8vh;
+  margin-top: 10vh;
 }
 
 .card {
-  padding-top: 1vh;
-  padding-bottom: 1vh;
+  padding-top: 2vh;
+  padding-bottom: 2vh;
 }
 
 .totalEvent {
-  margin-top: 2vh;
-  margin-bottom: 2vh;
+  margin-top: 5vh;
+  margin-bottom: 5vh;
 }
 
 .eventDoing{
-  margin-top: 2vh;
-  margin-bottom: 2vh;
+  margin-top: 5vh;
+  margin-bottom: 5vh;
 }
 
 .eventThrow {
-  margin-top: 2vh;
-  margin-bottom: 2vh;
+  margin-top: 5vh;
+  margin-bottom: 5vh;
 }
 
 .eventReview {
-  margin-top: 2vh;
-  margin-bottom: 2vh;
+  margin-top: 5vh;
+  margin-bottom: 5vh;
 }
 
 .eventApply {
-  margin-top: 2vh;
-  margin-bottom: 2vh;
+  margin-top: 5vh;
+  margin-bottom: 5vh;
 }
 
 .eventFinish {
-  margin-top: 2vh;
-  margin-bottom: 2vh;
+  margin-top: 5vh;
+  margin-bottom: 5vh;
 }
 
 .myEvent {
-  margin-top: 2vh;
-  margin-bottom: 2vh;
+  margin-top: 5vh;
+  margin-bottom: 5vh;
 }
 
 .eventList {
-  margin-top: 2vh;
-  margin-bottom: 2vh;
+  margin-top: 5vh;
+  margin-bottom: 5vh;
 }
 
 .accountManagement {
-  margin-top: 2vh;
-  margin-bottom: 2vh;
+  margin-top: 5vh;
+  margin-bottom: 5vh;
 }
 
 .setting {
-  margin-top: 2vh;
-  margin-bottom: 2vh;
+  margin-top: 5vh;
+  margin-bottom: 5vh;
 }
 
 .tutorial {
-  margin-top: 2vh;
-  margin-bottom: 2vh;
+  margin-top: 5vh;
+  margin-bottom: 5vh;
 }
 
 .notification {
-  margin-top: 2vh;
-  margin-bottom: 2vh;
+  margin-top: 5vh;
+  margin-bottom: 5vh;
 }
 
 .message {
-  margin-top: 2vh;
-  margin-bottom: 2vh;
+  margin-top: 5vh;
+  margin-bottom: 5vh;
 }
 
 .chat {
-  margin-top: 2vh;
-  margin-bottom: 2vh;
+  margin-top: 5vh;
+  margin-bottom: 5vh;
 }
 
 .chatroom {
   margin:auto;
-  padding-left: 2vh;
-  padding-right: 2vh;
+  padding-left: 5vh;
+  padding-right: 5vh;
 }
 
 .chatroomShow {
