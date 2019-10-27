@@ -327,6 +327,7 @@
     <!--差事清單-->
     <div class="eventList" id="eventList">
       <div class="container">
+        <!--上方搜尋列-->
         <div class="searchbar row">
           <div class="col s12">
             <div class="col s2 m2">
@@ -341,7 +342,7 @@
                 <select id="category" class="category">
                   <option value="未選" selected>選擇你的需求類別</option>
                   <option value="跑腿">跑腿</option>
-                  <option value="送餐">共乘</option>
+                  <option value="共乘">共乘</option>
                   <option value="租賃">租賃</option>
                   <option value="贈送">贈送</option>
                 </select>
@@ -350,101 +351,164 @@
             </form>
           </div>
         </div>
+        <!--目前差事內容-->
         <h4>目前差事</h4>
         <hr>
-        <table class="highlight centered responsive-table">
-          <thead>
-            <tr>
-              <th>提供者</th>
-              <th>需求類別</th>
-              <th>截止時間</th>
-              <th>地點</th>
-              <th>備註</th>
-              <th></th>
-            </tr>
-          </thead>
 
-          <tbody>
-            <tr>
-              <td>Alvin</td>
-              <td>租賃</td>
-              <td>2019/09/02 20:39</td>
-              <td>海大男一舍</td>
-              <td>腳踏車</td>
-              <td>
-                <a class="waves-effect waves-light btn-small blue eventApplybtn" href="JavaScript:void(0)"
-                  data-id="">申請差事</a>
-              </td>
-            </tr>
-            <tr>
-              <td>Jonathan</td>
-              <td>送餐</td>
-              <td>2019/09/02 18:28</td>
-              <td>巴塞隆納社區 A棟</td>
-              <td>麥當勞</td>
-              <td>
-                <a class="waves-effect waves-light btn-small blue eventApplybtn" href="JavaScript:void(0)"
-                  data-id="">申請差事</a>
-              </td>
-            </tr>
-            <tr>
-              <td>Rebecca</td>
-              <td>贈送</td>
-              <td>2019/09/02 18:28</td>
-              <td>海大電機2館</td>
-              <td>計算機概論課本</td>
-              <td>
-                <a class="waves-effect waves-light btn-small blue eventApplybtn" href="JavaScript:void(0)"
-                  data-id="">申請差事</a>
-              </td>
-            </tr>
-            <tr>
-              <td>Harper</td>
-              <td>送餐</td>
-              <td>2019/09/02 20:28</td>
-              <td>海中天社區</td>
-              <td>新豐街路上都可</td>
-              <td>
-                <a class="waves-effect waves-light btn-small blue eventApplybtn" href="JavaScript:void(0)"
-                  data-id="">申請差事</a>
-              </td>
-            </tr>
-            <tr>
-              <td>Kira</td>
-              <td>跑腿</td>
-              <td>2019/09/02 12:30</td>
-              <td>海大女一舍</td>
-              <td>等下要去體育館上課，順路的事情可以幫忙</td>
-              <td>
-                <a class="waves-effect waves-light btn-small blue eventApplybtn" href="JavaScript:void(0)"
-                  data-id="">申請差事</a>
-              </td>
-            </tr>
-            <tr>
-              <td>小明</td>
-              <td>跑腿</td>
-              <td>2019/09/02 20:39</td>
-              <td>海大男一舍</td>
-              <td>倒垃圾</td>
-              <td>
-                <a class="waves-effect waves-light btn-small blue eventApplybtn" href="JavaScript:void(0)"
-                  data-id="">申請差事</a>
-              </td>
-            </tr>
-            <tr>
-              <td>小明</td>
-              <td>跑腿</td>
-              <td>2019/09/02 20:39</td>
-              <td>海大男一舍</td>
-              <td>晚餐</td>
-              <td>
-                <a class="waves-effect waves-light btn-small blue eventApplybtn" href="JavaScript:void(0)"
-                  data-id="">申請差事</a>
-              </td>
-            </tr>
+        <div class="card row blue lighten-5">
+          <div class="card-image waves-effect waves-block waves-light col s4 l2">
+            <img class="activator responsive-img" src="image/pic_3.png">
+          </div>
+          <div class="card-content">
+            <span class="card-title activator grey-text text-darken-4">腳踏車租借<i
+                class="material-icons right">more_vert</i></span>
+            <p class="grey-text">差事標籤： 租賃</p>
+            <p class="grey-text">地點： 校內</p>
+            <p class=" right-align"><a class="waves-effect waves-light btn-small blue eventApplybtn"
+                href="JavaScript:void(0)" data-id="">申請差事</a></p>
+          </div>
+          <div class="card-reveal">
+            <span class="card-title grey-text text-darken-4">差事資訊<i class="material-icons right">close</i></span>
+            <p>提供者： Alvin</p>
+            <p>需求類別： 租賃</p>
+            <p>截止時間： 2019/09/02 12:46</p>
+            <p>地點： 海大男一舍</p>
+            <p>備註： 腳踏車</p>
+          </div>
+        </div>
 
-          </tbody>
-        </table>
+        <div class="card row blue lighten-5">
+          <div class="card-image waves-effect waves-block waves-light col s4 l2">
+            <img class="activator responsive-img" src="image/pic_4.png">
+          </div>
+          <div class="card-content">
+            <span class="card-title activator grey-text text-darken-4">送計概課本（資工）<i
+                class="material-icons right">more_vert</i></span>
+            <p class="grey-text">差事標籤： 贈送</p>
+            <p class="grey-text">地點： 校內</p>
+            <p class=" right-align"><a class="waves-effect waves-light btn-small blue eventApplybtn"
+                href="JavaScript:void(0)" data-id="">申請差事</a></p>
+          </div>
+          <div class="card-reveal">
+            <span class="card-title grey-text text-darken-4">差事資訊<i class="material-icons right">close</i></span>
+            <p>提供者： Rebecca</p>
+            <p>需求類別： 贈送</p>
+            <p>截止時間： 2019/09/02 12:46</p>
+            <p>地點： 海大電機2館</p>
+            <p>備註： 計算機概論課本</p>
+          </div>
+        </div>
+
+        <div class="card row blue lighten-5">
+          <div class="card-image waves-effect waves-block waves-light col s4 l2">
+            <img class="activator responsive-img" src="image/pic_2.png">
+          </div>
+          <div class="card-content">
+            <span class="card-title activator grey-text text-darken-4">載你去火車站<i
+                class="material-icons right">more_vert</i></span>
+            <p class="grey-text">差事標籤： 共乘</p>
+            <p class="grey-text">地點： 校內</p>
+            <p class=" right-align"><a class="waves-effect waves-light btn-small blue eventApplybtn"
+                href="JavaScript:void(0)" data-id="">申請差事</a></p>
+          </div>
+          <div class="card-reveal">
+            <span class="card-title grey-text text-darken-4">差事資訊<i class="material-icons right">close</i></span>
+            <p>提供者： Ｍira</p>
+            <p>需求類別： 共乘</p>
+            <p>截止時間： 2019/09/02 1８:46</p>
+            <p>地點： 工學院</p>
+            <p>備註： 需自備安全帽</p>
+          </div>
+        </div>
+
+        <div class="card row blue lighten-5">
+          <div class="card-image waves-effect waves-block waves-light col s4 l2">
+            <img class="activator responsive-img" src="image/pic_1.png">
+          </div>
+          <div class="card-content">
+            <span class="card-title activator grey-text text-darken-4">買晚餐<i
+                class="material-icons right">more_vert</i></span>
+            <p class="grey-text">差事標籤： 送餐</p>
+            <p class="grey-text">地點： 校外</p>
+            <p class=" right-align"><a class="waves-effect waves-light btn-small blue eventApplybtn"
+                href="JavaScript:void(0)" data-id="">申請差事</a></p>
+          </div>
+          <div class="card-reveal">
+            <span class="card-title grey-text text-darken-4">差事資訊<i class="material-icons right">close</i></span>
+            <p>提供者： Harper</p>
+            <p>需求類別： 跑腿</p>
+            <p>截止時間： 2019/09/02 20:28</p>
+            <p>地點： 海中天社區</p>
+            <p>備註： 新豐街路上都可</p>
+          </div>
+        </div>
+
+        <div class="card row blue lighten-5">
+          <div class="card-image waves-effect waves-block waves-light col s4 l2">
+            <img class="activator responsive-img" src="image/pic_1.png">
+          </div>
+          <div class="card-content">
+            <span class="card-title activator grey-text text-darken-4">隨手幫忙<i
+                class="material-icons right">more_vert</i></span>
+            <p class="grey-text">差事標籤： </p>
+            <p class="grey-text">地點： 校內</p>
+            <p class=" right-align"><a class="waves-effect waves-light btn-small blue eventApplybtn"
+                href="JavaScript:void(0)" data-id="">申請差事</a></p>
+          </div>
+          <div class="card-reveal">
+            <span class="card-title grey-text text-darken-4">差事資訊<i class="material-icons right">close</i></span>
+            <p>提供者： Kira</p>
+            <p>需求類別： 跑腿</p>
+            <p>截止時間： 2019/09/02 12:30</p>
+            <p>地點： 海大女一舍</p>
+            <p>備註： 等下要去體育館上課，順路的事情可以幫忙</p>
+          </div>
+        </div>
+
+        <div class="card row blue lighten-5">
+          <div class="card-image waves-effect waves-block waves-light col s4 l2">
+            <img class="activator responsive-img" src="image/pic_1.png">
+          </div>
+          <div class="card-content">
+            <span class="card-title activator grey-text text-darken-4">我等下可以幫忙倒垃圾喔<i
+                class="material-icons right">more_vert</i></span>
+            <p class="grey-text">差事標籤： ＃倒垃圾</p>
+            <p class="grey-text">地點： 校內</p>
+            <p class=" right-align"><a class="waves-effect waves-light btn-small blue eventApplybtn"
+                href="JavaScript:void(0)" data-id="">申請差事</a></p>
+          </div>
+          <div class="card-reveal">
+            <span class="card-title grey-text text-darken-4">差事資訊<i class="material-icons right">close</i></span>
+            <p>提供者： 小明</p>
+            <p>需求類別： 跑腿</p>
+            <p>截止時間： 2019/09/02 20:39</p>
+            <p>地點： 海大男一舍</p>
+            <p>備註： </p>
+          </div>
+        </div>
+
+        <div class="card row blue lighten-5">
+          <div class="card-image waves-effect waves-block waves-light col s4 l2">
+            <img class="activator responsive-img" src="image/pic_1.png">
+          </div>
+          <div class="card-content">
+            <span class="card-title activator grey-text text-darken-4">幫忙買晚餐<i
+                class="material-icons right">more_vert</i></span>
+            <p class="grey-text">差事標籤： ＃送餐</p>
+            <p class="grey-text">地點： 校內</p>
+            <p class=" right-align"><a class="waves-effect waves-light btn-small blue eventApplybtn"
+                href="JavaScript:void(0)" data-id="">申請差事</a></p>
+          </div>
+          <div class="card-reveal">
+            <span class="card-title grey-text text-darken-4">差事資訊<i class="material-icons right">close</i></span>
+            <p>提供者： 小明</p>
+            <p>需求類別： 跑腿</p>
+            <p>截止時間： 2019/09/02 20:39</p>
+            <p>地點： 海大男一舍</p>
+            <p>備註： </p>
+          </div>
+        </div>
+
       </div>
     </div>
 
@@ -628,7 +692,7 @@
       $("a.eventApplybtn").on("click", function () {
         //宣告變數
         var c = confirm("您確定要申請嗎？"),
-          this_tr = $(this).parent().parent();
+          this_tr = $(this).parent().parent().parent();
         var reward = prompt("請輸入差事獎勵。", "");
         if (c) {
           $.ajax({
