@@ -1,0 +1,3 @@
+module Mongoid::Document
+
+end

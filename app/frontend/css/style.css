@@ -1,0 +1,122 @@
+html, body {
+  height: 100%;
+}
+
+body {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
+
+main {
+  flex: 1 0 auto;
+}
+
+img {
+  border:2px gray solid;
+}
+
+/*disabled*/
+nav ul.level_2 {
+  display: none;
+  position: absolute;
+}
+
+/*disabled*/
+nav .level_1>li:hover ul.level_2 {
+  display: block;
+}
+
+.textForm {
+  margin-top: 10vh;
+}
+
+.card {
+  padding-top: 2vh;
+  padding-bottom: 2vh;
+}
+
+.totalEvent {
+  margin-top: 5vh;
+  margin-bottom: 5vh;
+}
+
+.eventDoing{
+  margin-top: 5vh;
+  margin-bottom: 5vh;
+}
+
+.eventThrow {
+  margin-top: 5vh;
+  margin-bottom: 5vh;
+}
+
+.eventReview {
+  margin-top: 5vh;
+  margin-bottom: 5vh;
+}
+
+.eventApply {
+  margin-top: 5vh;
+  margin-bottom: 5vh;
+}
+
+.eventFinish {
+  margin-top: 5vh;
+  margin-bottom: 5vh;
+}
+
+.myEvent {
+  margin-top: 5vh;
+  margin-bottom: 5vh;
+}
+
+.eventList {
+  margin-top: 5vh;
+  margin-bottom: 5vh;
+}
+
+.accountManagement {
+  margin-top: 5vh;
+  margin-bottom: 5vh;
+}
+
+.setting {
+  margin-top: 5vh;
+  margin-bottom: 5vh;
+}
+
+.tutorial {
+  margin-top: 5vh;
+  margin-bottom: 5vh;
+}
+
+.notification {
+  margin-top: 5vh;
+  margin-bottom: 5vh;
+}
+
+.message {
+  margin-top: 5vh;
+  margin-bottom: 5vh;
+}
+
+.chat {
+  margin-top: 5vh;
+  margin-bottom: 5vh;
+}
+
+.chatroom {
+  margin:auto;
+  padding-left: 5vh;
+  padding-right: 5vh;
+}
+
+.chatroomShow {
+  margin:auto;
+  height: 50vh;
+}
+
+.chatroomTitle {
+  font-size: 24px;
+}
