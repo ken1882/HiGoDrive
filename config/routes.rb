@@ -5,14 +5,16 @@ Rails.application.routes.draw do
   root 'static_pages#home'
   get '/index', to: 'static_pages#home'
   get '/home', to: 'static_pages#home'
-  get '/help', to: 'static_pages#help'
-  get '/login', to: 'session#new'
-  post '/login', to: 'session#create'
-  delete '/logout', to: 'session#destroy'
-  get '/logout', to: 'session#destroy'
+  
+  # get '/help', to: 'static_pages#help'
+  # get '/login', to: 'session#new'
+  # post '/login', to: 'session#create'
+  # delete '/logout', to: 'session#destroy'
+  # get '/logout', to: 'session#destroy'
 
-  match '/users/:username' => "api/#{CurrentVersion}/users#show", via: [:get]
-  match '/user/:username'  => "api/#{CurrentVersion}/users#show", via: [:get]
+  # match '/users/:username' => "api/#{CurrentVersion}/users#show", via: [:get]
+  # match '/user/:username'  => "api/#{CurrentVersion}/users#show", via: [:get]
+
   # API routes
   namespace 'api' do
     namespace "#{CurrentVersion}" do
