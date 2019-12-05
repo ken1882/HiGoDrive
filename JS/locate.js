@@ -127,7 +127,7 @@ function direction(destlat, destlng) {
       directionsDisplay.setDirections(result);
       dest.distance = result.routes[0].legs[0].distance;
       dest.duration = result.routes[0].legs[0].duration;
-      console.log(dest);
+      //console.log(dest);
 
     }
     else {
@@ -138,13 +138,14 @@ function direction(destlat, destlng) {
 
 function setPsssengerDirectionInfo() {
   info.style.display = "inline"
+
   infoDistance.innerHTML = "距離:" + dest.distance.text;
   infoTime.innerHTML = "時間:" + dest.duration.text;
   infoFare.innerHTML = "車費:" + Math.floor(dest.distance.value * distanceFareDegree + dest.duration.value * durationFareDegree) + "元"
 }
 
 function setDriverDirectionInfo() {
-  var task
+
 }
 
 function setAutoComplete() {
@@ -200,8 +201,12 @@ function setAutoComplete() {
 
     window.setTimeout(function () {
       direction(place.geometry.location.lat(), place.geometry.location.lng());
-      setPsssengerDirectionInfo();
     }, 300)
+
+    window.setTimeout(function () {
+      setPsssengerDirectionInfo();
+    }, 500)
+
     //document.getElementById('map').style.height = "50vh";
   });
 
@@ -223,8 +228,9 @@ function onReceiveTask() {
 }
 
 function initPassenger() {
-  setAutoComplete();
   initPassengerInfo();
+  setAutoComplete();
+
 }
 
 function acceptTask() {
