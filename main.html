@@ -69,13 +69,13 @@
       <div id="order" class="order" style="display: none;">
         <div class="form-row">
           <div class="col-12 px-1">
-            <span id="fare"></span>
+            <span id="farePassenger"></span>
           </div>
           <div class="col-6 px-1">
-            <span id="distance"></span>
+            <span id="distancePassenger"></span>
           </div>
           <div class="col-6 px-1">
-            <span id="time"></span>
+            <span id="timePassenger"></span>
           </div>
         </div>
         <form action="main.html" method="get">
@@ -152,7 +152,7 @@
       <div id="task" class="task" style="display: none;">
         <div class="row">
           <div class="col-8 offset-2">
-            <p>服務時效:立即</p>
+            <span>服務時效：</span><span id="taskType">立即</span>
           </div>
           <div class="col-2">
             <span id="sec">15</span><span>s</span>
@@ -160,12 +160,14 @@
         </div>
         <div class="row">
           <div class="col-10 offset-2">
-            <p>乘客目的地:基隆火車站</p>
+            <span>乘客目的地</span>
+            <span id="distDriver">基隆火車站</span>
           </div>
         </div>
         <div class="row">
           <div class="col-10  offset-2">
-            <p>路程:2.7km</p>
+            <span>路程：</span>
+            <span id="distanceDriver">2.7km</span>
           </div>
         </div>
         <div id="option" class="option">
