@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="zh-TW" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>HiGoDrive</title>
+
+  <!--Let browser know website is optimized for mobile-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!--[if lt IE 9]>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js">
+    </script>
+    <![endif]-->
+
+  <!--CSS-->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.1/css/tempusdominus-bootstrap-4.min.css" />
+  <link rel="stylesheet" href="css/style.css">
+
+  <!--ICON-->
+  <script src="https://kit.fontawesome.com/9b78fa3fff.js" crossorigin="anonymous"></script>
+
+  <!--JS-->
+  <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.1/js/tempusdominus-bootstrap-4.min.js"></script>
+  <script src="JS/locate.js"></script>
+
+</head>
+
+<body>
+  <!--上導覽列-->
+  <nav class="navbar navbar-expand fixed-top navbar-dark bg-primary flex-column bd-navbar p-1">
+    <span class="navbar-brand m-0 h1">HiGoDrive</span>
+    <!--<a class="navbar-brand mx-2" href="#">HiGoDrive</a>-->
+  </nav>
+
+  <!--內容-->
+  <main>
+    <div class="container">
+      <div id="locSearch" style="display: none;">
+        <input id="search" class="form-control my-2" type="text" name="search" placeholder="我想要去">
+      </div>
+
+      <div id="onlineState" class="onlineState" style="display: none;">
+        <div class="custom-control custom-switch">
+          <input type="checkbox" class="custom-control-input" id="statusSwitch" onclick="offline()">
+          <label class="custom-control-label" for="statusSwitch">上線狀態</label>
+        </div>
+      </div>
+
+      <div id="map"></div>
+
+      <div id="order" class="order" style="display: none;">
+        <div class="form-row">
+          <div class="col-12 px-1">
+            <span id="fare"></span>
+          </div>
+          <div class="col-6 px-1">
+            <span id="distance"></span>
+          </div>
+          <div class="col-6 px-1">
+            <span id="time"></span>
+          </div>
+        </div>
+        <form action="main.html" method="get">
+          <div class="form-row">
+            <div class="col px-1">
+              <label>自備配件:</label>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" name="inlineRadioOptions" id="helment" value="helment">
+                <label class="form-check-label" for="helment">安全帽</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" name="inlineRadioOptions" id="raincoat" value="raincoat">
+                <label class="form-check-label" for="raincoat">雨衣</label>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <textarea class="form-control" id="passengerTextarea" rows="1" placeholder="備註"></textarea>
+          </div>
+          <div class="form-group" id="datetimepickerDiv" style="display: none;">
+            <div class="form-row">
+              <div class="col-4">
+                <label class="form-check-label" for="datetimepicker">預約時間:</label>
+              </div>
+              <div class="col-8">
+                <div class="input-group date" id="datetimepicker" data-target-input="nearest">
+                  <input type="text" class="form-control datetimepicker-input" id="resvtime" data-toggle="datetimepicker" data-target="#datetimepicker" value="" />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col px-2">
+              <button type="button" name="button" class="btn btn-success btn-block" onclick="cancelDest()">取消行程</button>
+            </div>
+            <div class="col px-2">
+              <button type="button" class="btn btn-success btn-block" onclick="resv(this)">預約行程</button>
+            </div>
+            <div class="col px-2">
+              <button type="submit" class="btn btn-success btn-block">開始行程</button>
+            </div>
+          </div>
+        </form>
+
+      </div>
+
+      <div id="offlineState" class="offlineState">
+        <form action="#" method="get">
+          <div class="form-row">
+            <div class="col px-1">
+              <label>配件提供:</label>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" name="inlineRadioOptions" id="helment" value="helment">
+                <label class="form-check-label" for="helment">安全帽</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" name="inlineRadioOptions" id="raincoat" value="raincoat">
+                <label class="form-check-label" for="raincoat">雨衣</label>
+              </div>
+            </div>
+          </div>
+          <div class="px-3">
+            <p class="text-center"><button type="submit" class="btn btn-lg btn-success" onclick="online()">上線</button></p>
+          </div>
+        </form>
+      </div>
+
+      <div id="task" class="task" style="display: none;">
+        <div class="row"  >
+          <div class="col-8 offset-2">
+            <p>服務時效:立即</p>
+          </div>
+          <div class="col-2">
+            <span id="sec">15</span><span>s</span>
+          </div>
+          <div class="col-10 offset-2">
+            <p>乘客目的地:基隆火車站</p>
+          </div>
+          <div class="col-10  offset-2">
+            <p>路程:2.7km</p>
+          </div>
+          <div class="col-6">
+            <button type="button" class="btn btn-success btn-block">接受</button>
+          </div>
+          <div class="col-6">
+            <button type="button" class="btn btn-danger btn-block">拒絕</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+
+  </main>
+
+  <!--下導覽列-->
+  <nav class="navbar navbar-expand fixed-bottom navbar-dark bg-primary bd-navbar py-0">
+    <div class="row navbar-nav m-auto p-auto">
+      <div class="col-3">
+        <a class="nav-item nav-link pt-2 pb-0" href="main.html">
+          <p class="text-center my-0"><i class="fas fa-home fa-lg"></i></p>
+          <p class="text-center my-0">Home</p>
+        </a>
+      </div>
+      <div class="col-3">
+        <a class="nav-item nav-link pt-2 pb-0" href="search.html">
+          <p class="text-center my-0"><i class="fas fa-search fa-lg"></i></p>
+          <p class="text-center my-0">Search</p>
+        </a>
+      </div>
+      <div class="col-3">
+        <a class="nav-item nav-link pt-2 pb-0" href="task.html">
+          <p class="text-center my-0"><i class="fas fa-tasks fa-lg"></i></p>
+          <p class="text-center my-0">Task</p>
+        </a>
+      </div>
+      <div class="col-3">
+        <a class="nav-item nav-link pt-2 pb-0" href="user.html">
+          <p class="text-center my-0"><i class="fas fa-user fa-lg"></i></p>
+          <p class="text-center my-0">User</p>
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBpBgVKm6TqmDB0b3w-y3VoP3Oo-jWPWGY&libraries=places&callback=initMap"></script>
+  <script type="text/javascript">
+    function resv(item) {
+      document.getElementById('datetimepickerDiv').style.display = "flex";
+      console.log(document.getElementById('resvtime').value);
+      if (item.innerHTML == "預約行程") {
+        item.innerHTML = "取消預約"
+      } else {
+        item.innerHTML = "預約行程"
+        //cancelDest()
+        $('#datetimepicker').datetimepicker('clear');
+        $('#datetimepicker').datetimepicker('date', new Date());
+        document.getElementById('datetimepickerDiv').style.display = "none";
+      }
+    }
+
+    function online() {
+      document.getElementById('offlineState').style.display = "none";
+      document.getElementById('onlineState').style.display = "flex";
+      document.getElementById('statusSwitch').checked = true;
+      document.getElementById('task').style.display = "flex";
+    }
+
+    function offline() {
+      document.getElementById('offlineState').style.display = "flex";
+      document.getElementById('onlineState').style.display = "none";
+      document.getElementById('statusSwitch').checked = false;
+      document.getElementById('task').style.display = "none";
+    }
+  </script>
+
+  <script type="text/javascript">
+    $(document).ready(function() {
+      $('#datetimepicker').datetimepicker({
+        minDate: new Date(),
+        defaultDate: new Date()
+      });
+    });
+  </script>
+</body>
+
+</html>
