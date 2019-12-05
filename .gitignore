@@ -25,3 +25,6 @@
 
 # Ignore mongoid uri key file
 /config/mongoid.key
+
+/app/views/*
+/config/routes.rb

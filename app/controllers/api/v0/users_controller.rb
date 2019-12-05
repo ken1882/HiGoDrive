@@ -1,12 +1,15 @@
 module Api
   module V0
     class UsersController < ApplicationController
+      include UsersHelper
+      
       before_action :validate_init_params, only: [:create]
       before_action :validate_update_params, only: [:update]
       before_action :set_user, only: [:show, :edit, :update, :login]
       
       UserInitParms    = [:username, :nickname, :password, :password_confirmation, :email]
       UserUpdateParams = [:nickname, :old_password, :new_password, :email]
+      UserFindParms    = [:id, :username, :email]
 
       # GET /users
       # GET /users.json
@@ -74,29 +77,8 @@ module Api
       private
       # Use callbacks to share common setup or constraints between actions.
       def set_user
-        @user = User.find(User.or(
-          {'id' => params[:id] || ''},
-          {'username' => params[:username] || ''},
-          {'email' => params[:email] || ''},
-        ))
+        @user = User.wide_query(user_find_params.compact.first)
         not_found if @user.nil?
-      end
-      
-      # Never trust parameters from the scary internet, only allow the white list through.
-      def user_init_params
-        begin
-          params.require(:user).permit(*UserInitParms)
-        rescue Exception
-          params.permit(*UserInitParms)
-        end
-      end
-
-      def user_update_params
-        begin
-          params.require(:user).permit(*UserUpdateParams)
-        rescue Exception
-          params.permit(*UserUpdateParams)
-        end
       end
 
       def validate_init_params
