@@ -9,8 +9,12 @@ Rails.application.routes.draw do
   get '/login', to: 'pages#login'
 
   get '/home', to: 'pages#home'
+
   get '/search', to: 'pages#search'
+
   get '/task', to: 'pages#task'
+  get '/report', to: 'pages#report'
+
   get '/user', to: 'pages#userInfo'
   get '/user/edit/bio', to: 'pages#editUserBio'
   get '/user/edit/account', to: 'pages#editAccount'

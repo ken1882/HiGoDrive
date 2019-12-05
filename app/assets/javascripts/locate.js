@@ -59,7 +59,7 @@ function CenterControl(controlDiv, map) {
 
   //controlText.innerHTML = "<img src='/assets/my_location.svg' weight='30px' height='30px'>";
 
-  controlText.innerHTML = "<img src='assets/my_location.svg' weight='30px' height='30px'>";
+  controlText.innerHTML = "<img src='/assets/my_location.svg' weight='30px' height='30px'>";
   controlUI.appendChild(controlText);
 
   // Setup the click event listeners: simply set the map to Chicago.
@@ -424,6 +424,7 @@ function getTaskid(task_id) {
   return taskinfo;
 }
 
+/*
 function getTask(task_id_) {
   var task_ = {
     valid: false,
@@ -450,6 +451,7 @@ function getTask(task_id_) {
   console.log("task_", task_);
   return task_;
 }
+*/
 
 //driver on line
 function onlineTask() {

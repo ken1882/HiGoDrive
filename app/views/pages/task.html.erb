@@ -13,7 +13,6 @@
     <hr>
     <div class="accordion" id="accordion">
     </div>
-    <div id="important-temp-block" style="display: none;"></div>
   </div>
 
 </main>
@@ -49,38 +48,14 @@
 </nav>
 
 <script>
-function getUsername(user_id) {
-  Util.syncAjax(
-      "GET",
-      "/api/v0/users/" + user_id,
-      null,
-      function (result) {
-        $("#important-temp-block").html(result.username);
-      },
-      function (xhr, ajaxOptions, thrownError) {
-        console.log("unexpected error: ", thrownError);
-      }
-  );
-  var username = $("#important-temp-block").text();
-  return username;
-}
 
-function renderTaskToPage(task) {
-  var id = $("#important-temp-block").text();
-
-  // var dest_json = JSON.parse(task.dest);
-  // var dest = dest_json.placeName;
-
-  var dest = undefined;
-  try {
-    var dest_json = JSON.parse(task.dest);
-    dest = dest_json.placeName;
-  } catch (e) {
-    dest = task.dest;
-  }
+function renderTaskToPage(taskId) {
+  let task = getTask(taskId);
+  let placeName = task.dest.placeName;
+  let depart_time = task.dest.datetimepicker;
   // TODO: author_name or driver_name
-  var author_name = getUsername(task.author_id);
-  var depart_time = new Date(task.depart_time * 1000).toLocaleString();
+  var author_name = getUserInfo(task.author_id).username;
+  var driver_name = getUserInfo(task.driver_id).username;
   var status = task.status;
   var status_msg = {
       0: "等待中",
@@ -90,43 +65,40 @@ function renderTaskToPage(task) {
       4: "已取消"
   }[status];
 
-  var msg = "";
+  var msg = {
+    0: '      <span>狀態：尚無司機接單</span>',
 
-  if (status == 0) {
-    msg = '      <span>狀態：尚無司機接單</span>';
-  } else if (status == 1) {
-    msg = '      <span>狀態：已被司機接單</span>';
-  } else if (status == 2) {
-    msg = '      <span>狀態：送客中</span>';
-  } else if (status == 3) {
-    msg = '' +
-        '      <form action="task.html">' +
-        '        <div class="score p-2">' +
-        '          <div id="score" class="target"></div>' +
-        '          <div id="star" style="display: none;"></div>' +
-        '        </div>' +
-        '        <div class="form-group">' +
-        '          <textarea class="form-control" id="scoreTextarea" name="scoreTextarea" rows="2"' +
-        '            placeholder="評價敘述"></textarea>' +
-        '        </div>' +
-        '        <div class="form-row">' +
-        '          <div class="col-6">' +
-        '            <a href="report.html"><button type="button" class="btn btn-success btn-block p-2">我要申訴</button></a>' +
-        '          </div>' +
-        '          <div class="col-6">' +
-        '            <button type="submit" class="btn btn-success btn-block p-2">送出評價</button>' +
-        '          </div>' +
-        '        </div>' +
-        '      </form>';
-  } else if (status == 4) {  // cancelled
-    msg = '      <span>取消原因：已過期</span>';
-  }
+    1: '      <span>狀態：已被司機接單</span>',
+
+    2: '      <span>狀態：送客中</span>',
+
+    3: '      <form action="task.html">' +
+       '        <div class="score p-2">' +
+       '          <div id="score" class="target"></div>' +
+       '          <div id="star" style="display: none;"></div>' +
+       '        </div>' +
+       '        <div class="form-group">' +
+       '          <textarea class="form-control" id="scoreTextarea" name="scoreTextarea" rows="2"' +
+       '            placeholder="評價敘述"></textarea>' +
+       '        </div>' +
+       '        <div class="form-row">' +
+       '          <div class="col-6">' +
+       '            <a href="report.html"><button type="button" class="btn btn-success btn-block p-2">我要申訴</button></a>' +
+       '          </div>' +
+       '          <div class="col-6">' +
+       '            <button type="submit" class="btn btn-success btn-block p-2">送出評價</button>' +
+       '          </div>' +
+       '        </div>' +
+       '      </form>',
+
+    4: '      <span>取消原因：已過期</span>'
+  }[status];
 
   $("#accordion").append('' +
       '<div class="card">' +
-      '  <div class="card-header px-0" id="heading-' + id + '">' +
-      '    <button class="btn btn-block" data-toggle="collapse" data-target="#collapse-' + id + '" aria-expanded="false"' +
-      '      aria-controls="collapse-' + id + '">' +
+      '  <div class="card-header px-0" id="heading-' + taskId + '">' +
+      '    <button class="btn btn-block" data-toggle="collapse" data-target="#collapse-' + taskId + '" aria-expanded="false"' +
+      '      aria-controls="collapse-' + taskId + '">' +
       '      <div class="row">' +
       '        <div class="col-4 px-0">' +
       '          <p class="mb-0"><img class="user_task" src="/assets/user-circle-regular.svg" type="image/svg+xml"' +
@@ -135,7 +107,7 @@ function renderTaskToPage(task) {
       '          <p name="user_id" class="mb-0">' + author_name + '</p>' +
       '        </div>' +
       '        <div class="col-6 px-0">' +
-      '          <p name="dist" class="text-primary">目的地：' + dest + '</p>' +
+      '          <p name="dist" class="text-primary">目的地：' + placeName + '</p>' +
       '          <p name="route" class="text-primary mb-0">時間：' + depart_time + '</p>' +
       '        </div>' +
       '        <div class="col-2 px-0">' +
@@ -145,7 +117,7 @@ function renderTaskToPage(task) {
       '      </div>' +
       '    </button>' +
       '  </div>' +
-      '  <div id="collapse-' + id + '" class="collapse" aria-labelledby="heading-' + id + '" data-parent="#accordion">' +
+      '  <div id="collapse-' + taskId + '" class="collapse" aria-labelledby="heading-' + taskId + '" data-parent="#accordion">' +
       '    <div class="card-body">' +
       msg +
       '    </div>' +
@@ -157,8 +129,7 @@ function renderTaskToPage(task) {
                                     2: "text-primary tag",
                                     3: "text-success tag",
                                     4: "text-danger tag" }[status]);
-  $("#task-status").attr("id", "task-" + id + "-status");
-  $("#important-temp-block").html("");
+  $("#task-status").attr("id", "task-" + taskId + "-status");
   $('.score').raty({
     number: 5,
     targetType: 'score',
@@ -173,55 +144,11 @@ function renderTaskToPage(task) {
   });
 }
 
-function isAccordionEmpty() {
-  return $(".noTask").length != 0 || !$("#accordion").text().trim();
-}
-
-function getTaskList(task_list) {
-  console.log("task list", task_list);
-  if (task_list && task_list.length) {
-    task_list.forEach(function(task_id) {
-      window.task_list.push(task_id);
-    });
-  }
-}
-
 $(document).ready(function() {
-  window.task_list = [];
-  Util.syncAjax(
-      "GET",
-      "/api/v0/mytasks",
-      null,
-      getTaskList,
-      function(re) { console.log("unexpected error"); },
-  );
-  Util.syncAjax(
-      "GET",
-      "/api/v0/tasks_history",
-      null,
-      getTaskList,
-      function(re) { console.log("unexpected error"); },
-  );
-  Util.syncAjax(
-      "GET",
-      "/api/v0/tasks_engaging",
-      null,
-      getTaskList,
-      function(re) { console.log("unexpected error"); },
-  );
-  if (window.task_list.length) {
-    window.task_list.sort((a, b) => { return b - a; });
-    window.task_list.forEach(function(task_id) {
-      $("#important-temp-block").html(task_id);
-      Util.syncAjax(
-          "GET",
-          "/api/v0/tasks/" + task_id,
-          null,
-          renderTaskToPage,
-          function (xhr, ajaxOptions, thrownError) {
-            console.log("unexpected error: ", thrownError);
-          }
-      );
+  let myTasks = getMyTasks();
+  if (myTasks && myTasks.length) {
+    myTasks.forEach(taskId => {
+      renderTaskToPage(taskId);
     });
   } else {
     $("#accordion").html('' +

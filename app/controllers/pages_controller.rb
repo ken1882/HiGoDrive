@@ -1,4 +1,8 @@
 class PagesController < ApplicationController
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
   def index
     return home if logged_in?
     render 'welcome'
@@ -35,6 +39,9 @@ class PagesController < ApplicationController
     flash.now[:danger] = 'Please log in first' unless logged_in?
     return login unless logged_in?
     render 'task'
+  end
+
+  def report
   end
 
   def userInfo
