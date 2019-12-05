@@ -6,10 +6,6 @@ module Api
       before_action :validate_init_params, only: [:create]
       before_action :validate_update_params, only: [:update]
       before_action :set_user, only: [:show, :edit, :update, :login]
-      
-      UserInitParms    = [:username, :nickname, :password, :password_confirmation, :email]
-      UserUpdateParams = [:nickname, :old_password, :new_password, :email]
-      UserFindParms    = [:id, :username, :email]
 
       # GET /users
       # GET /users.json
