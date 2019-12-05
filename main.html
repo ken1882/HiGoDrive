@@ -275,7 +275,7 @@
       //before task coming
       document.getElementById('option').style.display = "block";
       document.getElementById('reject').style.display = "none";
-      getTask();
+      onlineTask();
     }
 
     function offline() {
@@ -295,7 +295,8 @@
     function errand() {
       document.getElementById('task').style.display = "none";
       document.getElementById('order').style.display = "none";
-      document.getElementById('errand').style.display = "block";
+      document.getElementById('errand').style.display = "inline";
+      console.log("errand start!");
     }
   </script>
 
