@@ -20,7 +20,7 @@ module Api
       # GET /users/1
       # GET /users/1.json
       def show
-        render 'users/show' 
+        render json: @user.public_json_info, status: :ok
       end
       
       # GET /users/new

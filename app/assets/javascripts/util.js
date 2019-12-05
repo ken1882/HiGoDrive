@@ -29,29 +29,23 @@ class Util{
     return this.RAILS_AUTH_TOKEN;
   }
 
-  static postAjax(){
-    if(arguments.length == 1){
-      let args = arguments[0];
-      args["type"] = "POST";
-      args["dataType"] = "json";
-      args["data"] = args["data"] || {}
-      args["data"]["authenticity_token"] = this.AuthToken;
-      $.ajax(args);
-    }
-    else if(arguments.length == 2){
-      let _url  = arguments[0];
-      let _data = arguments[1] || {};
-      _data["authenticity_token"] = this.AuthToken;
-      $.ajax({
-        type: "POST",
-        url: _url,
-        data: _data,
-        dataType: "json"
-      });
-    }
-    else{
-      throw Error(`Expect args 1 or 2, receved ${arguments.length}`);
-    }
+  /**
+   * Emit an ajax request
+   * @param {String} _type Request type (GET/POST...)
+   * @param {String} _url Target location
+   * @param {Object} _data Request arguments
+   */
+  static ajax(_type, _url, _data, on_succ, on_error=null){
+    _data = _data || {};
+    _data["authenticity_token"] = this.AuthToken;
+    $.ajax({
+      type: _type,
+      url: _url,
+      dataType: "json",
+      data: _data,
+      success: on_succ,
+      error: on_error
+    });
   }
 
   /**----------------------------------------------------------------------------

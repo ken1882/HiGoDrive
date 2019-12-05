@@ -14,13 +14,14 @@ class User
   field :nickname, type: String
   field :last_login_time, type: Time
   field :remember_digest, type: String
+  field :avatar, type: String
 
-  validates :username, presence: true, length: {in: 3..16}, uniqueness: true
-  validates :email, presence: true, format: {with: EmailRegex}, length: {in: 3..255}, 
+  validates :username, presence: true, length: {in: 3..32}, uniqueness: true
+  validates :email, presence: true, format: {with: EmailRegex}, length: {in: 3..256}, 
                     uniqueness: { case_sensitive: false }
 
   has_secure_password
-  validates :password_digest, presence: true, length: {minimum: 6}
+  validates :password_digest, presence: true, length: {in: 6..256}
 
   def self.username_exist?(uname)
     self.where({'username' => uname}).count != 0
