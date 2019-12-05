@@ -187,9 +187,11 @@
               <div class="col">
                 <button type="button" class="btn btn-info btn-block">沒空接單</button>
               </div>
+              <!--
               <div class="col">
                 <button type="button" class="btn btn-info btn-block">！</button>
               </div>
+              -->
             </div>
             <div class="form-row">
               <div class="col-10">
@@ -249,10 +251,9 @@
       document.getElementById('datetimepickerDiv').style.display = "flex";
       console.log(document.getElementById('resvtime').value);
       if (item.innerHTML == "預約行程") {
-        item.innerHTML = "取消預約"
+        item.innerHTML = "取消預約";
       } else {
-        item.innerHTML = "預約行程"
-        //cancelDest()
+        item.innerHTML = "預約行程";
         $('#datetimepicker').datetimepicker('clear');
         $('#datetimepicker').datetimepicker('date', new Date());
         document.getElementById('datetimepickerDiv').style.display = "none";
@@ -263,10 +264,11 @@
       document.getElementById('offlineState').style.display = "none";
       document.getElementById('onlineState').style.display = "block";
       document.getElementById('statusSwitch').checked = true;
-      document.getElementById('task').style.display = "block";
+      //document.getElementById('task').style.display = "block";
       //before task coming
       document.getElementById('option').style.display = "block";
       document.getElementById('reject').style.display = "none";
+      getTask();
     }
 
     function offline() {
@@ -274,6 +276,7 @@
       document.getElementById('onlineState').style.display = "none";
       document.getElementById('statusSwitch').checked = false;
       document.getElementById('task').style.display = "none";
+      offlineTask();
     }
 
     //after task coming
