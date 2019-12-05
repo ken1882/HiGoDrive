@@ -174,9 +174,11 @@
         <div id="option" class="option">
           <div class="row">
             <div class="col-6">
+              <!--acceptTask()-->
               <button type="button" class="btn btn-success btn-block" onclick="errand()">接受</button>
             </div>
             <div class="col-6">
+              <!--rejectTask()-->
               <button type="button" class="btn btn-danger btn-block" onclick="reject()">拒絕</button>
             </div>
           </div>
@@ -210,8 +212,14 @@
 
       <div id="errand" class="errand" style="display: none;">
         <div class="row">
-          <div class="col">
-            <span>123</span>
+          <div class="col-6">
+            <span id="dest"></span>
+          </div>
+          <div class="col-6">
+            <span id="distance"></span>
+          </div>
+          <div class="col-2 offset-10">
+            <a href="#"><i class="fas fa-exclamation-triangle"></i></a>
           </div>
         </div>
       </div>
@@ -295,7 +303,7 @@
     function errand() {
       document.getElementById('task').style.display = "none";
       document.getElementById('order').style.display = "none";
-      document.getElementById('errand').style.display = "inline";
+      document.getElementById('errand').style.display = "block";
       console.log("errand start!");
     }
   </script>
