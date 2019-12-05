@@ -41,7 +41,7 @@ main {
 #order {
   border: 1px solid black;
   display: flex;
-  /*width: 100%;*/
+  width: 100%;
   font-size: 14px;
   border-radius: 10px;
   padding: 10px;
@@ -52,7 +52,7 @@ main {
 #task {
   border: 1px solid black;
   display: flex;
-  /*width: 100%;*/
+  width: 100%;
   font-size: 14px;
   border-radius: 10px;
   padding: 10px;
