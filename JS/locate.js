@@ -4,7 +4,7 @@ var relocateTimer, relocateTime = 10000, postLocationTimer, postTime = 8000;
 var durationFareDegree = 0.1
 var distanceFareDegree = 0.01
 var infoFare, infoDistance, infoTime;
-var isDriver = true;
+var isDriver = false; //change passenger mode or driver mode
 var geoFirst = true;
 
 var dest = {
@@ -210,6 +210,11 @@ function initPassengerInfo() {
   map.controls[google.maps.ControlPosition.LEFT_BOTTOM].push(info)
 }
 
+function onReceiveTask() {
+  console.log("onTask")
+  window.setTimeout(function () { direction(25.1380689, 121.776766) }, 300)
+}
+
 function initPassenger() {
   setAutoComplete();
   initPassengerInfo();
@@ -219,10 +224,13 @@ function initDriver() {
   var onlineState = document.getElementById("onlineState");
   var offlineState = document.getElementById("offlineState");
   var task = document.getElementById("task");
-
+  offlineState.style.display = 'block';
   map.controls[google.maps.ControlPosition.TOP_RIGHT].push(onlineState);
   map.controls[google.maps.ControlPosition.BOTTOM_CENTER].push(offlineState);
   map.controls[google.maps.ControlPosition.LEFT_BOTTOM].push(task);
+
+  onReceiveTask();
+
 }
 
 function initMap() {
