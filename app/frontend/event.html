@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <!--網頁標題-->
+  <title>GuaneiArk | 差事中心</title>
+  <!--網頁圖標-->
+  <link rel="shortcut icon" href="image/icon.ico">
+  <!--Let browser know website is optimized for mobile-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!--[if lt IE 9]>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js">
+    </script>
+    <![endif]-->
+  <!--GoogleIcon 圖標 CDN-->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <!-- Compiled and minified CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+  <!--Minified Jquery-->
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+  <!-- Compiled and minified JavaScript -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+  <!--自定義CSS-->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+  <main>
+
+    <!--導覽列-->
+    <nav class="nav-extended">
+      <div class="nav-wrapper  #00b0ff light-blue accent-3">
+        <div class="container">
+          <a href="index.html" class="brand-logo">GuaneiArk</a>
+          <a href="JavaScript:void(0)" data-target="mobile-demo" class="sidenav-trigger"><i
+              class="material-icons">menu</i></a>
+          <ul class="right hide-on-med-and-down level_1">
+            <li><a href="member.html">👤會員</a></li>
+            <li class="active"><a href="event.html">💼差事</a></li>
+            <li><a href="notification.html">🔔通知</a></li>
+            <li>
+              <a class="waves-effect waves-light btn" href="JavaScript:void(0)">登出</a>
+            </li>
+          </ul>
+          <ul class="sidenav" id="mobile-demo">
+            <li><a href="member.html">👤會員</a></li>
+            <li class="active"><a href="event.html">💼差事</a></li>
+            <li><a href="notification.html">🔔通知</a></li>
+            <li>
+              <a class="waves-effect waves-light btn" href="JavaScript:void(0)">登出</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="nav-content #0091ea light-blue accent-4">
+        <div class="container">
+          <ul class="tabs tabs-transparent">
+            <li class="tab"><a href="#myEvent">我的差事</a></li>
+            <li class="tab"><a href="#eventList">差事清單</a></li>
+            <li class="tab disabled"><a href="#eventMap">差事地圖</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!--內容-->
+
+    <div class="myEvent" id="myEvent">
+      <div class="container">
+        <div class="row">
+          <div class="col s12">
+            <div class="col s4 m4 l2">
+              <a class="waves-effect waves-light btn-large" href="eventThrow.html">我要提出</a>
+            </div>
+          </div>
+        </div>
+        <!--你的差事-->
+        <div class="totalEvent">
+          <h4>已上架差事</h4>
+          <hr>
+          <table class="highlight centered responsive-table">
+            <thead>
+              <tr>
+                <th>需求類別</th>
+                <th>截止時間</th>
+                <th>地點</th>
+                <th>需求備註</th>
+                <th colspan="2"></th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                <td>送餐</td>
+                <td>2019/09/02 18:28</td>
+                <td>海大男一舍</td>
+                <td>晚餐</td>
+                <td colspan="2">
+                  <a class="waves-effect waves-light btn-small red eventDelete" href="JavaScript:void(0);"
+                    data-id="">下架差事</a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!--進行中的差事-->
+        <div class="eventDoing">
+          <h4>進行中的差事</h4>
+          <hr>
+
+          <!--提出的差事-->
+          <div class="eventThrow">
+            <h5>提出的差事</h5>
+            <table class="highlight centered responsive-table">
+              <thead>
+                <tr>
+                  <th>申請人</th>
+                  <th>需求類別</th>
+                  <th>截止時間</th>
+                  <th>地點</th>
+                  <th>需求備註</th>
+                  <th>差事狀態</th>
+                  <th colspan="2"></th>
+                </tr>
+              </thead>
+
+              <tbody>
+                <tr>
+                  <td>小華</td>
+                  <td>跑腿</td>
+                  <td>2019/09/02 20:39</td>
+                  <td>海大男一舍</td>
+                  <td>倒垃圾</td>
+                  <td>進行中</td>
+                  <td colspan="2">
+                    <a class="waves-effect waves-light btn-small amber" href="message.html" data-id="">傳送訊息</a>
+                    <a class="waves-effect waves-light btn-small green eventFinished" href="JavaScript:void(0);"
+                      data-id="">完成差事</a>
+                  </td>
+                </tr>
+                <tr>
+                  <td>小陳</td>
+                  <td>跑腿</td>
+                  <td>2019/09/02 20:39</td>
+                  <td>海大男一舍</td>
+                  <td>晚餐</td>
+                  <td>進行中</td>
+                  <td colspan="2">
+                    <a class="waves-effect waves-light btn-small amber" href="message.html">傳送訊息</a>
+                    <a class="waves-effect waves-light btn-small green eventFinished disabled"
+                      href="JavaScript:void(0);" data-id="">完成差事</a>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!--申請的差事-->
+          <div class="eventApply">
+            <h5>申請的差事</h5>
+            <table class="highlight centered responsive-table">
+              <thead>
+                <tr>
+                  <th>提供者</th>
+                  <th>需求類別</th>
+                  <th>截止時間</th>
+                  <th>地點</th>
+                  <th>需求備註</th>
+                  <th>差事狀態</th>
+                  <th></th>
+                </tr>
+              </thead>
+
+              <tbody>
+                <tr>
+                  <td>Alvin</td>
+                  <td>租賃</td>
+                  <td>2019/09/02 20:39</td>
+                  <td>海大男一舍</td>
+                  <td>腳踏車</td>
+                  <td>進行中</td>
+                  <td>
+                    <a class="waves-effect waves-light btn-small amber" href="message.html">傳送訊息</a>
+                    <a class="waves-effect waves-light btn-small green eventFinished" href="JavaScript:void(0);"
+                      data-id="">完成差事</a>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!--待審核的差事-->
+        <div class="eventReview">
+          <h4>差事待審核</h4>
+          <hr>
+          <table class="highlight centered responsive-table">
+            <thead>
+              <tr>
+                <th>申請人</th>
+                <th>需求類別</th>
+                <th>截止時間</th>
+                <th>地點</th>
+                <th>回饋</th>
+                <th>需求備註</th>
+                <th colspan="2"></th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                <td>Kaid</td>
+                <td>送餐</td>
+                <td>2019/09/02 18:28</td>
+                <td>巴塞隆納社區 A棟</td>
+                <td>7-11點數</td>
+                <td>麥當勞</td>
+                <td colspan="2">
+                  <a class="waves-effect waves-light btn-small cyan eventStart" href="JavaScript:void(0);"
+                    data-id="">確認差事</a>
+                  <a class="waves-effect waves-light btn-small red eventReject" href="JavaScript:void(0);"
+                    data-id="">婉拒差事</a>
+                </td>
+              </tr>
+              <tr>
+                <td>小華</td>
+                <td>送餐</td>
+                <td>2019/09/02 18:28</td>
+                <td>海大男一舍</td>
+                <td></td>
+                <td>晚餐</td>
+                <td colspan="2">
+                  <a class="waves-effect waves-light btn-small cyan eventStart" href="JavaScript:void(0);"
+                    data-id="">確認差事</a>
+                  <a class="waves-effect waves-light btn-small red eventReject" href="JavaScript:void(0);"
+                    data-id="">婉拒差事</a>
+                </td>
+              </tr>
+              <tr>
+                <td>小美</td>
+                <td>送餐</td>
+                <td>2019/09/02 18:28</td>
+                <td>海大男一舍</td>
+                <td>🍪餅乾</td>
+                <td>晚餐</td>
+                <td colspan="2">
+                  <a class="waves-effect waves-light btn-small cyan eventStart" href="JavaScript:void(0);"
+                    data-id="">確認差事</a>
+                  <a class="waves-effect waves-light btn-small red eventReject" href="JavaScript:void(0);"
+                    data-id="">婉拒差事</a>
+                </td>
+              </tr>
+              <tr>
+                <td>小陳</td>
+                <td>送餐</td>
+                <td>2019/09/02 18:28</td>
+                <td>海大男一舍</td>
+                <td>30</td>
+                <td>晚餐</td>
+                <td colspan="2">
+                  <a class="waves-effect waves-light btn-small cyan eventStart" href="JavaScript:void(0);"
+                    data-id="">確認差事</a>
+                  <a class="waves-effect waves-light btn-small red eventReject" href="JavaScript:void(0);"
+                    data-id="">婉拒差事</a>
+                </td>
+              </tr>
+              <tr>
+                <td>大雄</td>
+                <td>送餐</td>
+                <td>2019/09/02 18:28</td>
+                <td>海大男一舍</td>
+                <td></td>
+                <td>晚餐</td>
+                <td colspan="2">
+                  <a class="waves-effect waves-light btn-small cyan eventStart" href="JavaScript:void(0);"
+                    data-id="">確認差事</a>
+                  <a class="waves-effect waves-light btn-small red eventReject" href="JavaScript:void(0);"
+                    data-id="">婉拒差事</a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!--已完成的差事-->
+        <div class="eventFinish">
+          <h4>差事已完成</h4>
+          <hr>
+          <table class="highlight centered responsive-table">
+            <thead>
+              <tr>
+                <th>對象</th>
+                <th>需求類別</th>
+                <th>截止時間</th>
+                <th>地點</th>
+                <th>回饋</th>
+                <th>需求備註</th>
+                <th colspan="2"></th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                <td>胖虎</td>
+                <td>送餐</td>
+                <td>2019/09/02 18:28</td>
+                <td>巴塞隆納社區 A棟</td>
+                <td>50元</td>
+                <td>麥當勞</td>
+                <td colspan="2">
+                  <a class="waves-effect waves-light btn-small orange eventPresent" href="JavaScript:void(0);"
+                    data-id="">給予評價</a>
+                  <a class="waves-effect waves-light btn-small red eventAppeal" href="JavaScript:void(0);"
+                    data-id="">我要申訴</a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!--差事清單-->
+    <div class="eventList" id="eventList">
+      <div class="container">
+        <!--上方搜尋列-->
+        <div class="searchbar row">
+          <div class="col s12">
+            <div class="col s2 m2">
+              <a class="waves-effect waves-light btn-large" href="eventThrow.html">我要提出</a>
+            </div>
+            <form>
+              <div class="input-field col s12 m6">
+                <input id="search" class="search" type="search" required>
+                <label class="label-icon" for="search"><i class="material-icons">search</i></label>
+              </div>
+              <div class="input-field col s12 m4">
+                <select id="category" class="category">
+                  <option value="未選" selected>選擇你的需求類別</option>
+                  <option value="跑腿">跑腿</option>
+                  <option value="共乘">共乘</option>
+                  <option value="租賃">租賃</option>
+                  <option value="贈送">贈送</option>
+                </select>
+                <label>服務類別</label>
+              </div>
+            </form>
+          </div>
+        </div>
+        <!--目前差事內容-->
+        <h4>目前差事</h4>
+        <hr>
+
+        <div class="card row blue lighten-5">
+          <div class="card-image waves-effect waves-block waves-light col s4 l2">
+            <img class="activator responsive-img" src="image/pic_3.png">
+          </div>
+          <div class="card-content">
+            <span class="card-title activator grey-text text-darken-4">腳踏車租借<i
+                class="material-icons right">more_vert</i></span>
+            <p class="grey-text">差事標籤： 租賃</p>
+            <p class="grey-text">地點： 校內</p>
+            <p class=" right-align"><a class="waves-effect waves-light btn-small blue eventApplybtn"
+                href="JavaScript:void(0)" data-id="">申請差事</a></p>
+          </div>
+          <div class="card-reveal">
+            <span class="card-title grey-text text-darken-4">差事資訊<i class="material-icons right">close</i></span>
+            <p>提供者： Alvin</p>
+            <p>需求類別： 租賃</p>
+            <p>截止時間： 2019/09/02 12:46</p>
+            <p>地點： 海大男一舍</p>
+            <p>備註： 腳踏車</p>
+          </div>
+        </div>
+
+        <div class="card row blue lighten-5">
+          <div class="card-image waves-effect waves-block waves-light col s4 l2">
+            <img class="activator responsive-img" src="image/pic_4.png">
+          </div>
+          <div class="card-content">
+            <span class="card-title activator grey-text text-darken-4">送計概課本（資工）<i
+                class="material-icons right">more_vert</i></span>
+            <p class="grey-text">差事標籤： 贈送</p>
+            <p class="grey-text">地點： 校內</p>
+            <p class=" right-align"><a class="waves-effect waves-light btn-small blue eventApplybtn"
+                href="JavaScript:void(0)" data-id="">申請差事</a></p>
+          </div>
+          <div class="card-reveal">
+            <span class="card-title grey-text text-darken-4">差事資訊<i class="material-icons right">close</i></span>
+            <p>提供者： Rebecca</p>
+            <p>需求類別： 贈送</p>
+            <p>截止時間： 2019/09/02 12:46</p>
+            <p>地點： 海大電機2館</p>
+            <p>備註： 計算機概論課本</p>
+          </div>
+        </div>
+
+        <div class="card row blue lighten-5">
+          <div class="card-image waves-effect waves-block waves-light col s4 l2">
+            <img class="activator responsive-img" src="image/pic_2.png">
+          </div>
+          <div class="card-content">
+            <span class="card-title activator grey-text text-darken-4">載你去火車站<i
+                class="material-icons right">more_vert</i></span>
+            <p class="grey-text">差事標籤： 共乘</p>
+            <p class="grey-text">地點： 校內</p>
+            <p class=" right-align"><a class="waves-effect waves-light btn-small blue eventApplybtn"
+                href="JavaScript:void(0)" data-id="">申請差事</a></p>
+          </div>
+          <div class="card-reveal">
+            <span class="card-title grey-text text-darken-4">差事資訊<i class="material-icons right">close</i></span>
+            <p>提供者： Ｍira</p>
+            <p>需求類別： 共乘</p>
+            <p>截止時間： 2019/09/02 1８:46</p>
+            <p>地點： 工學院</p>
+            <p>備註： 需自備安全帽</p>
+          </div>
+        </div>
+
+        <div class="card row blue lighten-5">
+          <div class="card-image waves-effect waves-block waves-light col s4 l2">
+            <img class="activator responsive-img" src="image/pic_1.png">
+          </div>
+          <div class="card-content">
+            <span class="card-title activator grey-text text-darken-4">買晚餐<i
+                class="material-icons right">more_vert</i></span>
+            <p class="grey-text">差事標籤： 送餐</p>
+            <p class="grey-text">地點： 校外</p>
+            <p class=" right-align"><a class="waves-effect waves-light btn-small blue eventApplybtn"
+                href="JavaScript:void(0)" data-id="">申請差事</a></p>
+          </div>
+          <div class="card-reveal">
+            <span class="card-title grey-text text-darken-4">差事資訊<i class="material-icons right">close</i></span>
+            <p>提供者： Harper</p>
+            <p>需求類別： 跑腿</p>
+            <p>截止時間： 2019/09/02 20:28</p>
+            <p>地點： 海中天社區</p>
+            <p>備註： 新豐街路上都可</p>
+          </div>
+        </div>
+
+        <div class="card row blue lighten-5">
+          <div class="card-image waves-effect waves-block waves-light col s4 l2">
+            <img class="activator responsive-img" src="image/pic_1.png">
+          </div>
+          <div class="card-content">
+            <span class="card-title activator grey-text text-darken-4">隨手幫忙<i
+                class="material-icons right">more_vert</i></span>
+            <p class="grey-text">差事標籤： </p>
+            <p class="grey-text">地點： 校內</p>
+            <p class=" right-align"><a class="waves-effect waves-light btn-small blue eventApplybtn"
+                href="JavaScript:void(0)" data-id="">申請差事</a></p>
+          </div>
+          <div class="card-reveal">
+            <span class="card-title grey-text text-darken-4">差事資訊<i class="material-icons right">close</i></span>
+            <p>提供者： Kira</p>
+            <p>需求類別： 跑腿</p>
+            <p>截止時間： 2019/09/02 12:30</p>
+            <p>地點： 海大女一舍</p>
+            <p>備註： 等下要去體育館上課，順路的事情可以幫忙</p>
+          </div>
+        </div>
+
+        <div class="card row blue lighten-5">
+          <div class="card-image waves-effect waves-block waves-light col s4 l2">
+            <img class="activator responsive-img" src="image/pic_1.png">
+          </div>
+          <div class="card-content">
+            <span class="card-title activator grey-text text-darken-4">我等下可以幫忙倒垃圾喔<i
+                class="material-icons right">more_vert</i></span>
+            <p class="grey-text">差事標籤： ＃倒垃圾</p>
+            <p class="grey-text">地點： 校內</p>
+            <p class=" right-align"><a class="waves-effect waves-light btn-small blue eventApplybtn"
+                href="JavaScript:void(0)" data-id="">申請差事</a></p>
+          </div>
+          <div class="card-reveal">
+            <span class="card-title grey-text text-darken-4">差事資訊<i class="material-icons right">close</i></span>
+            <p>提供者： 小明</p>
+            <p>需求類別： 跑腿</p>
+            <p>截止時間： 2019/09/02 20:39</p>
+            <p>地點： 海大男一舍</p>
+            <p>備註： </p>
+          </div>
+        </div>
+
+        <div class="card row blue lighten-5">
+          <div class="card-image waves-effect waves-block waves-light col s4 l2">
+            <img class="activator responsive-img" src="image/pic_1.png">
+          </div>
+          <div class="card-content">
+            <span class="card-title activator grey-text text-darken-4">幫忙買晚餐<i
+                class="material-icons right">more_vert</i></span>
+            <p class="grey-text">差事標籤： ＃送餐</p>
+            <p class="grey-text">地點： 校內</p>
+            <p class=" right-align"><a class="waves-effect waves-light btn-small blue eventApplybtn"
+                href="JavaScript:void(0)" data-id="">申請差事</a></p>
+          </div>
+          <div class="card-reveal">
+            <span class="card-title grey-text text-darken-4">差事資訊<i class="material-icons right">close</i></span>
+            <p>提供者： 小明</p>
+            <p>需求類別： 跑腿</p>
+            <p>截止時間： 2019/09/02 20:39</p>
+            <p>地點： 海大男一舍</p>
+            <p>備註： </p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!--差事地圖-->
+    <div class="eventMap" id="eventMap">
+      <div class="container">
+
+      </div>
+    </div>
+
+
+  </main>
+
+  <!--置底說明-->
+  <footer class="page-footer #00b0ff light-blue accent-3">
+    <div class="container">
+      <div class="row">
+        <div class="col l6 s12">
+          <h5 class="white-text">關於</h5>
+          <p class="grey-text text-lighten-4">
+            建立台灣之服務共享平台，
+            讓供應者提供多餘實體物品與非實體服務讓需求者能夠選擇使用，
+            能使擁有多餘資源且願意回饋於社會的供應者，
+            提供如教育、照顧、共乘、租賃服務，
+            建立供應者與需求者溝通的橋樑。
+          </p>
+        </div>
+        <div class="col l4 offset-l2 s12">
+          <h5 class="white-text">其他資訊</h5>
+          <ul>
+            <li><a class="grey-text text-lighten-3" href="#!">問題回報</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer-copyright">
+      <div class="container">
+        © 2019 GuaneiArk
+        <a class="grey-text text-lighten-4 right" href="#!">聯絡我們</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    $(document).ready(function () {
+      $(".sidenav").sidenav();
+      $('.tabs').tabs();
+      $('select').formSelect();
+
+      //差事確認
+      $("a.eventStart").on("click", function () {
+        //宣告變數
+        var c = confirm("您確定要確認嗎？"),
+          this_tr = $(this).parent().parent();
+        if (c) {
+          $.ajax({
+            type: "POST",
+            url: "event.html", //後端處理
+            data: {
+              id: $(this).attr("data-id") //文章id
+            },
+            dataType: 'html' //設定該網頁回應的會是 html 格式
+          }).done(function (data) {
+            //成功的時候
+            if (data == "yes") {
+              //註冊新增成功，轉跳到登入頁面。
+              alert("確認成功，點擊確認從列表開始");
+              this_tr.fadeOut();
+              window.location.href = "event.html";
+            } else {
+              alert("確認錯誤:" + data);
+              this_tr.fadeOut();
+              window.location.href = "event.html";
+            }
+          }).fail(function (jqXHR, textStatus, errorThrown) {
+            //失敗的時候
+            alert("有錯誤產生，請看 console log");
+            console.log(jqXHR.responseText);
+          });
+        }
+        return false;
+      });
+
+      //差事完成
+      $("a.eventFinished").on("click", function () {
+        //宣告變數
+        var c = confirm("您確定差事完成了嗎？"),
+          this_tr = $(this).parent().parent();
+        if (c) {
+          $.ajax({
+            type: "POST",
+            url: "event.html", //後端處理
+            data: {
+              id: $(this).attr("data-id") //文章id
+            },
+            dataType: 'html' //設定該網頁回應的會是 html 格式
+          }).done(function (data) {
+            //成功的時候
+            if (data == "yes") {
+              //註冊新增成功，轉跳到登入頁面。
+              alert("刪除成功，點擊確認從列表移除");
+              this_tr.fadeOut();
+            } else {
+              alert("刪除錯誤:" + data);
+              this_tr.fadeOut();
+            }
+          }).fail(function (jqXHR, textStatus, errorThrown) {
+            //失敗的時候
+            alert("有錯誤產生，請看 console log");
+            console.log(jqXHR.responseText);
+          });
+        }
+        return false;
+      });
+
+      //差事下架
+      $("a.eventDelete").on("click", function () {
+        //宣告變數
+        var c = confirm("請注意！！下架差事不會取消進行中的差事。您確定要下架嗎？"),
+          this_tr = $(this).parent().parent();
+        if (c) {
+          $.ajax({
+            type: "POST",
+            url: "event.html", //後端處理
+            data: {
+              id: $(this).attr("data-id") //文章id
+            },
+            dataType: 'html' //設定該網頁回應的會是 html 格式
+          }).done(function (data) {
+            //成功的時候
+            if (data == "yes") {
+              //註冊新增成功，轉跳到登入頁面。
+              alert("下架成功，點擊確認從列表移除");
+              this_tr.fadeOut();
+            } else {
+              alert("下架錯誤:" + data);
+              this_tr.fadeOut();
+            }
+          }).fail(function (jqXHR, textStatus, errorThrown) {
+            //失敗的時候
+            alert("有錯誤產生，請看 console log");
+            console.log(jqXHR.responseText);
+          });
+        }
+        return false;
+      });
+
+      //差事婉拒
+      $("a.eventReject").on("click", function () {
+        //宣告變數
+        var c = confirm("您確定要婉拒嗎？"),
+          this_tr = $(this).parent().parent();
+        if (c) {
+          $.ajax({
+            type: "POST",
+            url: "event.html", //後端處理
+            data: {
+              id: $(this).attr("data-id") //文章id
+            },
+            dataType: 'html' //設定該網頁回應的會是 html 格式
+          }).done(function (data) {
+            //成功的時候
+            if (data == "yes") {
+              //註冊新增成功，轉跳到登入頁面。
+              alert("婉拒成功，點擊確認從列表移除");
+              this_tr.fadeOut();
+            } else {
+              alert("婉拒錯誤:" + data);
+              this_tr.fadeOut();
+            }
+          }).fail(function (jqXHR, textStatus, errorThrown) {
+            //失敗的時候
+            alert("有錯誤產生，請看 console log");
+            console.log(jqXHR.responseText);
+          });
+        }
+        return false;
+      });
+
+      //差事申請
+      $("a.eventApplybtn").on("click", function () {
+        //宣告變數
+        var c = confirm("您確定要申請嗎？"),
+          this_tr = $(this).parent().parent().parent();
+        var reward = prompt("請輸入差事獎勵。", "");
+        if (c) {
+          $.ajax({
+            type: "POST",
+            url: "event.html", //後端處理
+            data: {
+              id: $(this).attr("data-id"),//文章id
+              reward: reward,
+            },
+            dataType: 'html' //設定該網頁回應的會是 html 格式
+          }).done(function (data) {
+            //成功的時候
+            if (data == "yes") {
+              //註冊新增成功，轉跳到登入頁面。
+              alert("申請成功，點擊確認開始服務");
+              this_tr.fadeOut();
+            } else {
+              alert("申請錯誤:" + data);
+              this_tr.fadeOut();
+            }
+          }).fail(function (jqXHR, textStatus, errorThrown) {
+            //失敗的時候
+            alert("有錯誤產生，請看 console log");
+            console.log(jqXHR.responseText);
+          });
+        }
+        return false;
+      });
+
+      $("input.search").on("keyup", function () {
+        if ($("#search").val() != '') {
+          $.ajax({
+            type: "post",
+            url: "event.html",//後端處理
+            data: {
+              search: $("#search").val(),
+            },
+            datatype: 'html'//設定網頁回應是 html 格式
+          }).done(function (data) {
+            //成功
+            console.log(data);
+            if (data == "yes") {
+              //搜尋成功
+              window.location.href = "event.html";
+            } else {
+              alert("搜尋失敗,請與系統人員聯繫");
+              //測試
+              //window.location.href ="event.html";
+            }
+          }).fail(function (jqXHR, textStatus, errorThrow) {
+            //失敗
+            alert("有錯誤產生，請看 console log");
+            console.log(jqXHR.responseText);
+          });
+        }
+        return false;
+      });
+
+      $("#category").on("change", function () {
+        //alert($("#category").val());
+        if ($("#category").val() != '') {
+          $.ajax({
+            type: "post",
+            url: "event.html",//後端處理
+            data: {
+              category: $("#category").val(),
+            },
+            datatype: 'html'//設定網頁回應是 html 格式
+          }).done(function (data) {
+            //成功
+            console.log(data);
+            if (data == "yes") {
+              //搜尋成功
+              window.location.href = "event.html";
+            } else {
+              alert("搜尋失敗,請與系統人員聯繫");
+              //測試
+              //window.location.href ="event.html";
+            }
+          }).fail(function (jqXHR, textStatus, errorThrow) {
+            //失敗
+            alert("有錯誤產生，請看 console log");
+            console.log(jqXHR.responseText);
+          });
+        }
+        return false;
+      });
+
+    });
+  </script>
+</body>
+
+</html>
