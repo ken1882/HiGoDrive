@@ -4,8 +4,10 @@ var relocateTimer, relocateTime = 10000, postLocationTimer, postTime = 8000;
 var durationFareDegree = 0.1
 var distanceFareDegree = 0.01
 var infoFare, infoDistance, infoTime;
-var isDriver = true; //change passenger mode or driver mode
+var isDriver = false; //change passenger mode or driver mode
 var geoFirst = true;
+
+var task;
 
 var dest = {
   lng: "",
@@ -142,7 +144,7 @@ function setPsssengerDirectionInfo() {
 }
 
 function setDriverDirectionInfo() {
-
+  var task
 }
 
 function setAutoComplete() {
@@ -207,9 +209,9 @@ function setAutoComplete() {
 
 function initPassengerInfo() {
   info = document.getElementById("order")
-  infoFare = document.getElementById("fare")
-  infoDistance = document.getElementById("distance")
-  infoTime = document.getElementById("time")
+  infoFare = document.getElementById("farePassenger")
+  infoDistance = document.getElementById("distancePassenger")
+  infoTime = document.getElementById("timePassenger")
   info.index = 1;
 
   map.controls[google.maps.ControlPosition.LEFT_BOTTOM].push(info)
@@ -217,7 +219,7 @@ function initPassengerInfo() {
 
 function onReceiveTask() {
   console.log("onTask")
-  window.setTimeout(function () { direction(25.1380689, 121.776766) }, 300)
+  //window.setTimeout(function () { direction(25.1380689, 121.776766) }, 300)
 }
 
 function initPassenger() {
@@ -225,12 +227,30 @@ function initPassenger() {
   initPassengerInfo();
 }
 
-function getTask() {
-  //...ajax server task
+function acceptTask() {
+
+}
+
+function rejectTask() {
+
+}
+
+//driver on line
+function onlineTask() {
+  //...ajax server task 
+  // api need
+
   dest.lat = "25.1380689";
   dest.lng = "121.776766";
-  onReceiveTask();
+
 }
+
+//driver on line
+function offlineTask() {
+
+}
+
+
 
 function initDriver() {
   var onlineState = document.getElementById("onlineState");
@@ -240,8 +260,6 @@ function initDriver() {
   map.controls[google.maps.ControlPosition.TOP_RIGHT].push(onlineState);
   map.controls[google.maps.ControlPosition.BOTTOM_CENTER].push(offlineState);
   map.controls[google.maps.ControlPosition.LEFT_BOTTOM].push(task);
-
-  onReceiveTask();
 
 }
 
