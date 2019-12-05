@@ -4,7 +4,7 @@ var relocateTimer, relocateTime = 10000, postLocationTimer, postTime = 8000;
 var durationFareDegree = 0.1
 var distanceFareDegree = 0.01
 var infoFare, infoDistance, infoTime;
-var isDriver = false; //change passenger mode or driver mode
+var isDriver = true; //change passenger mode or driver mode
 var geoFirst = true;
 
 var dest = {
@@ -126,7 +126,7 @@ function direction(destlat, destlng) {
       dest.distance = result.routes[0].legs[0].distance;
       dest.duration = result.routes[0].legs[0].duration;
       console.log(dest);
-      setInfo();
+
     }
     else {
       console.log(status);
@@ -134,14 +134,16 @@ function direction(destlat, destlng) {
   });
 }
 
-function setInfo() {
+function setPsssengerDirectionInfo() {
   info.style.display = "inline"
   infoDistance.innerHTML = "距離:" + dest.distance.text;
   infoTime.innerHTML = "時間:" + dest.duration.text;
   infoFare.innerHTML = "車費:" + Math.floor(dest.distance.value * distanceFareDegree + dest.duration.value * durationFareDegree) + "元"
 }
 
+function setDriverDirectionInfo() {
 
+}
 
 function setAutoComplete() {
   var input = document.getElementById('search')
@@ -194,7 +196,10 @@ function setAutoComplete() {
     dest.lat = place.geometry.location.lat();
     dest.lng = place.geometry.location.lng();
 
-    window.setTimeout(function () { direction(place.geometry.location.lat(), place.geometry.location.lng()) }, 300)
+    window.setTimeout(function () {
+      direction(place.geometry.location.lat(), place.geometry.location.lng());
+      setPsssengerDirectionInfo();
+    }, 300)
     //document.getElementById('map').style.height = "50vh";
   });
 
@@ -218,6 +223,13 @@ function onReceiveTask() {
 function initPassenger() {
   setAutoComplete();
   initPassengerInfo();
+}
+
+function getTask() {
+  //...ajax server task
+  dest.lat = "25.1380689";
+  dest.lng = "121.776766";
+  onReceiveTask();
 }
 
 function initDriver() {
@@ -276,3 +288,5 @@ function cancelDest() {
   map.setCenter({ lat: lat, lng: lng });
   map.setZoom(zoom)
 }
+
+
