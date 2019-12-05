@@ -78,7 +78,7 @@
             <span id="timePassenger"></span>
           </div>
         </div>
-        <form action="main.html" method="get">
+        <form action="#">
           <div class="form-row">
             <div class="col px-1">
               <label>自備配件:</label>
@@ -118,7 +118,7 @@
               <button type="button" class="btn btn-success btn-block" onclick="resv(this)">預約行程</button>
             </div>
             <div class="col px-2">
-              <button type="submit" class="btn btn-success btn-block">開始行程</button>
+              <button type="submit" class="btn btn-success btn-block" onclick="errand()">開始行程</button>
             </div>
           </div>
         </form>
@@ -174,7 +174,7 @@
         <div id="option" class="option">
           <div class="row">
             <div class="col-6">
-              <button type="button" class="btn btn-success btn-block">接受</button>
+              <button type="button" class="btn btn-success btn-block" onclick="errand()">接受</button>
             </div>
             <div class="col-6">
               <button type="button" class="btn btn-danger btn-block" onclick="reject()">拒絕</button>
@@ -208,8 +208,12 @@
         </div>
       </div>
 
-      <div id="errand" class="errand">
-
+      <div id="errand" class="errand" style="display: none;">
+        <div class="row">
+          <div class="col">
+            <span>123</span>
+          </div>
+        </div>
       </div>
 
     </div>
@@ -286,6 +290,12 @@
     function reject() {
       document.getElementById('option').style.display = "none";
       document.getElementById('reject').style.display = "block";
+    }
+
+    function errand() {
+      document.getElementById('task').style.display = "none";
+      document.getElementById('order').style.display = "none";
+      document.getElementById('errand').style.display = "block";
     }
   </script>
 
