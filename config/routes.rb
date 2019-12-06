@@ -1,10 +1,6 @@
 CurrentVersion = 'v0'
 Rails.application.routes.draw do
-<<<<<<< HEAD
-  # get 'session/new'
-=======
-  
->>>>>>> backend
+
   # home page
   root 'static_pages#home'
   get '/index', to: 'static_pages#home'
