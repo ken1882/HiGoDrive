@@ -22,6 +22,7 @@ class User
 
   has_secure_password
   validates :password_digest, presence: true, length: {in: 6..256}
+  
 
   def self.username_exist?(uname)
     self.where({'username' => uname}).count != 0
@@ -48,11 +49,6 @@ class User
       {'username' => value || ''},
       {'email' => value || ''},
     ))
-  end
-
-  def self.hash_digest(_str)
-    cost = ActiveModel::SecurePassword.min_cost ? BCrypt::Engine::MIN_COST : BCrypt::Engine.cost
-    BCrypt::Password.create(_str, cost: cost)
   end
 
   def self.new_token; SecureRandom.urlsafe_base64; end
@@ -91,7 +87,7 @@ class User
 
   def remember
     @remember_token = User.new_token
-    update_attribute(:remember_digest, User.hash_digest(@remember_token))
+    update_attribute(:remember_digest, SecurityManager.hash_digest(@remember_token))
   end
 
   def forget

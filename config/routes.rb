@@ -1,19 +1,19 @@
 CurrentVersion = 'v0'
 Rails.application.routes.draw do
-  get 'session/new'
+  
   # home page
   root 'static_pages#home'
   get '/index', to: 'static_pages#home'
   get '/home', to: 'static_pages#home'
   get '/help', to: 'static_pages#help'
   get '/signup', to: 'static_pages#signup'
-  get '/login', to: 'session#new'
-  post '/login', to: 'session#create'
-  delete '/logout', to: 'session#destroy'
-  get '/logout', to: 'session#destroy'
 
   match '/users' => "api/#{CurrentVersion}/users#show", via: [:get]
   match '/user'  => "api/#{CurrentVersion}/users#show", via: [:get]
+
+  match '/login'  =>"api/#{CurrentVersion}/session#new",     via: [:get]
+  match '/login'  => "api/#{CurrentVersion}/session#create", via: [:post]
+  match '/logout' =>"api/#{CurrentVersion}/session#destroy", via: [:delete, :get]
 
   # API routes
   namespace 'api' do
@@ -22,6 +22,9 @@ Rails.application.routes.draw do
       resources :users
       post '/checkusername', to: 'users#checkusername'
       post '/checkemail', to: 'users#checkemail'
+      post '/currentuser', to: 'session#index'
+      put '/user/update', to: 'users#update'
+      put '/users/update', to: 'users#update'
     end
   end
   
