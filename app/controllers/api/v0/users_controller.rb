@@ -3,9 +3,9 @@ module Api
     class UsersController < ApplicationController
       include UsersHelper
       
+      before_action :set_user, only: [:show, :edit, :update, :login]
       before_action :validate_init_params, only: [:create]
       before_action :validate_update_params, only: [:update]
-      before_action :set_user, only: [:show, :edit, :update, :login]
 
       # GET /users
       # GET /users.json
@@ -17,16 +17,6 @@ module Api
       # GET /users/1.json
       def show
         render json: @user.public_json_info, status: :ok
-      end
-      
-      # GET /users/new
-      def new
-        not_acceptable
-      end
-    
-      # GET /users/1/edit
-      def edit
-        not_acceptable
       end
       
       # POST /checkusername
@@ -61,7 +51,8 @@ module Api
       # PATCH/PUT /users/1
       # PATCH/PUT /users/1.json
       def update
-        
+        @user.update(user_update_fields)
+        return_ok
       end
     
       # DELETE /users/1
@@ -73,7 +64,7 @@ module Api
       private
       # Use callbacks to share common setup or constraints between actions.
       def set_user
-        @user = User.wide_query(user_find_params.compact.first)
+        @user = current_user || User.wide_query(user_find_params.compact.first)
         not_found if @user.nil?
       end
 
@@ -92,7 +83,26 @@ module Api
       end
 
       def validate_update_params
-        unprocessable_entity unless register_param_ok?(user_update_params)
+        _params = user_update_params
+        return unauthorized if @user.nil?
+        return unsupported_media_type unless avatar_url_ok?(_params[:avatar_url])
+        return unprocessable_entity unless password_change_ok?(_params)
+        return true
+      end
+
+      def avatar_url_ok?(aurl)
+        return true if aurl.nil?
+        return SupportedAvatarFormat.include?(aurl.split('.').last.downcase)
+      end
+
+      def password_change_ok?(_params)
+        oldpwd = _params[:old_password]
+        newpwd = _params[:password]
+        conpwd = _params[:password_confirmation]
+        return true unless oldpwd || newpwd || conpwd
+        return false if newpwd != conpwd
+        return false unless @user.authenticate(oldpwd)
+        return true
       end
 
       def register_param_ok?(params)
@@ -101,7 +111,7 @@ module Api
         return false unless params[:username].match(/^[[:alnum:]]*$/)
         return true
       end
-    
+
       def user_url
         "/user/#{@user.username}"
       end

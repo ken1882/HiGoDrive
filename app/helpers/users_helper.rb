@@ -1,17 +1,13 @@
 module UsersHelper
+  include ApplicationHelper
+
+  private
 
   UserInitParms    = [:username, :nickname, :password, :password_confirmation, :email]
-  UserUpdateParams = [:nickname, :old_password, :new_password, :email]
+  UserUpdateParams = [:nickname, :old_password, :password, :password_confirmation, :email, :avatar_url]
+  UserUpdateFields = [:nickname, :password, :password_confirmation, :email, :avatar_url]
   UserFindParms    = [:id, :username, :email]
-
-  # Never trust parameters from the scary internet, only allow the white list through.
-  def filter_params(param_set)
-    begin
-      params.require(:user).permit(*param_set)
-    rescue Exception
-      params.permit(*param_set)
-    end
-  end
+  SupportedAvatarFormat = [:png, :jpg, :jpeg, :bmp, :webp]
 
   def user_init_params
     filter_params UserInitParms
@@ -21,7 +17,12 @@ module UsersHelper
     filter_params UserUpdateParams
   end
 
+  def user_update_fields
+    filter_params UserUpdateFields
+  end
+
   def user_find_params
     filter_params UserFindParms
   end
+
 end
