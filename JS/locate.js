@@ -246,15 +246,23 @@ function initPassenger() {
 }
 
 function onReceiveTask() {
+
+
   console.log("onTask")
   task.style.display = "block";
+  var taskType = document.getElementById("taskType");
+  var distDriver = document.getElementById("distDriver");
+  var distanceDriver = document.getElementById("distanceDriver");
   var sec = 15;
   var secHtml = document.getElementById("sec");
 
   var timesetInterval = window.setInterval(function () {
     secHtml.innerHTML = sec;
     if (sec > 0) sec--;
-    else clearInterval();
+    else {
+      clearInterval();
+      rejectTask();
+    }
   }, 1000)
   //window.setTimeout(function () { direction(25.1380689, 121.776766) }, 300)
 }
@@ -262,7 +270,7 @@ function onReceiveTask() {
 
 
 function acceptTask() {
-
+  console.log("task accept");
 }
 
 function rejectTask() {
@@ -275,6 +283,7 @@ function onlineTask() {
   // api need
   dest.lat = "25.1380689";
   dest.lng = "121.776766";
+
   onReceiveTask()
 
 }
