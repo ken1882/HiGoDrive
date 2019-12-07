@@ -6,13 +6,21 @@ var distanceFareDegree = 0.01
 var infoFare, infoDistance, infoTime;
 var isDriver = true; //change passenger mode or driver mode
 var geoFirst = true;
+var task;
 
-var task = {
+
+var taskOBJ = {
   pasID: "",
-  pasdest: "",
-  fare: "",
-
-
+  paslng: "",
+  paslat: "",
+  lng: "",
+  lat: "",
+  distance: "",
+  duration: "",
+  helment: "",
+  raincoat: "",
+  datetimepicker: "",
+  fare: ""
 
 };
 
@@ -21,6 +29,7 @@ var dest = {
   lat: "",
   distance: "",
   duration: "",
+  fare: "",
   helment: "",
   raincoat: "",
   datetimepicker: ""
@@ -134,6 +143,7 @@ function direction(destlat, destlng) {
       directionsDisplay.setDirections(result);
       dest.distance = result.routes[0].legs[0].distance;
       dest.duration = result.routes[0].legs[0].duration;
+      dest.fare = Math.floor(dest.distance.value * distanceFareDegree + dest.duration.value * durationFareDegree);
       //console.log(dest);
 
     }
@@ -148,7 +158,7 @@ function setPsssengerDirectionInfo() {
 
   infoDistance.innerHTML = "距離:" + dest.distance.text;
   infoTime.innerHTML = "時間:" + dest.duration.text;
-  infoFare.innerHTML = "車費:" + Math.floor(dest.distance.value * distanceFareDegree + dest.duration.value * durationFareDegree) + "元"
+  infoFare.innerHTML = "車費:" + dest.fare + "元"
 }
 
 function setDriverDirectionInfo() {
@@ -229,16 +239,27 @@ function initPassengerInfo() {
   map.controls[google.maps.ControlPosition.LEFT_BOTTOM].push(info)
 }
 
-function onReceiveTask() {
-  console.log("onTask")
-  //window.setTimeout(function () { direction(25.1380689, 121.776766) }, 300)
-}
-
 function initPassenger() {
   initPassengerInfo();
   setAutoComplete();
 
 }
+
+function onReceiveTask() {
+  console.log("onTask")
+  task.style.display = "block";
+  var sec = 15;
+  var secHtml = document.getElementById("sec");
+
+  var timesetInterval = window.setInterval(function () {
+    secHtml.innerHTML = sec;
+    if (sec > 0) sec--;
+    else clearInterval();
+  }, 1000)
+  //window.setTimeout(function () { direction(25.1380689, 121.776766) }, 300)
+}
+
+
 
 function acceptTask() {
 
@@ -252,9 +273,9 @@ function rejectTask() {
 function onlineTask() {
   //...ajax server task 
   // api need
-
   dest.lat = "25.1380689";
   dest.lng = "121.776766";
+  onReceiveTask()
 
 }
 
@@ -268,7 +289,7 @@ function offlineTask() {
 function initDriver() {
   var onlineState = document.getElementById("onlineState");
   var offlineState = document.getElementById("offlineState");
-  var task = document.getElementById("task");
+  task = document.getElementById("task");
   offlineState.style.display = 'block';
   map.controls[google.maps.ControlPosition.TOP_RIGHT].push(onlineState);
   map.controls[google.maps.ControlPosition.BOTTOM_CENTER].push(offlineState);
