@@ -1,14 +1,22 @@
 module Mailer
-  @client = Postmark::ApiClient.new('70d9121b-0589-4df6-9ae6-c759114d3997')
-	module_function
-  def send(username, token)
-    # Send an email:
-    client.deliver(
-      from: '00657121@email.ntou.edu.tw',
-      to: 'ludanwang@universetech.cc',
-      subject: 'Hello from Postmark',
-      html_body: '<strong>Hello</strong> dear Postmark user.',
+  @client = Postmark::ApiClient.new(ENV['POSTMARK_TOKEN'])
+  SenderEmail = "00657121@email.ntou.edu.tw"
+
+  module_function
+  
+  # TODO
+  def password_reset_url
+    "/"
+  end
+
+  def send(target_email, username, token)
+    # Send an email
+    @client.deliver(
+      from: SenderEmail,
+      to: target_email,
+      subject: 'Password reset request',
+      html_body: "#{password_reset_url}?username=#{username}&token=#{token}",
       track_opens: true
-     )
+    )
 	end
 end
