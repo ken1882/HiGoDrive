@@ -5,7 +5,6 @@ Rails.application.routes.draw do
   root 'static_pages#home'
   get '/index', to: 'static_pages#home'
   get '/home', to: 'static_pages#home'
-  get '/help', to: 'static_pages#help'
   get '/signup', to: 'static_pages#signup'
 
   match '/users' => "api/#{CurrentVersion}/users#show", via: [:get]
@@ -25,6 +24,8 @@ Rails.application.routes.draw do
       post '/currentuser', to: 'session#index'
       put '/user/update', to: 'users#update'
       put '/users/update', to: 'users#update'
+      post '/user/setpos', to: 'users#setpos'
+      get '/user/getpos', to: 'users#getpos'
     end
   end
   
