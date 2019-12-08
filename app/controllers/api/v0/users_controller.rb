@@ -4,10 +4,12 @@ module Api
       include UsersHelper
       
       before_action :set_user, only: [:show, :edit, :update, :login,
-        :setpos, :getpos]
+        :setpos, :getpos, :forgot_password, :reset_password]
       # ----------
       before_action :validate_init_params, only: [:create]
       before_action :validate_update_params, only: [:update]
+      before_action :validate_forgotpwd_params, only: [:forgot_password]
+      before_action :validate_resetpwd_params, only: [:reset_password]
 
       # GET /users
       # GET /users.json
@@ -77,6 +79,18 @@ module Api
         render json: @user.get_pos, status: :ok
       end
 
+      # POST /forgotpassword
+      def forgot_password
+        token = @user.generate_reset_token(params["authenticity_token"])
+        return_ok
+      end
+
+      # POST /resetpassword
+      def reset_password
+        @user.reset_password(user_reset_fields)
+        return_ok
+      end
+
       private
       # Use callbacks to share common setup or constraints between actions.
       def set_user
@@ -85,17 +99,9 @@ module Api
       end
 
       def validate_init_params
-        respond_msg = nil
-        respond_msg = "The information you entered is invalid" unless register_param_ok?(user_init_params)
-        respond_msg = "Undeliverable Email" unless Util.email_deliverable?(user_init_params[:email])
-        return true unless respond_msg
-        respond_to do |f|
-          f.html {
-            flash[:danger] = respond_msg
-            redirect_to root_path
-          }
-          f.json {render json: {'message' => respond_msg}, status: :unprocessable_entity}
-        end
+        return bad_request unless register_param_ok?(user_init_params)
+        return unprocessable_entity unless Util.email_deliverable?(user_init_params[:email])
+        return_ok
       end
 
       def validate_update_params
@@ -103,6 +109,22 @@ module Api
         return unauthorized if @user.nil?
         return unsupported_media_type unless avatar_url_ok?(_params[:avatar_url])
         return unprocessable_entity unless password_change_ok?(_params)
+        return true
+      end
+
+      def validate_resetpwd_params
+        _params = user_reset_params
+        return bad_request if logged_in?
+        return unauthorized if _params[:token] != @user.password_reset_token
+        return unprocessable_entity unless password_reset_ok?(_params)
+        return true
+      end
+
+      def validate_forgotpwd_params
+        _params = user_find_params
+        return bad_request if logged_in?
+        return unauthorized if @user.username != _params[:username]
+        return unauthorized if @user.email != _params[:email]
         return true
       end
 
@@ -116,8 +138,17 @@ module Api
         newpwd = _params[:password]
         conpwd = _params[:password_confirmation]
         return true unless oldpwd || newpwd || conpwd
+        return false if !newpwd || !conpwd
         return false if newpwd != conpwd
         return false unless @user.authenticate(oldpwd)
+        return true
+      end
+
+      def password_reset_ok?(_params)
+        newpwd = _params[:password]
+        conpwd = _params[:password_confirmation]
+        return false if !newpwd || !conpwd
+        return false if newpwd != conpwd
         return true
       end
 

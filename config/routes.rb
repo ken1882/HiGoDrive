@@ -18,9 +18,13 @@ Rails.application.routes.draw do
     namespace "#{CurrentVersion}" do
       resources :handshake
       resources :users
+      
       post '/checkusername', to: 'users#checkusername'
       post '/checkemail', to: 'users#checkemail'
       post '/currentuser', to: 'session#index'
+      post '/forgotpassword', to: 'users#forgot_password'
+      post '/resetpassword', to: 'users#reset_password'
+
       put '/user/update', to: 'users#update'
       put '/users/update', to: 'users#update'
       post '/user/setpos', to: 'users#setpos'
