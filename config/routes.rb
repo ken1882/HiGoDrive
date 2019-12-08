@@ -23,6 +23,8 @@ Rails.application.routes.draw do
       post '/currentuser', to: 'session#index'
       put '/user/update', to: 'users#update'
       put '/users/update', to: 'users#update'
+      post '/user/setpos', to: 'users#setpos'
+      get '/user/getpos', to: 'users#getpos'
     end
   end
   

@@ -7,6 +7,7 @@ module UsersHelper
   UserUpdateParams = [:nickname, :old_password, :password, :password_confirmation, :email, :avatar_url]
   UserUpdateFields = [:nickname, :password, :password_confirmation, :email, :avatar_url]
   UserFindParms    = [:id, :username, :email]
+  UserPosParams    = [:lat, :lng]
   SupportedAvatarFormat = [:png, :jpg, :jpeg, :bmp, :webp]
 
   def user_init_params
@@ -25,4 +26,7 @@ module UsersHelper
     filter_params UserFindParms
   end
 
+  def user_pos_params
+    filter_params UserPosParams
+  end
 end

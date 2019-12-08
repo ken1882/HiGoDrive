@@ -3,7 +3,9 @@ module Api
     class UsersController < ApplicationController
       include UsersHelper
       
-      before_action :set_user, only: [:show, :edit, :update, :login]
+      before_action :set_user, only: [:show, :edit, :update, :login,
+        :setpos, :getpos]
+      # ----------
       before_action :validate_init_params, only: [:create]
       before_action :validate_update_params, only: [:update]
 
@@ -61,6 +63,20 @@ module Api
         not_acceptable
       end
 
+      # POST /user/setpos
+      def setpos
+        _params = user_pos_params
+        lat, lng = _params[:lat], _params[:lng]
+        return bad_request unless coordinates_ok?(lat, lng)
+        @user.set_pos(lat, lng)
+        return_ok
+      end
+      
+      # GET /user/getpos
+      def getpos
+        render json: @user.get_pos, status: :ok
+      end
+
       private
       # Use callbacks to share common setup or constraints between actions.
       def set_user
@@ -110,6 +126,12 @@ module Api
         return false if (params[:password] || '').length < 6
         return false unless params[:username].match(/^[[:alnum:]]*$/)
         return true
+      end
+
+      def coordinates_ok?(lat, lng)
+        x = Float(lng) rescue nil
+        y = Float(lat) rescue nil
+        return x && y
       end
 
       def user_url

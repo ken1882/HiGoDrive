@@ -15,6 +15,8 @@ class User
   field :last_login_time, type: Time
   field :remember_digest, type: String
   field :avatar, type: String
+  field :lat, type: Float
+  field :lng, type: Float
 
   validates :username, presence: true, length: {in: 3..32}, uniqueness: true
   validates :email, presence: true, format: {with: EmailRegex}, length: {in: 3..256}, 
@@ -98,5 +100,17 @@ class User
     return true if logged_in?
     flash.now[:danger] = "Please log in"
     redirect_to login_url
+  end
+
+  def set_pos(lat, lng)
+    update_attribute(:lat, lat)
+    update_attribute(:lng, lng)
+  end
+
+  def get_pos
+    return {
+      :lat => self.lat,
+      :lng => self.lng
+    }
   end
 end
