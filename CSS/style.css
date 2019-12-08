@@ -26,8 +26,12 @@ main {
   width: 100%;
 }
 
-#user_task {
+.user_task {
   width: 10vw;
+}
+
+.user_img {
+  height: 5vh;
 }
 
 .accordion {
