@@ -36,8 +36,11 @@ class Util{
    * @param {Object} _data Request arguments
    */
   static ajax(_type, _url, _data, on_succ, on_error=null){
+    _type = _type.toUpperCase();
     _data = _data || {};
-    _data["authenticity_token"] = this.AuthToken;
+    if(_type != "GET"){
+      _data["authenticity_token"] = this.AuthToken;
+    }
     $.ajax({
       type: _type,
       url: _url,
