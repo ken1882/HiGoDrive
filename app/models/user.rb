@@ -17,6 +17,7 @@ class User
   field :avatar, type: String
   field :lat, type: Float
   field :lng, type: Float
+  field :password_reset_token, type: String
 
   validates :username, presence: true, length: {in: 3..32}, uniqueness: true
   validates :email, presence: true, format: {with: EmailRegex}, length: {in: 3..256}, 
@@ -112,5 +113,16 @@ class User
       :lat => self.lat,
       :lng => self.lng
     }
+  end
+
+  def generate_reset_token(auth_token)
+    token = SecurityManager.sha256(auth_token + self.email + Time.now.to_s)
+    update_attribute :password_reset_token, token
+    token
+  end
+
+  def reset_password(_params)
+    self.update(_params)
+    update_attribute :password_reset_token, nil
   end
 end
