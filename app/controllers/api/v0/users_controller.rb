@@ -99,17 +99,9 @@ module Api
       end
 
       def validate_init_params
-        respond_msg = nil
-        respond_msg = "The information you entered is invalid" unless register_param_ok?(user_init_params)
-        respond_msg = "Undeliverable Email" unless Util.email_deliverable?(user_init_params[:email])
-        return true unless respond_msg
-        respond_to do |f|
-          f.html {
-            flash[:danger] = respond_msg
-            redirect_to root_path
-          }
-          f.json {render json: {'message' => respond_msg}, status: :unprocessable_entity}
-        end
+        return bad_request unless register_param_ok?(user_init_params)
+        return unprocessable_entity unless Util.email_deliverable?(user_init_params[:email])
+        return_ok
       end
 
       def validate_update_params
@@ -124,7 +116,7 @@ module Api
         _params = user_reset_params
         return bad_request if logged_in?
         return unauthorized if _params[:token] != @user.password_reset_token
-        return unprocessable_entity if _params[:password] != _params[:password_confirmation]
+        return unprocessable_entity unless password_reset_ok?(_params)
         return true
       end
 
@@ -146,8 +138,17 @@ module Api
         newpwd = _params[:password]
         conpwd = _params[:password_confirmation]
         return true unless oldpwd || newpwd || conpwd
+        return false if !newpwd || !conpwd
         return false if newpwd != conpwd
         return false unless @user.authenticate(oldpwd)
+        return true
+      end
+
+      def password_reset_ok?(_params)
+        newpwd = _params[:password]
+        conpwd = _params[:password_confirmation]
+        return false if !newpwd || !conpwd
+        return false if newpwd != conpwd
         return true
       end
 
