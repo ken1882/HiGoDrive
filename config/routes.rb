@@ -8,7 +8,7 @@ Rails.application.routes.draw do
 
   match '/users' => "api/#{CurrentVersion}/users#show", via: [:get]
   match '/user'  => "api/#{CurrentVersion}/users#show", via: [:get]
-
+  
   match '/login'  =>"api/#{CurrentVersion}/session#new",     via: [:get]
   match '/login'  => "api/#{CurrentVersion}/session#create", via: [:post]
   match '/logout' =>"api/#{CurrentVersion}/session#destroy", via: [:delete, :get]
