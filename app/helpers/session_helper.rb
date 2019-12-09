@@ -5,7 +5,10 @@ module SessionHelper
   # Logs in the given user.
   def log_in(unoem, pwd)
     user = User.wide_query(unoem)
-    return user if user && user.authenticate(pwd)
+    if user && user.authenticate(pwd)
+      user.update_login_time
+      return user
+    end
   end
 
   def set_user(user)

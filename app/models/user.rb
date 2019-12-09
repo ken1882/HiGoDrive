@@ -12,7 +12,7 @@ class User
   field :email, type: String
   field :password_digest, type: String
   field :nickname, type: String
-  field :last_login_time, type: Time
+  field :last_login_time, type: DateTime
   field :remember_digest, type: String
   field :avatar, type: String
   field :lat, type: Float
@@ -26,6 +26,7 @@ class User
   has_secure_password
   validates :password_digest, presence: true, length: {in: 6..256}
   
+  has_many :tasks, dependent: :destroy
 
   def self.username_exist?(uname)
     self.where({'username' => uname}).count != 0
@@ -124,5 +125,9 @@ class User
   def reset_password(_params)
     self.update(_params)
     update_attribute :password_reset_token, nil
+  end
+
+  def update_login_time
+    update_attribute :last_login_time, Time.mongoize(Time.now)
   end
 end

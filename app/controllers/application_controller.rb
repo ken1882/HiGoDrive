@@ -3,6 +3,7 @@ class ApplicationController < ActionController::Base
   include SessionHelper
 
   def return_ok(*args); return_httpcode(200, *args); end
+  def return_wip(*args); return_httpcode(204, *args); end
   def bad_request(*args); return_httpcode(400, *args); end
   def not_acceptable(*args); return_httpcode(406, *args); end
   def forbidden(*args); return_httpcode(403, *args); end

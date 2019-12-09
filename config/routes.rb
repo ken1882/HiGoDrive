@@ -1,6 +1,7 @@
 CurrentVersion = 'v0'
 Rails.application.routes.draw do
   
+  resources :tasks
   # home page
   root 'static_pages#home'
   get '/index', to: 'static_pages#home'
@@ -19,6 +20,7 @@ Rails.application.routes.draw do
     namespace "#{CurrentVersion}" do
       resources :handshake
       resources :users
+      resources :tasks
       
       post '/checkusername', to: 'users#checkusername'
       post '/checkemail', to: 'users#checkemail'
@@ -27,7 +29,6 @@ Rails.application.routes.draw do
       post '/resetpassword', to: 'users#reset_password'
 
       put '/user/update', to: 'users#update'
-      put '/users/update', to: 'users#update'
       post '/user/setpos', to: 'users#setpos'
       get '/user/getpos', to: 'users#getpos'
     end
