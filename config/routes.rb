@@ -1,17 +1,21 @@
 CurrentVersion = 'v0'
 Rails.application.routes.draw do
-  
+
   resources :tasks
   # home page
-  root 'static_pages#home'
-  get '/index', to: 'static_pages#home'
-  get '/home', to: 'static_pages#home'
-  get '/signup', to: 'static_pages#signup'
+  root 'pages#index'
+  get '/index', to: 'pages#index'
+
+  get '/home', to: 'pages#home'
+  get '/signup', to: 'pages#signup'
+  get '/login', to: 'pages#login'
+
+  get '/account-recovery', to: 'pages#passwordForget'
+  get '/account-recovery/reset', to: 'pages#passwordReset'
 
   match '/users' => "api/#{CurrentVersion}/users#show", via: [:get]
   match '/user'  => "api/#{CurrentVersion}/users#show", via: [:get]
-  
-  match '/login'  =>"api/#{CurrentVersion}/session#new",     via: [:get]
+
   match '/login'  => "api/#{CurrentVersion}/session#create", via: [:post]
   match '/logout' =>"api/#{CurrentVersion}/session#destroy", via: [:delete, :get]
 
@@ -21,7 +25,7 @@ Rails.application.routes.draw do
       resources :handshake
       resources :users
       resources :tasks
-      
+
       post '/checkusername', to: 'users#checkusername'
       post '/checkemail', to: 'users#checkemail'
       post '/currentuser', to: 'session#index'
@@ -33,7 +37,7 @@ Rails.application.routes.draw do
       get '/user/getpos', to: 'users#getpos'
     end
   end
-  
+
   # 404
   get '*unmatched_route', to: 'application#not_found'
 end
