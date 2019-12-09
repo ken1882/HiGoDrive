@@ -4,11 +4,11 @@ var relocateTimer, relocateTime = 10000, postLocationTimer, postTime = 8000;
 var durationFareDegree = 0.1
 var distanceFareDegree = 0.01
 var infoFare, infoDistance, infoTime;
-var isDriver = false; //change passenger mode or driver mode
+var isDriver = true; //change passenger mode or driver mode
 var geoFirst = true;
 var task;
-
-
+var isaccept = false;
+var task_id = '0';
 
 
 var dest = {
@@ -16,6 +16,7 @@ var dest = {
   passengerlat: "",
   lng: "",
   lat: "",
+  placeName: "",
   distance: "",
   duration: "",
   fare: "",
@@ -148,6 +149,8 @@ function direction(destlat, destlng) {
   });
 }
 
+2
+
 function setPsssengerDirectionInfo() {
   info.style.display = "inline"
 
@@ -156,9 +159,6 @@ function setPsssengerDirectionInfo() {
   infoFare.innerHTML = "車費:" + dest.fare + "元"
 }
 
-function setDriverDirectionInfo() {
-
-}
 
 function setAutoComplete() {
   var input = document.getElementById('search')
@@ -212,6 +212,7 @@ function setAutoComplete() {
     dest.lng = place.geometry.location.lng();
     dest.passengerlat = lat;
     dest.passengerlng = lng;
+    dest.placeName = place.name;
     window.setTimeout(function () {
       direction(place.geometry.location.lat(), place.geometry.location.lng());
     }, 300)
@@ -242,36 +243,76 @@ function initPassenger() {
 
 }
 
-function onReceiveTask() {
-
-
-  console.log("onTask")
+function onReceiveTask(dest) {
+  console.log(dest);
   task.style.display = "block";
-  var taskType = document.getElementById("taskType");
-  var distDriver = document.getElementById("distDriver");
-  var distanceDriver = document.getElementById("distanceDriver");
+  document.getElementById("taskType").innerHTML = dest.datetimepicker;
+  document.getElementById("distDriver").innerHTML = dest.placeName;
+  document.getElementById("distanceDriver").innerHTML = dest.distance.text;
+
+
+
+  window.setTimeout(function () { directionDrive(dest.lat, dest.lng, dest.passengerlat, dest.passengerlng) }, 300)
+
   var sec = 15;
   var secHtml = document.getElementById("sec");
-
+  isaccept = false;
   var timesetInterval = window.setInterval(function () {
     secHtml.innerHTML = sec;
     if (sec > 0) sec--;
     else {
       clearInterval();
-      rejectTask();
-
+      if (isaccept == false) {
+        rejectTask("time out");
+      }
+      return;
     }
   }, 1000)
-  window.setTimeout(function () { direction(dest.lat, dest.lng) }, 300)
+
+
 }
 
 
+function directionDrive(destlat, destlng, passengerlat, passengerlng) {
+  var request = {
+    origin: { lat: parseFloat(passengerlat), lng: parseFloat(passengerlng) },
+    destination: { lat: parseFloat(destlat), lng: parseFloat(destlng) },
+    travelMode: 'DRIVING',
+    //avoidTolls: 'true'
+  };
 
+  console.log(request)
+
+  var infowindows = [];
+  var markers = [];
+  directionsService.route(request, function (result, status) {
+    if (status == 'OK') {
+      directionsDisplay.setDirections(result);
+
+
+    }
+    else {
+      console.log(status);
+    }
+  });
+}
+
+//check api /api/v0/task status
 function acceptTask() {
   console.log("task accept");
+  var status = '0'; //check api status again 
+  if (status == '0') {
+    isaccept = true;
+  } else {
+    rejectTask("time out");
+  }
+
 }
 
-function rejectTask() {
+function rejectTask(reson) {
+  //api reject 婉拒
+
+  //set user view
   directionsDisplay.set('directions', null);
   map.setCenter({ lat: lat, lng: lng });
   map.setZoom(zoom);
@@ -280,35 +321,93 @@ function rejectTask() {
 }
 
 //driver on line
-// /api/v0/task/next 
-//var fakeTaskNext = { "task_id": "111", "next_id": "222" };
-var fakeTask111Dest = {
-  passengerlng: "121.78009159",
-  passengerlat: "25.1510101",
-  lng: "121.5658191",
-  lat: "25.0353647",
-  distance: {
-    text: "33.8公里",
-    value: 33822,
+
+var fakeTaskNext = { "task_id": "111", "next_id": "112" };
+var fakeTaskNext2 = { "task_id": "112", "next_id": "-1" };
+var fakeTaskDest111 = {
+  dest: {
+    passengerlng: "121.78009159",
+    passengerlat: "25.1510101",
+    lng: "121.5658191",
+    lat: "25.0353647",
+    placeName: "place a",
+    distance: {
+      text: "33.8 公里",
+      value: 33822,
+    },
+    duration: {
+      text: "39 分鐘",
+      value: 2362,
+    },
+    fare: "574",
+    helmet: "true",
+    raincoat: "true",
+    datetimepicker: "12/09/2019 7:36 PM"
   },
-  duration: {
-    text: "39分鐘",
-    value: 2362,
+  username: "user1",
+  status: "0"
+
+}
+
+var fakeTaskDest112 = {
+  dest: {
+    passengerlng: "121.6176128",
+    passengerlat: "25.0486784",
+    lng: "121.5658191",
+    lat: "25.0353647",
+    placeName: "place b",
+    distance: {
+      text: "9.7 公里",
+      value: 9691,
+    },
+    duration: {
+      text: "15 分鐘",
+      value: 895,
+    },
+    fare: "574",
+    helmet: "true",
+    raincoat: "true",
+    datetimepicker: "12/09/2019 8:36 PM"
   },
-  fare: "574",
-  helmet: "true",
-  raincoat: "true",
-  datetimepicker: "12/09/2019 7:36 PM"
+  username: "user2",
+  status: "0"
 }
 
 
+function getTaskid(task_id) {
+  if (task_id == '0') { // GET "/api/v0/task/next?task_id = 0"
+    return fakeTaskNext;
+  } else if (task_id == '112') { // GET "/api/v0/task/next?task_id = 112"
+    return fakeTaskNext2;
+  } else {
+    return "-1";
+  }
+}
+
 function onlineTask() {
+  var taskinfo;
+  var next_id = '0';
+  var destnow;
+  //while (true) {
+
+  ///api/v0/task/next 
+  taskinfo = getTaskid(next_id);
+
+  if (taskinfo == "-1") {
+    setTimeout('console.log("no task")', 5000);
+  } else {
+    task_id = taskinfo.task_id;
+    next_id = taskinfo.next_id;
+    var request = fakeTaskDest111; // /api/v0/task?tasK_id = 111 
+    console.log(request);
+    dest = request.dest;
+    onReceiveTask(dest);
+    //}
 
 
-  dest.lat = 25.1380689;
-  dest.lng = 121.776766;
+  }
 
-  onReceiveTask()
+
 
 }
 
