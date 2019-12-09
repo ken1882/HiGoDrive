@@ -9,20 +9,7 @@ var geoFirst = true;
 var task;
 
 
-var taskOBJ = {
-  pasID: "",
-  paslng: "",
-  paslat: "",
-  lng: "",
-  lat: "",
-  distance: "",
-  duration: "",
-  helment: "",
-  raincoat: "",
-  datetimepicker: "",
-  fare: ""
 
-};
 
 var dest = {
   passengerlng: "",
@@ -32,7 +19,7 @@ var dest = {
   distance: "",
   duration: "",
   fare: "",
-  helment: "",
+  helmet: "",
   raincoat: "",
   datetimepicker: ""
 }
@@ -60,7 +47,7 @@ function CenterControl(controlDiv, map) {
   controlText.style.lineHeight = '5px';
   // controlText.style.paddingLeft = '5px';
   //controlText.style.paddingRight = '5px';
-  controlText.innerHTML = "<img src='img/my_location.svg' weight='30px' height='30px'>";
+  controlText.innerHTML = "<img src='assets/my_location.svg' weight='30px' height='30px'>";
   controlUI.appendChild(controlText);
 
   // Setup the click event listeners: simply set the map to Chicago.
