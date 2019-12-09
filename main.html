@@ -228,25 +228,32 @@
             <p><span>距離:###</span></p>
           </div>
           <div class="col-2">
-            <a href="#"><i class="fas fa-exclamation-triangle fa-2x py-2"></i></a>
+            <a href="report.html"><i class="fas fa-exclamation-triangle fa-2x py-2"></i></a>
             <br>
-            <a href="#"><i class="fas fa-map-signs fa-2x py-2"></i></a>
+            <a id="googleMap" href=""><i class="fas fa-map-signs fa-2x py-2"></i></a>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <p><span>##備註：</span><span>我到了</span></p>
           </div>
         </div>
         <form action="#">
           <div class="form-row">
             <div class="col-8">
-              <p><span>##備註：</span><span>我到了</span></p>
               <textarea class="form-control" id="errand_text_send" name="errand_text_send" placeholder="輸入備註"
                 rows="1"></textarea>
             </div>
             <div class="col-4">
-              <br>
-              <button type="submit" class="btn btn-success btn-block py-2">送出備註<i
+              <button type="submit" class="btn btn-success btn-block py-2"><small>送出備註 </small><i
                   class="fas fa-paper-plane"></i></button>
             </div>
           </div>
         </form>
+        <br>
+        <div class="px-2">
+          <button type="button" class=" btn btn-success btn-block"><small>完成訂單</small></button>
+        </div>
       </div>
 
     </div>
@@ -329,6 +336,7 @@
       document.getElementById('task').style.display = "none";
       document.getElementById('errand').style.display = "block";
       console.log("errand start!");
+      acceptTask();
     }
 
     function errandPassenger() {
