@@ -83,19 +83,20 @@
             <div class="col px-1">
               <label>自備配件:</label>
               <div class="form-check form-check-inline">
-                <input class="form-check-input" type="checkbox" name="inlineRadioOptions" id="helmentPassenger"
+                <input class="form-check-input" type="checkbox" name="helmentPassenger" id="helmentPassenger"
                   value="helment">
                 <label class="form-check-label" for="helment">安全帽</label>
               </div>
               <div class="form-check form-check-inline">
-                <input class="form-check-input" type="checkbox" name="inlineRadioOptions" id="raincoatPassenger"
+                <input class="form-check-input" type="checkbox" name="raincoatPassenger" id="raincoatPassenger"
                   value="raincoat">
                 <label class="form-check-label" for="raincoat">雨衣</label>
               </div>
             </div>
           </div>
           <div class="form-group">
-            <textarea class="form-control" id="passengerTextarea" rows="1" placeholder="備註"></textarea>
+            <textarea class="form-control" id="passengerTextarea" name="passengerTextarea" rows="1"
+              placeholder="備註"></textarea>
           </div>
           <div class="form-group" id="datetimepickerDiv" style="display: none;">
             <div class="form-row">
@@ -104,7 +105,7 @@
               </div>
               <div class="col-8">
                 <div class="input-group date" id="datetimepicker" data-target-input="nearest">
-                  <input type="text" class="form-control datetimepicker-input" id="resvtime"
+                  <input type="text" class="form-control datetimepicker-input" id="resvtime" name="resvtime"
                     data-toggle="datetimepicker" data-target="#datetimepicker" value="" />
                 </div>
               </div>
@@ -126,17 +127,16 @@
       </div>
 
       <div id="offlineState" class="offlineState" style="display: none;">
-        <form action="#" method="get">
+        <form action="#">
           <div class="form-row">
             <div class="col px-1">
               <label>配件提供:</label>
               <div class="form-check form-check-inline">
-                <input class="form-check-input" type="checkbox" name="inlineRadioOptions" id="helmentDriver"
-                  value="helment">
+                <input class="form-check-input" type="checkbox" name="helmentDriver" id="helmentDriver" value="helment">
                 <label class="form-check-label" for="helment">安全帽</label>
               </div>
               <div class="form-check form-check-inline">
-                <input class="form-check-input" type="checkbox" name="inlineRadioOptions" id="raincoatDriver"
+                <input class="form-check-input" type="checkbox" name="raincoatDriver" id="raincoatDriver"
                   value="raincoat">
                 <label class="form-check-label" for="raincoat">雨衣</label>
               </div>
@@ -183,14 +183,15 @@
             </div>
           </div>
         </div>
+
         <div id="reject" class="reject">
           <form action="#">
             <div class="form-row mb-1">
               <div class="col">
-                <button type="button" class="btn btn-info btn-block">太遠了</button>
+                <button type="button" class="btn btn-info btn-block" onclick="tooFar()">太遠了</button>
               </div>
               <div class="col">
-                <button type="button" class="btn btn-info btn-block">沒空接單</button>
+                <button type="button" class="btn btn-info btn-block" onclick="tooBusy()">沒空接單</button>
               </div>
               <!--
               <div class="col">
@@ -200,7 +201,7 @@
             </div>
             <div class="form-row">
               <div class="col-10">
-                <textarea class="form-control" id="rejectText" placeholder="拒絕原因" rows="1"></textarea>
+                <textarea class="form-control" id="rejectText" name="rejectText" placeholder="拒絕原因" rows="1"></textarea>
               </div>
               <div class="col-2">
                 <button type="submit" class="btn btn-sucess"><i class="fas fa-paper-plane"></i></button>
@@ -217,8 +218,8 @@
             <p class="text-center">user_id</p>
           </div>
           <div class="col-6">
-            <p><span id="dest">目的地:###</span></p>
-            <p><span id="distance">距離:###</span></p>
+            <p><span>目的地:###</span></p>
+            <p><span>距離:###</span></p>
           </div>
           <div class="col-2">
             <a href="#"><i class="fas fa-exclamation-triangle fa-2x py-2"></i></a>
@@ -229,8 +230,9 @@
         <form action="#">
           <div class="form-row">
             <div class="col-8">
-              <p><span id="errand_type">備註：</span><span id="errand_text_recv">我到了</span></p>
-              <textarea class="form-control" id="errand_text_send" placeholder="輸入備註" rows="1"></textarea>
+              <p><span>##備註：</span><span>我到了</span></p>
+              <textarea class="form-control" id="errand_text_send" name="errand_text_send" placeholder="輸入備註"
+                rows="1"></textarea>
             </div>
             <div class="col-4">
               <br>
@@ -322,6 +324,14 @@
       document.getElementById('order').style.display = "none";
       document.getElementById('errand').style.display = "block";
       console.log("errand start!");
+    }
+
+    function tooFar() {
+      document.getElementById('rejectText').value = "太遠了！";
+    }
+
+    function tooBusy() {
+      document.getElementById('rejectText').value = "太忙了！";
     }
   </script>
 
