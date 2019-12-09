@@ -47,6 +47,9 @@ function CenterControl(controlDiv, map) {
   controlText.style.lineHeight = '5px';
   // controlText.style.paddingLeft = '5px';
   //controlText.style.paddingRight = '5px';
+
+  //controlText.innerHTML = "<img src='/assets/my_location.svg' weight='30px' height='30px'>";
+
   controlText.innerHTML = "<img src='assets/my_location.svg' weight='30px' height='30px'>";
   controlUI.appendChild(controlText);
 
@@ -136,7 +139,7 @@ function direction(destlat, destlng) {
       dest.distance = result.routes[0].legs[0].distance;
       dest.duration = result.routes[0].legs[0].duration;
       dest.fare = Math.floor(dest.distance.value * distanceFareDegree + dest.duration.value * durationFareDegree);
-      console.log(dest);
+
 
     }
     else {
@@ -279,15 +282,29 @@ function rejectTask() {
 //driver on line
 // /api/v0/task/next 
 //var fakeTaskNext = { "task_id": "111", "next_id": "222" };
-var fakeTask111 = {
-  "dest": {
-
-  }
+var fakeTask111Dest = {
+  passengerlng: "121.78009159",
+  passengerlat: "25.1510101",
+  lng: "121.5658191",
+  lat: "25.0353647",
+  distance: {
+    text: "33.8公里",
+    value: 33822,
+  },
+  duration: {
+    text: "39分鐘",
+    value: 2362,
+  },
+  fare: "574",
+  helmet: "true",
+  raincoat: "true",
+  datetimepicker: "12/09/2019 7:36 PM"
 }
+
 
 function onlineTask() {
 
-  var destid = 0;
+
   dest.lat = 25.1380689;
   dest.lng = 121.776766;
 
