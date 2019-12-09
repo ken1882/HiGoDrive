@@ -334,8 +334,8 @@
     function errandPassenger() {
       document.getElementById('task').style.display = "none";
       document.getElementById('errand').style.display = "block";
-      dest.helmet = (document.getElementById('helmetPassenger').check = true);
-      dest.raincoat = (document.getElementById('raincoatPassenger').check = true);
+      dest.helmet = (document.getElementById('helmetPassenger').check == true);
+      dest.raincoat = (document.getElementById('raincoatPassenger').check == true);
       dest.datetimepicker = document.getElementById('resvtime').value;
       console.log("errand start!");
     }
