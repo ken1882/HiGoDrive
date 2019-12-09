@@ -123,7 +123,7 @@
               <button type="button" class="btn btn-success btn-block" onclick="resv(this)">預約行程</button>
             </div>
             <div class="col px-2">
-              <button type="submit" class="btn btn-success btn-block" onclick="errand()">開始行程</button>
+              <button type="submit" class="btn btn-success btn-block" onclick="errandPassenger()">開始行程</button>
             </div>
           </div>
         </form>
@@ -179,7 +179,7 @@
           <div class="row">
             <div class="col-6">
               <!--acceptTask()-->
-              <button type="button" class="btn btn-success btn-block" onclick="errand()">接受</button>
+              <button type="button" class="btn btn-success btn-block" onclick="errandDriver()">接受</button>
             </div>
             <div class="col-6">
               <!--rejectTask()-->
@@ -323,9 +323,14 @@
       document.getElementById('reject').style.display = "block";
     }
 
-    function errand() {
+    function errandDriver() {
       document.getElementById('task').style.display = "none";
-      document.getElementById('order').style.display = "none";
+      document.getElementById('errand').style.display = "block";
+      console.log("errand start!");
+    }
+
+    function errandPassenger() {
+      document.getElementById('task').style.display = "none";
       document.getElementById('errand').style.display = "block";
       console.log("errand start!");
     }
