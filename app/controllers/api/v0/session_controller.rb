@@ -13,15 +13,15 @@ module Api
         set_user(user)
         if logged_in?
           login_params[:remember_me] == '1' ? remember(user) : forget(user)
-          respond_to do |f| 
+          respond_to do |f|
             f.html {redirect_to root_path}
             f.json {render json: {'message' => "true"}, status: :ok}
           end
         else
-          respond_to do |f| 
+          respond_to do |f|
             f.html {
               flash.now[:danger] = 'Invalid username/email/password combination'
-              render 'session/new'
+              render '/login'
             }
             f.json {render json: {'message' => "false"}, status: :ok}
           end
@@ -47,6 +47,7 @@ module Api
       end
 
       def index
+        return no_content unless logged_in?
         render json: {:uid => current_user.id.to_s}
       end
 
@@ -60,4 +61,4 @@ module Api
       end
     end
   end # Api::V0
-end    
+end

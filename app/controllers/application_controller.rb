@@ -4,6 +4,7 @@ class ApplicationController < ActionController::Base
 
   def return_ok(*args); return_httpcode(200, *args); end
   def return_wip(*args); return_httpcode(204, *args); end
+  alias :no_content :return_wip
   def bad_request(*args); return_httpcode(400, *args); end
   def not_acceptable(*args); return_httpcode(406, *args); end
   def forbidden(*args); return_httpcode(403, *args); end
@@ -15,7 +16,7 @@ class ApplicationController < ActionController::Base
 
   private
   def return_httpcode(code, *messages, **kwargs)
-    sep   = kwargs[:sep] 
+    sep   = kwargs[:sep]
     sep ||= "\n"
     respond_to do |format|
       msg = messages.size == 0 ? Rack::Utils::HTTP_STATUS_CODES[code] : messages.join(sep)

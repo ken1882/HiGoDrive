@@ -2,7 +2,7 @@ module Api
   module V0
     class UsersController < ApplicationController
       include UsersHelper
-      
+
       before_action :set_user, only: [:show, :edit, :update, :login,
         :setpos, :getpos, :forgot_password, :reset_password]
       # ----------
@@ -16,13 +16,13 @@ module Api
       def index
         render json: {size: User.count}, status: :ok
       end
-    
+
       # GET /users/1
       # GET /users/1.json
       def show
         render json: @user.public_json_info, status: :ok
       end
-      
+
       # POST /checkusername
       def checkusername
         _username = user_init_params[:username] || ''
@@ -43,7 +43,7 @@ module Api
         @user = User.new(user_init_params)
         respond_to do |format|
           if @user.save
-            format.html { redirect_to user_url, notice: 'User was successfully created.' }
+            format.html { redirect_to '/login', notice: 'User was successfully created.' }
             format.json { render json: {message: 'created'}, status: :created}
           else
             format.html { unprocessable_entity }
@@ -51,14 +51,14 @@ module Api
           end
         end
       end
-    
+
       # PATCH/PUT /users/1
       # PATCH/PUT /users/1.json
       def update
         @user.update(user_update_fields)
         return_ok
       end
-    
+
       # DELETE /users/1
       # DELETE /users/1.json
       def destroy
@@ -73,7 +73,7 @@ module Api
         @user.set_pos(lat, lng)
         return_ok
       end
-      
+
       # GET /user/getpos
       def getpos
         render json: @user.get_pos, status: :ok
@@ -101,7 +101,7 @@ module Api
       def validate_init_params
         return bad_request unless register_param_ok?(user_init_params)
         return unprocessable_entity unless Util.email_deliverable?(user_init_params[:email])
-        return_ok
+        return true
       end
 
       def validate_update_params
@@ -163,10 +163,6 @@ module Api
         x = Float(lng) rescue nil
         y = Float(lat) rescue nil
         return x && y
-      end
-
-      def user_url
-        "/user/#{@user.username}"
       end
 
     end # class
