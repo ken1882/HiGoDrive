@@ -44,16 +44,17 @@
   <!--內容-->
   <main>
     <div class="container">
-      <h5 class="text-center my-3">訂單紀錄</h5>
+      <h4 class="text-center my-3">訂單紀錄</h4>
       <hr>
       <div class="accordion" id="accordion">
+        <!--樣式模板>>-->
         <div class="card">
           <div class="card-header px-0" id="headingOne">
             <button class="btn btn-block" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false"
               aria-controls="collapseOne">
               <div class="row">
                 <div class="col-4 px-0">
-                  <p class="mb-0"><img class="user_task" src="img/user-circle-regular.svg" type="image/svg+xml"
+                  <p class="mb-0"><img class="user_task" src="/assets/user-circle-regular.svg" type="image/svg+xml"
                       alt="user"></p>
                   <p name="user_id" class="mb-0">12345</p>
                 </div>
@@ -76,7 +77,8 @@
                   <div id="star" style="display: none;"></div>
                 </div>
                 <div class="form-group">
-                  <textarea class="form-control" id="scoreTextarea" rows="2" placeholder="評價敘述"></textarea>
+                  <textarea class="form-control" id="scoreTextarea" name="scoreTextarea" rows="2"
+                    placeholder="評價敘述"></textarea>
                 </div>
                 <div class="form-row">
                   <div class="col-6">
@@ -97,7 +99,7 @@
               aria-controls="collapseTwo">
               <div class="row">
                 <div class="col-4 px-0">
-                  <p class="mb-0"><img class="user_task" src="img/user-circle-regular.svg" type="image/svg+xml"
+                  <p class="mb-0"><img class="user_task" src="/assets/user-circle-regular.svg" type="image/svg+xml"
                       alt="user"></p>
                   <p name="user_id" class="mb-0">48763</p>
                 </div>
@@ -118,8 +120,45 @@
             </div>
           </div>
         </div>
+
+        <div class="card">
+          <div class="card-header px-0" id="headingThree">
+            <button class="btn btn-block" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false"
+              aria-controls="collapseThree">
+              <div class="row">
+                <div class="col-4 px-0">
+                  <p class="mb-0"><img class="user_task" src="/assets/user-circle-regular.svg" type="image/svg+xml"
+                      alt="user">
+                  </p>
+                  <p name="user_id" class="mb-0">48763</p>
+                </div>
+                <div class="col-6 px-0">
+                  <p name="dist" class="text-primary">目的地：基隆火車站</p>
+                  <p name="route" class="text-primary mb-0">時間：2019/12/3 18:00</p>
+                </div>
+                <div class="col-2 px-0">
+                  <p class="text-danger tag">已拒絕</p>
+                  <i class="fas fa-sort-down fa-lg"></i>
+                </div>
+              </div>
+            </button>
+          </div>
+          <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
+            <div class="card-body">
+              <span>拒絕原因：######</span>
+            </div>
+          </div>
+        </div>
+        <!--<<樣式模板-->
+      </div>
+
+      <div class="noTask" style="display: none;">
+        <br>
+        <h3 class="text-center">沒有訂單紀錄</h3>
+        <hr>
       </div>
     </div>
+
   </main>
 
   <!--下導覽列-->
@@ -157,7 +196,7 @@
     $('.score').raty({
       number: 5,
       targetType: 'score',
-      path: 'img',
+      path: 'assets',
       hints: ['非常差', '差', '普通', '好', '非常好'],
       size: 24,
       starHalf: 'star-half.png',
