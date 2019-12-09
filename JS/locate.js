@@ -299,13 +299,17 @@ function directionDrive(destlat, destlng, passengerlat, passengerlng) {
 
 //check api /api/v0/task status
 function acceptTask() {
-  console.log("task accept");
+
   var status = '0'; //check api status again 
   if (status == '0') {
     isaccept = true;
   } else {
     rejectTask("time out");
+    return;
   }
+  map.controls[google.maps.ControlPosition.LEFT_BOTTOM].push(document.getElementById('errand'));
+  console.log("task accept");
+  document.getElementById("googleMap").href = "https://www.google.com/maps/dir/" + lat + ',' + lng + '/' + dest.passengerlat + ',' + dest.passengerlng + '/' + dest.lat + ',' + dest.lng;
 
 }
 
