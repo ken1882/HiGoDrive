@@ -4,7 +4,7 @@ var relocateTimer, relocateTime = 10000, postLocationTimer, postTime = 8000;
 var durationFareDegree = 0.1
 var distanceFareDegree = 0.01
 var infoFare, infoDistance, infoTime;
-var isDriver = true; //change passenger mode or driver mode
+var isDriver = false; //change passenger mode or driver mode
 var geoFirst = true;
 var task;
 
@@ -25,6 +25,8 @@ var taskOBJ = {
 };
 
 var dest = {
+  passengerlng: "",
+  passengerlat: "",
   lng: "",
   lat: "",
   distance: "",
@@ -105,6 +107,7 @@ function geoloaction(isFirst) {
     console.log("geolocation found \nlat:" + pos.lat + "\nlng:" + pos.lng)
     lat = pos.lat
     lng = pos.lng
+
     setLocationMarker(lat, lng);
     if (isFirst) {
       map.setCenter({ lat: lat, lng: lng });
@@ -128,6 +131,8 @@ function geoloaction(isFirst) {
   }
 }
 
+
+
 function direction(destlat, destlng) {
   var request = {
     origin: { lat: lat, lng: lng },
@@ -144,7 +149,7 @@ function direction(destlat, destlng) {
       dest.distance = result.routes[0].legs[0].distance;
       dest.duration = result.routes[0].legs[0].duration;
       dest.fare = Math.floor(dest.distance.value * distanceFareDegree + dest.duration.value * durationFareDegree);
-      //console.log(dest);
+      console.log(dest);
 
     }
     else {
@@ -215,7 +220,8 @@ function setAutoComplete() {
     }
     dest.lat = place.geometry.location.lat();
     dest.lng = place.geometry.location.lng();
-
+    dest.passengerlat = lat;
+    dest.passengerlng = lng;
     window.setTimeout(function () {
       direction(place.geometry.location.lat(), place.geometry.location.lng());
     }, 300)
@@ -241,6 +247,7 @@ function initPassengerInfo() {
 
 function initPassenger() {
   initPassengerInfo();
+
   setAutoComplete();
 
 }
@@ -262,9 +269,10 @@ function onReceiveTask() {
     else {
       clearInterval();
       rejectTask();
+
     }
   }, 1000)
-  //window.setTimeout(function () { direction(25.1380689, 121.776766) }, 300)
+  window.setTimeout(function () { direction(dest.lat, dest.lng) }, 300)
 }
 
 
@@ -274,15 +282,27 @@ function acceptTask() {
 }
 
 function rejectTask() {
+  directionsDisplay.set('directions', null);
+  map.setCenter({ lat: lat, lng: lng });
+  map.setZoom(zoom);
+  task.style.display = "none";
 
 }
 
 //driver on line
+// /api/v0/task/next 
+//var fakeTaskNext = { "task_id": "111", "next_id": "222" };
+var fakeTask111 = {
+  "dest": {
+
+  }
+}
+
 function onlineTask() {
-  //...ajax server task 
-  // api need
-  dest.lat = "25.1380689";
-  dest.lng = "121.776766";
+
+  var destid = 0;
+  dest.lat = 25.1380689;
+  dest.lng = 121.776766;
 
   onReceiveTask()
 
