@@ -149,7 +149,7 @@ function direction(destlat, destlng) {
   });
 }
 
-2
+
 
 function setPsssengerDirectionInfo() {
   info.style.display = "inline"
