@@ -83,9 +83,9 @@
             <div class="col px-1">
               <label>自備配件:</label>
               <div class="form-check form-check-inline">
-                <input class="form-check-input" type="checkbox" name="helmentPassenger" id="helmentPassenger"
-                  value="helment">
-                <label class="form-check-label" for="helment">安全帽</label>
+                <input class="form-check-input" type="checkbox" name="helmetPassenger" id="helmetPassenger"
+                  value="helmet">
+                <label class="form-check-label" for="helmet">安全帽</label>
               </div>
               <div class="form-check form-check-inline">
                 <input class="form-check-input" type="checkbox" name="raincoatPassenger" id="raincoatPassenger"
@@ -136,8 +136,8 @@
             <div class="col px-1">
               <label>配件提供:</label>
               <div class="form-check form-check-inline">
-                <input class="form-check-input" type="checkbox" name="helmentDriver" id="helmentDriver" value="helment">
-                <label class="form-check-label" for="helment">安全帽</label>
+                <input class="form-check-input" type="checkbox" name="helmetDriver" id="helmetDriver" value="helmet">
+                <label class="form-check-label" for="helmet">安全帽</label>
               </div>
               <div class="form-check form-check-inline">
                 <input class="form-check-input" type="checkbox" name="raincoatDriver" id="raincoatDriver"
@@ -332,6 +332,9 @@
     function errandPassenger() {
       document.getElementById('task').style.display = "none";
       document.getElementById('errand').style.display = "block";
+      dest[helmet] = (document.getElementById('helmetPassenger').check = true);
+      dest[raincoat] = (document.getElementById('raincoatPassenger').check = true);
+      dest[datetimepicker] = document.getElementById('resvtime').value;
       console.log("errand start!");
     }
 
