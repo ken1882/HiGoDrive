@@ -33,7 +33,7 @@ Rails.application.routes.draw do
       get '/user/getpos', to: 'users#getpos'
       
       get '/mytasks', to: 'tasks#user_tasks'
-      
+      get '/next_task', to: 'tasks#next_task'
     end
   end
   

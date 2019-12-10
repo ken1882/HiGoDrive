@@ -3,10 +3,10 @@ module Api
     class TasksController < ApplicationController
       include TasksHelper
 
-      before_action :set_task, only: [:show, :edit, :update, :destroy]
+      before_action :set_task, only: [:show, :update, :destroy]
 
       before_action :validate_login, only: [:create, :update, :destroy,
-        :user_tasks]
+        :user_tasks, :next_task]
       before_action :validate_timelock, only: [:create]
       before_action :validate_init_params, only: [:create]
     
@@ -19,7 +19,7 @@ module Api
       # GET /tasks/1
       # GET /tasks/1.json
       def show
-        return_wip
+        render json: @task.public_json_info, status: :ok
       end
       
       # GET /tasks/mine
@@ -67,11 +67,24 @@ module Api
           format.json { head :no_content }
         end
       end
-    
+      
+
+      # GET /next_task
+      def next_task
+        tid = params[:id].to_i
+        return bad_request if tid.nil?
+        ret_cur = 0; ret_nxt = 0;
+        idx = (tid == 0 ? 0 : $task_queue.index(tid)) || 0
+        ret_cur = $task_queue[idx]
+        ret_nxt = $task_queue[idx+1]
+        render json: {task_id: ret_cur || 0, next_id: ret_nxt || 0}
+      end
+
       private
       # Use callbacks to share common setup or constraints between actions.
       def set_task
-        @task = Task.find(params[:id])
+        @task = Task.find(params[:id].to_i)
+        return not_found unless @task
       end
     
       def validate_login
@@ -80,11 +93,13 @@ module Api
       end
       
       def validate_timelock
-        lct = current_user.tasks.last.created_at.to_i
-        if (Time.now.to_i - lct).abs < 180
-          return forbidden
+        current_user.mutex.synchronize do
+          lct = current_user.tasks.last.created_at.to_i rescue 0
+          if (Time.now.to_i - lct).abs < 180
+            return forbidden
+          end
+          return true
         end
-        return true
       end
 
       def validate_init_params
@@ -94,7 +109,7 @@ module Api
         return bad_request unless _time.between?(curt - 180, curt + 60 * 60 * 24 * 100)
         return true
       end
-    
+
     end    
   end
 end

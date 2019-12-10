@@ -173,4 +173,8 @@ class User
     return false
   end
 
+  def mutex 
+    return @mutex if @mutex
+    @mutex = Mutex.new
+  end
 end
