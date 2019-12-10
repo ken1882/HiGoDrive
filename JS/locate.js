@@ -406,7 +406,7 @@ function onReceiveTask(dest) {
   clearInterval(timesetInterval);
   timesetInterval = window.setInterval(function () {
 
-    secHtml.innerHTML = sec;
+    secHtml.innerHTML = sec + ' 秒';
     if (sec > 0) sec--;
     else {
       clearInterval(timesetInterval);

@@ -162,7 +162,7 @@
             <span id="taskType">立即</span>
           </div>
           <div class="col-2">
-            <span id="sec">15</span><span>s</span>
+            <span id="sec"></span>
           </div>
         </div>
         <div class="row">
@@ -335,6 +335,8 @@
     function reject() {
       document.getElementById('option').style.display = "none";
       document.getElementById('reject').style.display = "block";
+      document.getElementById("sec").innerHTML = '';
+      clearInterval(timesetInterval);
     }
 
     function errandDriver() {
