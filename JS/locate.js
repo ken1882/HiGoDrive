@@ -1,3 +1,4 @@
+//function : acceptTask  rejectTask onlineTask 需串 api  acceptTask 備註待更改
 var map, marker, directionsService, directionsDisplay, info;
 var zoom = 17, lat = 25.1506194, lng = 121.7760687;
 var relocateTimer, relocateTime = 10000, postLocationTimer, postTime = 8000;
