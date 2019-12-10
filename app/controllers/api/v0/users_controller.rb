@@ -34,14 +34,21 @@ module Api
       # POST /checkusername
       def checkusername
         _username = user_init_params[:username] || ''
-        return unprocessable_entity unless _username.length.between?(3, 20)
+        return bad_request unless _username.length.between?(3, 20)
         render json: {'message': User.username_exist?(_username)}
+      end
+
+      # POST /checkphone
+      def checkphone
+        number = Util.format_phone_number(params[:phone]) || ''
+        return bad_request unless number.match(User::PhoneRegex)
+        render json: {'message': User.phone_exist?(number)}
       end
 
       # POST /checkemail
       def checkemail
         _email = user_init_params[:email] || ''
-        return unprocessable_entity unless _email.length.between?(3, 255)
+        return bad_request unless _email.length.between?(3, 255)
         render json: {'message': User.email_exist?(_email)}
       end
 

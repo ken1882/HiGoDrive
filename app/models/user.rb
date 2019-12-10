@@ -47,8 +47,13 @@ class User
     self.where({'email' => email}).count != 0
   end
 
+  def self.phone_exist?(phone)
+    self.where({'phone' => phone}).count != 0
+  end
+
   def self.exist?(params)
-    return username_exist?(params[:username]) || email_exist?(params[:email])
+    return username_exist?(params[:username]) || 
+      email_exist?(params[:email]) || phone_exist?(params[:phone])
   end
 
   def self.register_param_ok?(params)
@@ -67,6 +72,11 @@ class User
   end
 
   def self.new_token; SecureRandom.urlsafe_base64; end
+
+  def initialize(_params)
+    _params[:phone] = Util.format_phone_number(_params[:phone])
+    super
+  end
 
   def init_roles
     bt = (@attributes['roles'] || 0) | RoleManager.get_role_bitset(:passenger)

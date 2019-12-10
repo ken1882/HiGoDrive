@@ -21,6 +21,7 @@ Rails.application.routes.draw do
 
       post '/checkusername', to: 'users#checkusername'
       post '/checkemail', to: 'users#checkemail'
+      post '/checkphone', to: 'users#checkphone'
       post '/currentuser', to: 'session#index'
       post '/forgotpassword', to: 'users#forgot_password'
       post '/resetpassword', to: 'users#reset_password'
