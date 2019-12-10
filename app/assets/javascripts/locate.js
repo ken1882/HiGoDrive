@@ -26,6 +26,7 @@ var dest = {
   datetimepicker: ""
 }
 
+
 function CenterControl(controlDiv, map) {
 
   // Set CSS for the control border.
@@ -123,6 +124,37 @@ function geoloaction(isFirst) {
   }
 }
 
+function initMap() {
+  //initial Map
+  map = new google.maps.Map(document.getElementById('map'), {
+    zoom: zoom,
+    center: {
+      lat: lat,
+      lng: lng,
+    },
+    disableDefaultUI: true,
+  });
+
+  document.getElementById('map').style.height = document.getElementsByTagName("main")[0].clientHeight + "px";
+
+  //inital direction service and display
+  directionsService = new google.maps.DirectionsService();
+  directionsDisplay = new google.maps.DirectionsRenderer();
+  directionsDisplay.setMap(map)
+
+  if (isDriver) {
+    initDriver();
+  } else {
+    initPassenger();
+  }
+
+  setIcon();
+  geoloaction(geoFirst)
+  relocateTimer = window.setInterval(function () { geoloaction(geoFirst); }, relocateTime);
+
+
+
+}
 
 
 function direction(destlat, destlng) {
@@ -256,37 +288,7 @@ function cancelDest() {
   map.setZoom(zoom)
 }
 
-function initMap() {
-  //initial Map
-  map = new google.maps.Map(document.getElementById('map'), {
-    zoom: zoom,
-    center: {
-      lat: lat,
-      lng: lng,
-    },
-    disableDefaultUI: true,
-  });
 
-  document.getElementById('map').style.height = document.getElementsByTagName("main")[0].clientHeight + "px";
-
-  //inital direction service and display
-  directionsService = new google.maps.DirectionsService();
-  directionsDisplay = new google.maps.DirectionsRenderer();
-  directionsDisplay.setMap(map)
-
-  if (isDriver) {
-    initDriver();
-  } else {
-    initPassenger();
-  }
-
-  setIcon();
-  geoloaction(geoFirst)
-  relocateTimer = window.setInterval(function () { geoloaction(geoFirst); }, relocateTime);
-
-
-
-}
 
 
 
@@ -355,6 +357,8 @@ function getTaskid(task_id) {
   }
 }
 
+
+//driver on line
 function onlineTask() {
   var taskinfo;
   var next_id = '0';
@@ -379,11 +383,12 @@ function onlineTask() {
   }
 }
 
-//driver on line
+//driver off line
 function offlineTask() {
   clearInterval(timesetInterval);
 }
 
+//driver get task
 function onReceiveTask(dest) {
   console.log(dest);
   task.style.display = "block";
@@ -401,7 +406,7 @@ function onReceiveTask(dest) {
   clearInterval(timesetInterval);
   timesetInterval = window.setInterval(function () {
 
-    secHtml.innerHTML = sec;
+    secHtml.innerHTML = sec + ' 秒';
     if (sec > 0) sec--;
     else {
       clearInterval(timesetInterval);
@@ -415,7 +420,7 @@ function onReceiveTask(dest) {
 
 }
 
-
+// preview route between passenger position and destination
 function directionDrive(destlat, destlng, passengerlat, passengerlng) {
   var request = {
     origin: { lat: parseFloat(passengerlat), lng: parseFloat(passengerlng) },
@@ -454,6 +459,8 @@ function acceptTask() {
   }
   map.controls[google.maps.ControlPosition.LEFT_BOTTOM].push(document.getElementById('errand'));
   console.log("task accept");
+
+  // open map  on mobile  app
   document.getElementById("googleMap").href = "https://www.google.com/maps/dir/" + lat + ',' + lng + '/' + dest.passengerlat + ',' + dest.passengerlng + '/' + dest.lat + ',' + dest.lng;
 
 }
