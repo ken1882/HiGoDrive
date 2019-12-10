@@ -377,6 +377,7 @@ function onlineTask() {
 
   ///api/v0/task/next 
   taskinfo = getTaskid(taskid.nowid); //fake api first time give 0
+  console.log(taskinfo);
   if (taskid.nowid == 0) {
     taskid.nowid = taskinfo.task_id
   }
@@ -395,7 +396,10 @@ function onlineTask() {
   }
 
   dest = request.dest;
-  onReceiveTask(dest);
+
+  console.log(taskinfo);
+  setTimeout((() => onReceiveTask(dest)), 500);
+
 
   //done
 
