@@ -20,7 +20,7 @@ module Api
         else
           respond_to do |f|
             f.html {
-              flash.now[:danger] = 'Invalid username/email/password combination'
+              flash[:danger] = 'Invalid username/email/password combination'
               redirect_to '/login'
             }
             f.json {render json: {'message' => "false"}, status: :ok}
@@ -39,7 +39,8 @@ module Api
         end
         respond_to do |f|
           f.html {
-            flash[:notice] = notice_msg
+            flash[:notice] = notice_msg if logged_in?
+            flash[:danger] = notice_msg unless logged_in?
             redirect_to root_path
           }
           f.json {render json: {'message' => json_msg}, status: :ok}
