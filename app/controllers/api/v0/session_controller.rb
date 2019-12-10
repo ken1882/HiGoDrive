@@ -21,7 +21,7 @@ module Api
           respond_to do |f|
             f.html {
               flash.now[:danger] = 'Invalid username/email/password combination'
-              render '/login'
+              redirect_to '/login'
             }
             f.json {render json: {'message' => "false"}, status: :ok}
           end
