@@ -104,7 +104,6 @@ class User
       'id'       => id.to_s,
       'username' => username,
       'nickname' => nickname,
-      'last_login_time' => last_login_time,
     }
   end
 

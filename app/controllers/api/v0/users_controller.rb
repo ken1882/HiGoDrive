@@ -3,8 +3,9 @@ module Api
     class UsersController < ApplicationController
       include UsersHelper
       
-      before_action :set_user, only: [:show, :edit, :update, :login,
-        :setpos, :getpos, :forgot_password, :reset_password]
+      before_action :set_user, only: [:show, :getpos, :forgot_password,
+        :reset_password]
+      before_action :set_current_user, only: [:update, :setpos]
       # ----------
       before_action :validate_init_params, only: [:create]
       before_action :validate_update_params, only: [:update]
@@ -94,8 +95,13 @@ module Api
       private
       # Use callbacks to share common setup or constraints between actions.
       def set_user
-        @user = current_user || User.wide_query(user_find_params.compact.first)
+        @user = User.wide_query(user_find_params.compact.first)
         not_found if @user.nil?
+      end
+
+      def set_current_user
+        @user = current_user
+        unauthorized if @user.nil?
       end
 
       def validate_init_params
