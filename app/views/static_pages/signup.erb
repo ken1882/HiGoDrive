@@ -64,7 +64,11 @@
 
  <form action="/api/v0/users" method="post">
   <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+  Real Name: <input type="text" name="realname"><br>  
+  <br>
   Username: <input type="text" name="username"><br> 
+  <br>
+  Phone Number: <input type="text" name="phone"><br>  
   <br>
   Email: <input type="text" name="email"><br> 
   <br> 
@@ -72,10 +76,11 @@
   <br> 
   Password Confirmation: <input type="text" name="password_confirmation"><br> 
   <br>
+  <label><input type="checkbox" name="roles" value="1">Passenger</label>
+  <br>
   <input type="submit" value="Submit">
   <input type="button" onclick="check()" value="Check"> 
   </form>
 
   <p id="msg"></p> 
-  <% console if Rails.development? %>
 </div>

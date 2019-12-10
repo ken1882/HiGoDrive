@@ -1,8 +1,8 @@
 module RoleManager
   RoleTable = {
     :admin      => 0,
-    :standard   => 1,
-    :sponsor    => 2,
+    :passenger  => 1,
+    :driver     => 2,
   }
 
   RoleTable.each{|k, v| RoleTable[k] = (1 << v)}
@@ -15,6 +15,10 @@ module RoleManager
       bitset |= RoleTable[role]
     end
     return bitset
+  end
+
+  def match?(bt, sym)
+    bt & get_role_bitset(sym) > 0
   end
 
 end

@@ -39,6 +39,7 @@ Rails.application.routes.draw do
       put '/user/update', to: 'users#update'
       post '/user/setpos', to: 'users#setpos'
       get '/user/getpos', to: 'users#getpos'
+      get '/search', to: 'users#show'
     end
   end
 
