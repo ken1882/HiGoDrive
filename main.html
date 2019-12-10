@@ -210,8 +210,7 @@
                 <textarea class="form-control" id="rejectText" name="rejectText" placeholder="拒絕原因" rows="1"></textarea>
               </div>
               <div class="col-2">
-                <button type="button" class="btn btn-sucess"
-                  onclick="rejectTask(getElementById('rejectText').innerHTML); onlineTask();"><i
+                <button type="button" class="btn btn-sucess" onclick="rejectTask()"><i
                     class="fas fa-paper-plane"></i></button>
               </div>
             </div>
@@ -338,6 +337,13 @@
       document.getElementById('reject').style.display = "block";
       document.getElementById("sec").innerHTML = '';
       clearInterval(timesetInterval);
+    }
+
+    function rejectTask() {
+      rejectTask(getElementById('rejectText').innerHTML);
+      document.getElementById('option').style.display = "block";
+      document.getElementById('reject').style.display = "none";
+      onlineTask();
     }
 
     function errandDriver() {
