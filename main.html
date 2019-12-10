@@ -252,7 +252,7 @@
         </form>
         <br>
         <div class="px-2">
-          <button type="button" class=" btn btn-success btn-block"><small>完成訂單</small></button>
+          <button type="button" class=" btn btn-success btn-block" onclick="finish()"><small>完成訂單</small></button>
         </div>
       </div>
 
@@ -357,6 +357,15 @@
 
     function tooBusy() {
       document.getElementById('rejectText').value = "太忙了！";
+    }
+
+    function finish() {
+      document.getElementById('errand').style.display = "none";
+      console.log("task finish!!");
+      directionsDisplay.set('directions', null);
+      map.setCenter({ lat: lat, lng: lng });
+      map.setZoom(zoom);
+      //需傳id給伺服器使差事狀態完成
     }
   </script>
 
