@@ -9,7 +9,11 @@ var geoFirst = true;
 var task;
 var isaccept = false;
 var timesetInterval;
-var task_id = '0';
+var taskid = {
+  nowid: '0',
+  nextid: '0'
+};
+var request;
 
 
 var dest = {
@@ -347,6 +351,9 @@ var fakeTaskDest112 = {
   username: "user2",
   status: "0"
 }
+
+// above is fake data
+
 function getTaskid(task_id) {
   if (task_id == '0') { // GET "/api/v0/task/next?task_id = 0"
     return fakeTaskNext;
@@ -357,30 +364,46 @@ function getTaskid(task_id) {
   }
 }
 
+function getTasks(task_id) { // fake /api/v0/tasks
+  if (task_id == "111") return fakeTaskDest111;
+  if (task_id == "112") return fakeTaskDest112;
+  return "-1";
+}
 
 //driver on line
 function onlineTask() {
   var taskinfo;
-  var next_id = '0';
-  var destnow;
-  //while (true) {
+
 
   ///api/v0/task/next
-  taskinfo = getTaskid(next_id);
+  taskinfo = getTaskid(taskid.nowid); //fake api first time give 0
+  console.log(taskinfo);
+  if (taskid.nowid == 0) {
+    taskid.nowid = taskinfo.task_id
+  }
+  taskid.nextid = taskinfo.next_id;
 
   if (taskinfo == "-1") {
-    setTimeout('console.log("no task")', 5000);
-  } else {
-    task_id = taskinfo.task_id;
-    next_id = taskinfo.next_id;
-    var request = fakeTaskDest111; // /api/v0/task?tasK_id = 111
-    console.log(request);
-    dest = request.dest;
-    onReceiveTask(dest);
-    //}
-
+    return setTimeout(onlineTask(), 5000); // fail request or no task
 
   }
+
+  request = getTasks(taskid.nowid);
+  if (request == "-1") {
+    taskid.nowid = '0';
+    return setTimeout(onlineTask(), 5000); // fail request or no task
+
+  }
+
+  dest = request.dest;
+
+  console.log(taskinfo);
+  setTimeout((() => onReceiveTask(dest)), 500);
+
+
+  //done
+
+
 }
 
 //driver off line
@@ -413,7 +436,7 @@ function onReceiveTask(dest) {
       if (isaccept == false) {
         rejectTask("time out");
       }
-      return;
+      return onlineTask();
     }
   }, 1000)
 
@@ -445,13 +468,13 @@ function directionDrive(destlat, destlng, passengerlat, passengerlng) {
   });
 }
 
-//check api /api/v0/task status
+//check api /api/v0/task status task_id = taskid.nowid
 function acceptTask() {
 
   var status = '0'; //check api status again
   if (status == '0') {
     isaccept = true;
-    console.log(task_id) //set api status = 1;
+    console.log(taskid.nowid) //set api status = 1;
 
   } else {
     rejectTask("task is accepted by other driver");
@@ -465,13 +488,14 @@ function acceptTask() {
 
 }
 
+
 function rejectTask(reason) {
   //api reject 婉拒
-
+  taskid.nowid = taskid.nextid; //switch to next task
   //set user view
   directionsDisplay.set('directions', null);
-  //map.setCenter({ lat: lat, lng: lng });
-  // map.setZoom(zoom);
+  map.setCenter({ lat: lat, lng: lng });
+  map.setZoom(zoom);
   task.style.display = "none";
 
 }
