@@ -19,26 +19,6 @@
     <hr>
 
     <div class="userList">
-      <!--樣式模板>>-->
-      <!--
-      <div class="card mb-3 mx-auto" style="max-width: 540px;">
-        <div class="row no-gutters">
-          <div class="col-4">
-            <img id="user" src="/assets/user-circle-regular.svg" type="image/svg+xml" class="card-img" alt="user">
-          </div>
-          <div class="col-8">
-            <div class="card-body">
-              <h5 class="card-title">Driver ID:</h5>
-              <p class="card-text">名稱：</p>
-              <p class="card-text">聯絡方式：</p>
-              <p class="card-text">個人資訊：</p>
-              <p class="card-text text-primary"><small class="text-muted">18:00~19:00已被預約</small></p>
-            </div>
-          </div>
-        </div>
-      </div>
-      -->
-      <!--<<樣式模板-->
     </div>
 
   </div>
@@ -76,14 +56,16 @@
 
 <script>
   function listUserInfo(result) {
-    console.log(result);
-    var username = result.username;
-    if (result.nickname) {
-      username = username + " (" + result.nickname + ")"
+    var name = result.username;
+    if (result.realname) {
+      name = name + " (" + result.realname + ")"
     }
-    var email = undefined;
-    var phone = undefined;
-    var bio = undefined;
+    var email = result.email;
+    var phone = result.phone;
+    var bio = result.bio;
+    if (!bio) {
+      bio = "";
+    }
     $(".userList").html('' +
       '<div class="card mb-3 mx-auto" style="max-width: 540px;">' +
       '  <div class="row no-gutters">' +
@@ -92,7 +74,7 @@
       '    </div>' +
       '    <div class="col-8">' +
       '      <div class="card-body">' +
-      '        <h5 class="card-title">用戶名稱：' + username + '</h5>' +
+      '        <h5 class="card-title">用戶名稱：' + name + '</h5>' +
       '        <p class="card-text">電子信箱：' + email + '</p>' +
       '        <p class="card-text">手機號碼：' + phone + '</p>' +
       '        <p class="card-text">個人資訊：' + bio + '</p>' +
