@@ -439,6 +439,8 @@ function onReceiveTask(dest) {
       clearInterval(timesetInterval);
       if (isaccept == false) {
         rejectTask("time out");
+        console.log("auto reject")
+        return setTimeout('onlineTask()', 1000); // fail request or no task
       }
       return;
       //return onlineTask();
