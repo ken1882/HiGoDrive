@@ -497,7 +497,7 @@ function acceptTask() {
   document.getElementById("userid").innerHTML = "乘客：" + request.username
   document.getElementById("destination").innerHTML = request.dest.placeName
   document.getElementById("distance").innerHTML = request.dest.distance.text
-
+  document.getElementById("fare").innerHTML = request.dest.fare + '元'
   var ps = document.getElementById("psText").innerHTML // web get driver ps text
 }
 
