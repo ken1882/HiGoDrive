@@ -94,15 +94,13 @@
         "http://localhost:3000/api/v0/users/" + id,
         null,
         listUserInfo,
-        function (re) { console.log("unexpected error"); });
+        function (result) { console.log("unexpected error"); });
   }
 
   function userNotFound(result) {
     $(".userList").html('' +
       '<div class="notFound">' +
-      '  <br>' +
-      '  <h3 class="text-center">很抱歉！找不到該使用者</h3>' +
-      '  <hr>' +
+      '  <h3 class="text-center alert alert-danger">很抱歉！找不到該使用者</h3>' +
       '</div>');
   }
 
