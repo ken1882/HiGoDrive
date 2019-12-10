@@ -8,6 +8,7 @@ var isDriver = true; //change passenger mode or driver mode
 var geoFirst = true;
 var task;
 var isaccept = false;
+var timesetInterval;
 var task_id = '0';
 
 
@@ -243,6 +244,146 @@ function initPassenger() {
 
 }
 
+function cancelDest() {
+  document.getElementById('search').value = "";
+  document.getElementById('datetimepickerDiv').style.display = "none";
+  directionsDisplay.set('directions', null);
+  info.style.display = "none"
+  infoDistance.innerHTML = "";
+  infoTime.innerHTML = "";
+  infoFare.innerHTML = "";
+  map.setCenter({ lat: lat, lng: lng });
+  map.setZoom(zoom)
+}
+
+function initMap() {
+  //initial Map
+  map = new google.maps.Map(document.getElementById('map'), {
+    zoom: zoom,
+    center: {
+      lat: lat,
+      lng: lng,
+    },
+    disableDefaultUI: true,
+  });
+
+  document.getElementById('map').style.height = document.getElementsByTagName("main")[0].clientHeight + "px";
+
+  //inital direction service and display
+  directionsService = new google.maps.DirectionsService();
+  directionsDisplay = new google.maps.DirectionsRenderer();
+  directionsDisplay.setMap(map)
+
+  if (isDriver) {
+    initDriver();
+  } else {
+    initPassenger();
+  }
+
+  setIcon();
+  geoloaction(geoFirst)
+  relocateTimer = window.setInterval(function () { geoloaction(geoFirst); }, relocateTime);
+
+
+
+}
+
+
+
+
+
+
+
+//driver on line
+
+var fakeTaskNext = { "task_id": "111", "next_id": "112" };
+var fakeTaskNext2 = { "task_id": "112", "next_id": "-1" };
+var fakeTaskDest111 = {
+  dest: {
+    passengerlng: "121.78009159",
+    passengerlat: "25.1510101",
+    lng: "121.5658191",
+    lat: "25.0353647",
+    placeName: "place a",
+    distance: {
+      text: "33.8 公里",
+      value: 33822,
+    },
+    duration: {
+      text: "39 分鐘",
+      value: 2362,
+    },
+    fare: "574",
+    helmet: "true",
+    raincoat: "true",
+    datetimepicker: "12/09/2019 7:36 PM"
+  },
+  username: "user1",
+  status: "0"
+
+}
+var fakeTaskDest112 = {
+  dest: {
+    passengerlng: "121.6176128",
+    passengerlat: "25.0486784",
+    lng: "121.5658191",
+    lat: "25.0353647",
+    placeName: "place b",
+    distance: {
+      text: "9.7 公里",
+      value: 9691,
+    },
+    duration: {
+      text: "15 分鐘",
+      value: 895,
+    },
+    fare: "574",
+    helmet: "true",
+    raincoat: "true",
+    datetimepicker: "12/09/2019 8:36 PM"
+  },
+  username: "user2",
+  status: "0"
+}
+function getTaskid(task_id) {
+  if (task_id == '0') { // GET "/api/v0/task/next?task_id = 0"
+    return fakeTaskNext;
+  } else if (task_id == '112') { // GET "/api/v0/task/next?task_id = 112"
+    return fakeTaskNext2;
+  } else {
+    return "-1";
+  }
+}
+
+function onlineTask() {
+  var taskinfo;
+  var next_id = '0';
+  var destnow;
+  //while (true) {
+
+  ///api/v0/task/next
+  taskinfo = getTaskid(next_id);
+
+  if (taskinfo == "-1") {
+    setTimeout('console.log("no task")', 5000);
+  } else {
+    task_id = taskinfo.task_id;
+    next_id = taskinfo.next_id;
+    var request = fakeTaskDest111; // /api/v0/task?tasK_id = 111
+    console.log(request);
+    dest = request.dest;
+    onReceiveTask(dest);
+    //}
+
+
+  }
+}
+
+//driver on line
+function offlineTask() {
+  clearInterval(timesetInterval);
+}
+
 function onReceiveTask(dest) {
   console.log(dest);
   task.style.display = "block";
@@ -257,11 +398,13 @@ function onReceiveTask(dest) {
   var sec = 15;
   var secHtml = document.getElementById("sec");
   isaccept = false;
-  var timesetInterval = window.setInterval(function () {
+  clearInterval(timesetInterval);
+  timesetInterval = window.setInterval(function () {
+
     secHtml.innerHTML = sec;
     if (sec > 0) sec--;
     else {
-      clearInterval();
+      clearInterval(timesetInterval);
       if (isaccept == false) {
         rejectTask("time out");
       }
@@ -300,11 +443,13 @@ function directionDrive(destlat, destlng, passengerlat, passengerlng) {
 //check api /api/v0/task status
 function acceptTask() {
 
-  var status = '0'; //check api status again 
+  var status = '0'; //check api status again
   if (status == '0') {
     isaccept = true;
+    console.log(task_id) //set api status = 1;
+
   } else {
-    rejectTask("time out");
+    rejectTask("task is accepted by other driver");
     return;
   }
   map.controls[google.maps.ControlPosition.LEFT_BOTTOM].push(document.getElementById('errand'));
@@ -313,114 +458,16 @@ function acceptTask() {
 
 }
 
-function rejectTask(reson) {
+function rejectTask(reason) {
   //api reject 婉拒
 
   //set user view
   directionsDisplay.set('directions', null);
-  map.setCenter({ lat: lat, lng: lng });
-  map.setZoom(zoom);
+  //map.setCenter({ lat: lat, lng: lng });
+  // map.setZoom(zoom);
   task.style.display = "none";
 
 }
-
-//driver on line
-
-var fakeTaskNext = { "task_id": "111", "next_id": "112" };
-var fakeTaskNext2 = { "task_id": "112", "next_id": "-1" };
-var fakeTaskDest111 = {
-  dest: {
-    passengerlng: "121.78009159",
-    passengerlat: "25.1510101",
-    lng: "121.5658191",
-    lat: "25.0353647",
-    placeName: "place a",
-    distance: {
-      text: "33.8 公里",
-      value: 33822,
-    },
-    duration: {
-      text: "39 分鐘",
-      value: 2362,
-    },
-    fare: "574",
-    helmet: "true",
-    raincoat: "true",
-    datetimepicker: "12/09/2019 7:36 PM"
-  },
-  username: "user1",
-  status: "0"
-
-}
-
-var fakeTaskDest112 = {
-  dest: {
-    passengerlng: "121.6176128",
-    passengerlat: "25.0486784",
-    lng: "121.5658191",
-    lat: "25.0353647",
-    placeName: "place b",
-    distance: {
-      text: "9.7 公里",
-      value: 9691,
-    },
-    duration: {
-      text: "15 分鐘",
-      value: 895,
-    },
-    fare: "574",
-    helmet: "true",
-    raincoat: "true",
-    datetimepicker: "12/09/2019 8:36 PM"
-  },
-  username: "user2",
-  status: "0"
-}
-
-
-function getTaskid(task_id) {
-  if (task_id == '0') { // GET "/api/v0/task/next?task_id = 0"
-    return fakeTaskNext;
-  } else if (task_id == '112') { // GET "/api/v0/task/next?task_id = 112"
-    return fakeTaskNext2;
-  } else {
-    return "-1";
-  }
-}
-
-function onlineTask() {
-  var taskinfo;
-  var next_id = '0';
-  var destnow;
-  //while (true) {
-
-  ///api/v0/task/next 
-  taskinfo = getTaskid(next_id);
-
-  if (taskinfo == "-1") {
-    setTimeout('console.log("no task")', 5000);
-  } else {
-    task_id = taskinfo.task_id;
-    next_id = taskinfo.next_id;
-    var request = fakeTaskDest111; // /api/v0/task?tasK_id = 111 
-    console.log(request);
-    dest = request.dest;
-    onReceiveTask(dest);
-    //}
-
-
-  }
-
-
-
-}
-
-//driver on line
-function offlineTask() {
-
-}
-
-
 
 function initDriver() {
   var onlineState = document.getElementById("onlineState");
@@ -432,49 +479,3 @@ function initDriver() {
   map.controls[google.maps.ControlPosition.LEFT_BOTTOM].push(task);
 
 }
-
-function initMap() {
-  //initial Map
-  map = new google.maps.Map(document.getElementById('map'), {
-    zoom: zoom,
-    center: {
-      lat: lat,
-      lng: lng,
-    },
-    disableDefaultUI: true,
-  });
-
-  document.getElementById('map').style.height = document.getElementsByTagName("main")[0].clientHeight + "px";
-
-  //inital direction service and display
-  directionsService = new google.maps.DirectionsService();
-  directionsDisplay = new google.maps.DirectionsRenderer();
-  directionsDisplay.setMap(map)
-
-  if (isDriver) {
-    initDriver();
-  } else {
-    initPassenger();
-  }
-
-  setIcon();
-  geoloaction(geoFirst)
-  relocateTimer = window.setInterval(function () { geoloaction(geoFirst); }, relocateTime);
-
-
-
-}
-
-function cancelDest() {
-  document.getElementById('search').value = "";
-  document.getElementById('datetimepickerDiv').style.display = "none";
-  directionsDisplay.set('directions', null);
-  info.style.display = "none"
-  infoDistance.innerHTML = "";
-  infoTime.innerHTML = "";
-  infoFare.innerHTML = "";
-  map.setCenter({ lat: lat, lng: lng });
-  map.setZoom(zoom)
-}
-
-
