@@ -493,6 +493,11 @@ function acceptTask() {
   // open map  on mobile  app
   document.getElementById("googleMap").href = "https://www.google.com/maps/dir/" + lat + ',' + lng + '/' + dest.passengerlat + ',' + dest.passengerlng + '/' + dest.lat + ',' + dest.lng;
 
+  document.getElementById("userid").innerHTML = "乘客：" + request.username
+  document.getElementById("destination").innerHTML = request.dest.placeName
+  document.getElementById("distance").innerHTML = request.dest.distance.text
+
+  var ps = document.getElementById("psText").innerHTML // web get driver ps text
 }
 
 
