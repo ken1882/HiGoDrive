@@ -6,9 +6,6 @@ Rails.application.routes.draw do
   get '/index', to: 'static_pages#home'
   get '/home', to: 'static_pages#home'
   get '/signup', to: 'static_pages#signup'
-
-  match '/users' => "api/#{CurrentVersion}/users#show", via: [:get]
-  match '/user'  => "api/#{CurrentVersion}/users#show", via: [:get]
   
   match '/login'  =>"api/#{CurrentVersion}/session#new",     via: [:get]
   match '/login'  => "api/#{CurrentVersion}/session#create", via: [:post]

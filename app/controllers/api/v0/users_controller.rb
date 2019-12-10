@@ -117,26 +117,23 @@ module Api
       end
 
       def validate_update_params
-        _params = user_update_params
         return unauthorized if @user.nil?
-        return unsupported_media_type unless avatar_url_ok?(_params[:avatar_url])
-        return unprocessable_entity unless password_change_ok?(_params)
+        return unsupported_media_type unless avatar_url_ok?(params[:avatar_url])
+        return unprocessable_entity unless password_change_ok?(params)
         return true
       end
 
       def validate_resetpwd_params
-        _params = user_reset_params
         return bad_request if logged_in?
-        return unauthorized if _params[:token] != @user.password_reset_token
+        return unauthorized if params[:token] != @user.password_reset_token
         return unprocessable_entity unless password_reset_ok?(_params)
         return true
       end
 
       def validate_forgotpwd_params
-        _params = user_find_params
         return bad_request if logged_in?
-        return unauthorized if @user.username != _params[:username]
-        return unauthorized if @user.email != _params[:email]
+        return unauthorized if @user.username != params[:username]
+        return unauthorized if @user.email != params[:email]
         return true
       end
 
