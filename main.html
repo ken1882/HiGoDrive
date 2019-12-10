@@ -210,7 +210,8 @@
                 <textarea class="form-control" id="rejectText" name="rejectText" placeholder="拒絕原因" rows="1"></textarea>
               </div>
               <div class="col-2">
-                <button type="submit" class="btn btn-sucess" onclick><i class="fas fa-paper-plane"></i></button>
+                <button type="submit" class="btn btn-sucess" onclick="onlineTask(task_id)"><i
+                    class="fas fa-paper-plane"></i></button>
               </div>
             </div>
           </form>
@@ -295,6 +296,7 @@
   <script async defer
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBpBgVKm6TqmDB0b3w-y3VoP3Oo-jWPWGY&libraries=places&callback=initMap"></script>
   <script type="text/javascript">
+
     function resv(item) {
       document.getElementById('datetimepickerDiv').style.display = "flex";
       console.log(document.getElementById('resvtime').value);
@@ -314,9 +316,9 @@
       document.getElementById('statusSwitch').checked = true;
       //document.getElementById('task').style.display = "block";
       //before task coming
-      document.getElementById('option').style.display = "block";
+      //document.getElementById('option').style.display = "block";
       document.getElementById('reject').style.display = "none";
-      onlineTask();
+      onlineTask(0);
     }
 
     function offline() {
@@ -368,6 +370,7 @@
       directionsDisplay.set('directions', null);
       map.setCenter({ lat: lat, lng: lng });
       map.setZoom(zoom);
+      onlineTask(task_id);
       //需傳id給伺服器使差事狀態完成
     }
   </script>
