@@ -162,7 +162,7 @@
             <span id="taskType">立即</span>
           </div>
           <div class="col-2">
-            <span id="sec">15</span><span>s</span>
+            <span id="sec"></span>
           </div>
         </div>
         <div class="row">
@@ -210,7 +210,7 @@
                 <textarea class="form-control" id="rejectText" name="rejectText" placeholder="拒絕原因" rows="1"></textarea>
               </div>
               <div class="col-2">
-                <button type="submit" class="btn btn-sucess"><i class="fas fa-paper-plane"></i></button>
+                <button type="submit" class="btn btn-sucess" onclick><i class="fas fa-paper-plane"></i></button>
               </div>
             </div>
           </form>
@@ -333,6 +333,8 @@
     function reject() {
       document.getElementById('option').style.display = "none";
       document.getElementById('reject').style.display = "block";
+      document.getElementById("sec").innerHTML = '';
+      clearInterval(timesetInterval);
     }
 
     function errandDriver() {
