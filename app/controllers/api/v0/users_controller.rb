@@ -43,7 +43,7 @@ module Api
         @user = User.new(user_init_params)
         respond_to do |format|
           if @user.save
-            format.html { redirect_to user_url, notice: 'User was successfully created.' }
+            format.html { redirect_to '/', notice: 'User was successfully created.' }
             format.json { render json: {message: 'created'}, status: :created}
           else
             format.html { unprocessable_entity }
@@ -101,7 +101,8 @@ module Api
       def validate_init_params
         return bad_request unless register_param_ok?(user_init_params)
         return unprocessable_entity unless Util.email_deliverable?(user_init_params[:email])
-        return_ok
+        return unprocessable_entity unless driver_licensed?
+        return true
       end
 
       def validate_update_params
@@ -153,10 +154,13 @@ module Api
       end
 
       def register_param_ok?(params)
-        return false if User.exist?(params)
-        return false if (params[:password] || '').length < 6
-        return false unless params[:username].match(/^[[:alnum:]]*$/)
+        return false if UserInitParms.any?{|k| params[k].nil?}
         return true
+      end
+
+      def driver_licensed?
+        return true unless RoleManager.match?(params[:roles].to_i, :driver)
+        return @user.licensed?
       end
 
       def coordinates_ok?(lat, lng)

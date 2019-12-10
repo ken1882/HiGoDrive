@@ -3,13 +3,17 @@ class User
   include Mongoid::Timestamps
   include ActiveModel::SecurePassword
 
+  UsernameRegex = /\A[[:alnum:]]*\z/
   EmailRegex = /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i
+  PhoneRegex = /\+([0-9]{3})-([0-9]+)-([0-9]{8})/
 
   attr_accessor :remember_token
 
   field :roles, type: Integer
   field :username, type: String
+  field :realname, type: String
   field :email, type: String
+  field :phone, type: String
   field :password_digest, type: String
   field :nickname, type: String
   field :last_login_time, type: DateTime
@@ -19,9 +23,16 @@ class User
   field :lng, type: Float
   field :password_reset_token, type: String
 
-  validates :username, presence: true, length: {in: 3..32}, uniqueness: true
-  validates :email, presence: true, format: {with: EmailRegex}, length: {in: 3..256}, 
-                    uniqueness: { case_sensitive: false }
+  validates :roles, numericality: { only_integer: true }
+  validates :username, presence: true, length: {in: 6..32}, 
+    uniqueness: true, format: {with: UsernameRegex}
+  
+  validates :email, presence: true, format: {with: EmailRegex}, 
+    length: {in: 3..256}, uniqueness: { case_sensitive: false }
+
+  validates :realname, presence: true
+  validates :phone, presence: true, uniqueness: true, 
+    format: {with: PhoneRegex}
 
   has_secure_password
   validates :password_digest, presence: true, length: {in: 6..256}
@@ -57,17 +68,30 @@ class User
 
   def self.new_token; SecureRandom.urlsafe_base64; end
 
-  def initialize(*args, &block)
-    super
-    init_roles
-  end
-  
   def init_roles
-    @attributes['roles'] = RoleManager.get_role_bitset(:standard)
+    bt = (@attributes['roles'] || 0) | RoleManager.get_role_bitset(:passenger)
+    update_attribute :roles, bt
   end
 
   def set_roles(*roles, **kwargs)
-    @attributes['roles'] = RoleManager.get_role_bitset(roles)
+    bitset = 0
+    roles.each do |role|
+      bt = RoleManager.get_role_bitset(role) if role.is_a?(Symbol)
+      bt = Integer(role) rescue 0
+      bitset |= bt
+    end
+    @attributes['roles'] |= bitset
+    save if kwargs[:save]
+  end
+
+  def remove_roles(*roles, **kwargs)
+    bitset = 0xffff
+    roles.each do |role|
+      bt = RoleManager.get_role_bitset(role) if role.is_a?(Symbol)
+      bt = Integer(role) rescue 0
+      bitset &= ~bt
+    end
+    @attributes['roles'] &= bitset
     save if kwargs[:save]
   end
 
@@ -130,4 +154,9 @@ class User
   def update_login_time
     update_attribute :last_login_time, Time.mongoize(Time.now)
   end
+
+  def licensed?
+    return false
+  end
+
 end
