@@ -4,8 +4,10 @@ module Api
       include TasksHelper
 
       before_action :set_task, only: [:show, :edit, :update, :destroy]
-      
-      before_action :validate_login, only: [:create, :update, :destroy]
+
+      before_action :validate_login, only: [:create, :update, :destroy,
+        :user_tasks]
+      before_action :validate_timelock, only: [:create]
       before_action :validate_init_params, only: [:create]
     
       # GET /tasks
@@ -19,7 +21,12 @@ module Api
       def show
         return_wip
       end
-    
+      
+      # GET /tasks/mine
+      def user_tasks
+        render json: current_user.tasks.collect{|t| t.id.to_s}, status: :ok
+      end
+
       # POST /tasks
       # POST /tasks.json
       def create
@@ -71,12 +78,20 @@ module Api
         return unauthorized unless logged_in?
         return true
       end
-    
+      
+      def validate_timelock
+        lct = current_user.tasks.last.created_at.to_i
+        if (Time.now.to_i - lct).abs < 180
+          return forbidden
+        end
+        return true
+      end
+
       def validate_init_params
         _time = params[:depart_time].to_i || 0
         curt  = Time.now.to_i
         return bad_request unless params[:dest].length.between?(1,256)
-        return bad_request unless _time.between?(curt - 300, curt + 60 * 60 * 24 * 100)
+        return bad_request unless _time.between?(curt - 180, curt + 60 * 60 * 24 * 100)
         return true
       end
     

@@ -31,6 +31,7 @@ Rails.application.routes.draw do
       post '/user/setpos', to: 'users#setpos'
       get '/user/getpos', to: 'users#getpos'
       
+      get '/mytasks', to: 'tasks#user_tasks'
       
     end
   end
