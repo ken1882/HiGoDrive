@@ -24,8 +24,8 @@
       <input type="password" class="form-control" id="password_confirmation" name="password_confirmation" required>
     </div>
     <div class="form-group">
-      <label for="name">真實姓名</label>
-      <input type="text" class="form-control" id="name" name="name" required>
+      <label for="realname">真實姓名</label>
+      <input type="text" class="form-control" id="realname" name="realname" required>
     </div>
     <div class="form-group">
       <label for="phone">手機號碼</label>
@@ -39,13 +39,13 @@
     <div class="form-row">
       <div class="col-6">
         <div class="form-check form-check-inline">
-          <input class="form-check-input" type="radio" name="type" id="passenger" value="passenger" checked>
+          <input class="form-check-input" type="radio" name="roles" id="passenger" value="1" checked>
           <label class="form-check-label" for="passenger">成為乘客</label>
         </div>
       </div>
       <div class="col-6">
         <div class="form-check form-check-inline">
-          <input class="form-check-input" type="radio" name="type" id="driver" value="driver">
+          <input class="form-check-input" type="radio" name="roles" id="driver" value="2">
           <label class="form-check-label" for="driver">成為司機</label>
         </div>
       </div>
@@ -71,4 +71,3 @@
     </div>
   </div>
 </div>
-
