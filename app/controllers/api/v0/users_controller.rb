@@ -62,7 +62,7 @@ module Api
       # PATCH/PUT /users/1.json
       def update
         @user.update(user_update_fields)
-        return_ok
+        redirect_to '/user'
       end
 
       # DELETE /users/1
