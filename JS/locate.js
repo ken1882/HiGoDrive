@@ -384,14 +384,18 @@ function onlineTask() {
   taskid.nextid = taskinfo.next_id;
 
   if (taskinfo == "-1") {
-    return setTimeout(onlineTask(), 5000); // fail request or no task
+    console.log("1");
+    setTimeout(onlineTask(), 5000);
+    return; // fail request or no task
 
   }
 
   request = getTasks(taskid.nowid);
   if (request == "-1") {
     taskid.nowid = '0';
-    return setTimeout(onlineTask(), 5000); // fail request or no task
+    console.log("2");
+    setTimeout(onlineTask(), 5000);
+    return;// fail request or no task
 
   }
 
