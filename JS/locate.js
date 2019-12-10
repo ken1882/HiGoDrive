@@ -364,7 +364,7 @@ function getTaskid(task_id) {
   }
 }
 
-function getTasks(tasK_id) { // fake /api/v0/tasks
+function getTasks(task_id) { // fake /api/v0/tasks
   if (task_id == "111") return fakeTaskDest111;
   if (task_id == "112") return fakeTaskDest112;
   return "-1";
