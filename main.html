@@ -318,7 +318,8 @@
       //before task coming
       //document.getElementById('option').style.display = "block";
       document.getElementById('reject').style.display = "none";
-      onlineTask();
+      console.log("online")
+      setTimeout('onlineTask()', 500);
     }
 
     function offline() {
@@ -344,7 +345,8 @@
       rejectTask(document.getElementById('rejectText').value);
       document.getElementById('option').style.display = "block";
       document.getElementById('reject').style.display = "none";
-      onlineTask();
+      console.log("reject btn click")
+      setTimeout('onlineTask()', 500);
     }
 
     function errandDriver() {
@@ -378,7 +380,8 @@
       directionsDisplay.set('directions', null);
       map.setCenter({ lat: lat, lng: lng });
       map.setZoom(zoom);
-      onlineTask();
+
+      //onlineTask();
       //需傳id給伺服器使差事狀態完成
     }
   </script>

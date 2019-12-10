@@ -384,18 +384,18 @@ function onlineTask() {
   taskid.nextid = taskinfo.next_id;
 
   if (taskinfo == "-1") {
-    console.log("1");
-    setTimeout(onlineTask(), 5000);
-    return; // fail request or no task
+    console.log("getTaskid error");
+
+    return setTimeout('onlineTask()', 5000); // fail request or no task
 
   }
 
   request = getTasks(taskid.nowid);
   if (request == "-1") {
     taskid.nowid = '0';
-    console.log("2");
-    setTimeout(onlineTask(), 5000);
-    return;// fail request or no task
+    console.log("getTask error");
+    //setTimeout('onlineTask()', 5000);
+    return setTimeout('onlineTask()', 5000);// fail request or no task
 
   }
 
@@ -440,7 +440,8 @@ function onReceiveTask(dest) {
       if (isaccept == false) {
         rejectTask("time out");
       }
-      return onlineTask();
+      return;
+      //return onlineTask();
     }
   }, 1000)
 
