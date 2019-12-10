@@ -383,14 +383,14 @@ function onlineTask() {
   taskid.nextid = taskinfo.next_id;
 
   if (taskinfo == "-1") {
-    setTimeout('console.log("no task")', 5000); // fail request or no task
+    setTimeout('console.log("no task1")', 5000); // fail request or no task
     return onlineTask();
   }
 
-  request = getTasks(task.nowid);
+  request = getTasks(taskid.nowid);
   if (request == "-1") {
     taskid.nowid = '0';
-    setTimeout('console.log("no task")', 5000); // fail request or no task
+    setTimeout('console.log("no task2")', 5000); // fail request or no task
     return onlineTask();
   }
 
@@ -470,7 +470,7 @@ function acceptTask() {
   var status = '0'; //check api status again 
   if (status == '0') {
     isaccept = true;
-    console.log(task_id) //set api status = 1;
+    console.log(taskid.nowid) //set api status = 1;
 
   } else {
     rejectTask("task is accepted by other driver");
