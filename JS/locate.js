@@ -351,6 +351,9 @@ var fakeTaskDest112 = {
   username: "user2",
   status: "0"
 }
+
+// above is fake data
+
 function getTaskid(task_id) {
   if (task_id == '0') { // GET "/api/v0/task/next?task_id = 0"
     return fakeTaskNext;
