@@ -19,7 +19,7 @@ main {
 }
 
 #user {
-  width: 25vw;
+  height: 25vh;
 }
 
 #search {
@@ -27,11 +27,11 @@ main {
 }
 
 .user_task {
-  width: 10vw;
+  width: 5vw;
 }
 
 .user_img {
-  height: 5vh;
+  width: 5vw;
 }
 
 .accordion {
