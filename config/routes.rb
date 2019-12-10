@@ -6,15 +6,19 @@ Rails.application.routes.draw do
   root 'pages#index'
   get '/index', to: 'pages#index'
 
-  get '/home', to: 'pages#home'
   get '/signup', to: 'pages#signup'
   get '/login', to: 'pages#login'
+
+  get '/home', to: 'pages#home'
+  get '/search', to: 'pages#search'
+  get '/task', to: 'pages#task'
+  get '/user', to: 'pages#userInfo'
 
   get '/account-recovery', to: 'pages#passwordForget'
   get '/account-recovery/reset', to: 'pages#passwordReset'
 
   match '/users' => "api/#{CurrentVersion}/users#show", via: [:get]
-  match '/user'  => "api/#{CurrentVersion}/users#show", via: [:get]
+  # match '/user'  => "api/#{CurrentVersion}/users#show", via: [:get]
 
   match '/login'  => "api/#{CurrentVersion}/session#create", via: [:post]
   match '/logout' =>"api/#{CurrentVersion}/session#destroy", via: [:delete, :get]
