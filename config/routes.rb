@@ -27,12 +27,14 @@ Rails.application.routes.draw do
       post '/currentuser', to: 'session#index'
       post '/forgotpassword', to: 'users#forgot_password'
       post '/resetpassword', to: 'users#reset_password'
-
+      
+      match '/users/search/:username', to: 'users#peak', via: [:get]
+      
       put '/user/update', to: 'users#update'
       post '/user/setpos', to: 'users#setpos'
       get '/user/getpos', to: 'users#getpos'
       
-      match '/searchuser/:username', to: 'users#show', via: [:get]
+      
     end
   end
   
