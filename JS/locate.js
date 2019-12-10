@@ -384,18 +384,18 @@ function onlineTask() {
   taskid.nextid = taskinfo.next_id;
 
   if (taskinfo == "-1") {
-    console.log("1");
-    setTimeout(onlineTask(), 5000);
-    return; // fail request or no task
+    console.log("getTaskid error");
+
+    return setTimeout('onlineTask()', 5000); // fail request or no task
 
   }
 
   request = getTasks(taskid.nowid);
   if (request == "-1") {
     taskid.nowid = '0';
-    console.log("2");
-    setTimeout(onlineTask(), 5000);
-    return;// fail request or no task
+    console.log("getTask error");
+    //setTimeout('onlineTask()', 5000);
+    return setTimeout('onlineTask()', 5000);// fail request or no task
 
   }
 
@@ -439,8 +439,11 @@ function onReceiveTask(dest) {
       clearInterval(timesetInterval);
       if (isaccept == false) {
         rejectTask("time out");
+        console.log("auto reject")
+        return setTimeout('onlineTask()', 1000); // fail request or no task
       }
-      return onlineTask();
+      return;
+      //return onlineTask();
     }
   }, 1000)
 
@@ -490,6 +493,11 @@ function acceptTask() {
   // open map  on mobile  app
   document.getElementById("googleMap").href = "https://www.google.com/maps/dir/" + lat + ',' + lng + '/' + dest.passengerlat + ',' + dest.passengerlng + '/' + dest.lat + ',' + dest.lng;
 
+  document.getElementById("userid").innerHTML = "乘客：" + request.username
+  document.getElementById("destination").innerHTML = request.dest.placeName
+  document.getElementById("distance").innerHTML = request.dest.distance.text
+
+  var ps = document.getElementById("psText").innerHTML // web get driver ps text
 }
 
 
