@@ -210,7 +210,8 @@
                 <textarea class="form-control" id="rejectText" name="rejectText" placeholder="拒絕原因" rows="1"></textarea>
               </div>
               <div class="col-2">
-                <button type="submit" class="btn btn-sucess" onclick="onlineTask(task_id)"><i
+                <button type="submit" class="btn btn-sucess"
+                  onclick="rejectTask(getElementById('rejectText').innerHTML);onlineTask();"><i
                     class="fas fa-paper-plane"></i></button>
               </div>
             </div>
@@ -318,7 +319,7 @@
       //before task coming
       //document.getElementById('option').style.display = "block";
       document.getElementById('reject').style.display = "none";
-      onlineTask(0);
+      onlineTask();
     }
 
     function offline() {
@@ -370,7 +371,7 @@
       directionsDisplay.set('directions', null);
       map.setCenter({ lat: lat, lng: lng });
       map.setZoom(zoom);
-      onlineTask(task_id);
+      onlineTask();
       //需傳id給伺服器使差事狀態完成
     }
   </script>
