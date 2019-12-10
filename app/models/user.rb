@@ -36,8 +36,6 @@ class User
   validates :phone, presence: true, uniqueness: true, 
     format: {with: PhoneRegex}
 
-  validates :bio, length: {in: 0..2000}
-
   has_secure_password
   validates :password_digest, presence: true, length: {in: 6..256}
 

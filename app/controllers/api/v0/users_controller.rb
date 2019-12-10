@@ -11,6 +11,8 @@ module Api
       before_action :validate_update_params, only: [:update]
       before_action :validate_forgotpwd_params, only: [:forgot_password]
       before_action :validate_resetpwd_params, only: [:reset_password]
+      
+      BioMaxLen = 2000
 
       # GET /users
       # GET /users.json
@@ -111,7 +113,7 @@ module Api
 
       def validate_init_params
         return bad_request unless register_param_ok?(user_init_params)
-        return unprocessable_entity unless Util.email_deliverable?(user_init_params[:email])
+        return forbidden unless Util.email_deliverable?(user_init_params[:email])
         return unprocessable_entity unless driver_licensed?
         return true
       end
@@ -120,6 +122,7 @@ module Api
         return unauthorized if @user.nil?
         return unsupported_media_type unless avatar_url_ok?(params[:avatar_url])
         return unprocessable_entity unless password_change_ok?(params)
+        return forbidden if (params[:bio] || '').length > BioMaxLen
         return true
       end
 

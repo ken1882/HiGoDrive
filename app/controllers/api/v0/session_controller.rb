@@ -15,7 +15,7 @@ module Api
           login_params[:remember_me] == '1' ? remember(user) : forget(user)
           respond_to do |f|
             f.html {redirect_to root_path}
-            f.json {render json: {'message' => "true"}, status: :ok}
+            f.json {render json: {'message' => true}, status: :ok}
           end
         else
           respond_to do |f|
@@ -23,7 +23,7 @@ module Api
               flash[:danger] = 'Invalid username/email/password combination'
               redirect_to '/login'
             }
-            f.json {render json: {'message' => "false"}, status: :ok}
+            f.json {render json: {'message' => false}, status: :ok}
           end
         end
       end
