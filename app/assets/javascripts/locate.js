@@ -1,10 +1,11 @@
+//function : acceptTask  rejectTask onlineTask 需串 api  acceptTask 備註待更改
 var map, marker, directionsService, directionsDisplay, info;
 var zoom = 17, lat = 25.1506194, lng = 121.7760687;
 var relocateTimer, relocateTime = 10000, postLocationTimer, postTime = 8000;
 var durationFareDegree = 0.1
 var distanceFareDegree = 0.01
 var infoFare, infoDistance, infoTime;
-var isDriver = true; //change passenger mode or driver mode
+var isDriver = false; //change passenger mode or driver mode
 var geoFirst = true;
 var task;
 var isaccept = false;
@@ -375,7 +376,7 @@ function onlineTask() {
   var taskinfo;
 
 
-  ///api/v0/task/next
+  ///api/v0/task/next 
   taskinfo = getTaskid(taskid.nowid); //fake api first time give 0
   console.log(taskinfo);
   if (taskid.nowid == 0) {
@@ -384,14 +385,18 @@ function onlineTask() {
   taskid.nextid = taskinfo.next_id;
 
   if (taskinfo == "-1") {
-    return setTimeout(onlineTask(), 5000); // fail request or no task
+    console.log("getTaskid error");
+
+    return setTimeout('onlineTask()', 5000); // fail request or no task
 
   }
 
   request = getTasks(taskid.nowid);
   if (request == "-1") {
     taskid.nowid = '0';
-    return setTimeout(onlineTask(), 5000); // fail request or no task
+    console.log("getTask error");
+    //setTimeout('onlineTask()', 5000);
+    return setTimeout('onlineTask()', 5000);// fail request or no task
 
   }
 
@@ -411,7 +416,7 @@ function offlineTask() {
   clearInterval(timesetInterval);
 }
 
-//driver get task
+//driver get task 
 function onReceiveTask(dest) {
   console.log(dest);
   task.style.display = "block";
@@ -435,15 +440,18 @@ function onReceiveTask(dest) {
       clearInterval(timesetInterval);
       if (isaccept == false) {
         rejectTask("time out");
+        console.log("auto reject")
+        return setTimeout('onlineTask()', 1000); // fail request or no task
       }
-      return onlineTask();
+      return;
+      //return onlineTask();
     }
   }, 1000)
 
 
 }
 
-// preview route between passenger position and destination
+// preview route between passenger position and destination 
 function directionDrive(destlat, destlng, passengerlat, passengerlng) {
   var request = {
     origin: { lat: parseFloat(passengerlat), lng: parseFloat(passengerlng) },
@@ -471,7 +479,7 @@ function directionDrive(destlat, destlng, passengerlat, passengerlng) {
 //check api /api/v0/task status task_id = taskid.nowid
 function acceptTask() {
 
-  var status = '0'; //check api status again
+  var status = '0'; //check api status again 
   if (status == '0') {
     isaccept = true;
     console.log(taskid.nowid) //set api status = 1;
@@ -486,6 +494,11 @@ function acceptTask() {
   // open map  on mobile  app
   document.getElementById("googleMap").href = "https://www.google.com/maps/dir/" + lat + ',' + lng + '/' + dest.passengerlat + ',' + dest.passengerlng + '/' + dest.lat + ',' + dest.lng;
 
+  document.getElementById("userid").innerHTML = "乘客：" + request.username
+  document.getElementById("destination").innerHTML = request.dest.placeName
+  document.getElementById("distance").innerHTML = request.dest.distance.text
+  document.getElementById("fare").innerHTML = request.dest.fare + '元'
+  var ps = document.getElementById("psText").innerHTML // web get driver ps text
 }
 
 
@@ -510,3 +523,5 @@ function initDriver() {
   map.controls[google.maps.ControlPosition.LEFT_BOTTOM].push(task);
 
 }
+
+
