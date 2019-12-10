@@ -295,6 +295,19 @@ function cancelDest() {
 
 
 
+function taskrunning() { //if driver accept task call back
+
+  var driverid = 'driver01' // api get driver id
+
+  document.getElementById("driverid").innerHTML = "乘客：" + driverid;
+  document.getElementById("destination").innerHTML = dest.placeName
+  document.getElementById("distance").innerHTML = dest.distance.text
+  document.getElementById("fare").innerHTML = dest.fare + '元'
+
+  var ps = document.getElementById("psText").innerHTML // web get driver ps text
+  driverReceive();
+}
+
 
 
 
@@ -482,7 +495,7 @@ function acceptTask() {
   var status = '0'; //check api status again 
   if (status == '0') {
     isaccept = true;
-    console.log(taskid.nowid) //set api status = 1;
+    console.log(taskid.nowid) //set api status = 1; give driver id 
 
   } else {
     rejectTask("task is accepted by other driver");
