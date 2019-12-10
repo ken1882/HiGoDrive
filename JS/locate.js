@@ -244,6 +244,54 @@ function initPassenger() {
 
 }
 
+function cancelDest() {
+  document.getElementById('search').value = "";
+  document.getElementById('datetimepickerDiv').style.display = "none";
+  directionsDisplay.set('directions', null);
+  info.style.display = "none"
+  infoDistance.innerHTML = "";
+  infoTime.innerHTML = "";
+  infoFare.innerHTML = "";
+  map.setCenter({ lat: lat, lng: lng });
+  map.setZoom(zoom)
+}
+
+function initMap() {
+  //initial Map
+  map = new google.maps.Map(document.getElementById('map'), {
+    zoom: zoom,
+    center: {
+      lat: lat,
+      lng: lng,
+    },
+    disableDefaultUI: true,
+  });
+
+  document.getElementById('map').style.height = document.getElementsByTagName("main")[0].clientHeight + "px";
+
+  //inital direction service and display
+  directionsService = new google.maps.DirectionsService();
+  directionsDisplay = new google.maps.DirectionsRenderer();
+  directionsDisplay.setMap(map)
+
+  if (isDriver) {
+    initDriver();
+  } else {
+    initPassenger();
+  }
+
+  setIcon();
+  geoloaction(geoFirst)
+  relocateTimer = window.setInterval(function () { geoloaction(geoFirst); }, relocateTime);
+
+
+
+}
+
+
+
+
+
 function onReceiveTask(dest) {
   console.log(dest);
   task.style.display = "block";
@@ -357,7 +405,6 @@ var fakeTaskDest111 = {
   status: "0"
 
 }
-
 var fakeTaskDest112 = {
   dest: {
     passengerlng: "121.6176128",
@@ -381,8 +428,6 @@ var fakeTaskDest112 = {
   username: "user2",
   status: "0"
 }
-
-
 function getTaskid(task_id) {
   if (task_id == '0') { // GET "/api/v0/task/next?task_id = 0"
     return fakeTaskNext;
@@ -415,9 +460,6 @@ function onlineTask() {
 
 
   }
-
-
-
 }
 
 //driver on line
@@ -436,50 +478,6 @@ function initDriver() {
   map.controls[google.maps.ControlPosition.BOTTOM_CENTER].push(offlineState);
   map.controls[google.maps.ControlPosition.LEFT_BOTTOM].push(task);
 
-}
-
-function initMap() {
-  //initial Map
-  map = new google.maps.Map(document.getElementById('map'), {
-    zoom: zoom,
-    center: {
-      lat: lat,
-      lng: lng,
-    },
-    disableDefaultUI: true,
-  });
-
-  document.getElementById('map').style.height = document.getElementsByTagName("main")[0].clientHeight + "px";
-
-  //inital direction service and display
-  directionsService = new google.maps.DirectionsService();
-  directionsDisplay = new google.maps.DirectionsRenderer();
-  directionsDisplay.setMap(map)
-
-  if (isDriver) {
-    initDriver();
-  } else {
-    initPassenger();
-  }
-
-  setIcon();
-  geoloaction(geoFirst)
-  relocateTimer = window.setInterval(function () { geoloaction(geoFirst); }, relocateTime);
-
-
-
-}
-
-function cancelDest() {
-  document.getElementById('search').value = "";
-  document.getElementById('datetimepickerDiv').style.display = "none";
-  directionsDisplay.set('directions', null);
-  info.style.display = "none"
-  infoDistance.innerHTML = "";
-  infoTime.innerHTML = "";
-  infoFare.innerHTML = "";
-  map.setCenter({ lat: lat, lng: lng });
-  map.setZoom(zoom)
 }
 
 
