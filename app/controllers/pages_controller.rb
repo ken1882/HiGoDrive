@@ -42,4 +42,22 @@ class PagesController < ApplicationController
     return login unless logged_in?
     render 'userInfo'
   end
+
+  def editAccount
+    flash.now[:danger] = 'Please log in first' unless logged_in?
+    return login unless logged_in?
+    render 'editAccount'
+  end
+
+  def changePassword
+    flash.now[:danger] = 'Please log in first' unless logged_in?
+    return login unless logged_in?
+    render 'changePassword'
+  end
+
+  def editUserBio
+    flash.now[:danger] = 'Please log in first' unless logged_in?
+    return login unless logged_in?
+    render 'editUserBio'
+  end
 end

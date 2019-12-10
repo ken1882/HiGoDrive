@@ -12,6 +12,9 @@ Rails.application.routes.draw do
   get '/search', to: 'pages#search'
   get '/task', to: 'pages#task'
   get '/user', to: 'pages#userInfo'
+  get '/user/edit/bio', to: 'pages#editUserBio'
+  get '/user/edit/account', to: 'pages#editAccount'
+  get '/user/edit/account/password', to: 'pages#changePassword'
 
   get '/account-recovery', to: 'pages#passwordForget'
   get '/account-recovery/reset', to: 'pages#passwordReset'
