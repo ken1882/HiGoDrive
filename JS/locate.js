@@ -8,6 +8,7 @@ var isDriver = true; //change passenger mode or driver mode
 var geoFirst = true;
 var task;
 var isaccept = false;
+var timesetInterval;
 var task_id = '0';
 
 
@@ -257,11 +258,13 @@ function onReceiveTask(dest) {
   var sec = 15;
   var secHtml = document.getElementById("sec");
   isaccept = false;
-  var timesetInterval = window.setInterval(function () {
+  clearInterval(timesetInterval);
+  timesetInterval = window.setInterval(function () {
+
     secHtml.innerHTML = sec;
     if (sec > 0) sec--;
     else {
-      clearInterval();
+      clearInterval(timesetInterval);
       if (isaccept == false) {
         rejectTask("time out");
       }
@@ -303,8 +306,10 @@ function acceptTask() {
   var status = '0'; //check api status again 
   if (status == '0') {
     isaccept = true;
+    console.log(task_id) //set api status = 1;
+
   } else {
-    rejectTask("time out");
+    rejectTask("task is accepted by other driver");
     return;
   }
   map.controls[google.maps.ControlPosition.LEFT_BOTTOM].push(document.getElementById('errand'));
@@ -313,13 +318,13 @@ function acceptTask() {
 
 }
 
-function rejectTask(reson) {
+function rejectTask(reason) {
   //api reject 婉拒
 
   //set user view
   directionsDisplay.set('directions', null);
-  map.setCenter({ lat: lat, lng: lng });
-  map.setZoom(zoom);
+  //map.setCenter({ lat: lat, lng: lng });
+  // map.setZoom(zoom);
   task.style.display = "none";
 
 }
@@ -417,7 +422,7 @@ function onlineTask() {
 
 //driver on line
 function offlineTask() {
-
+  clearInterval(timesetInterval);
 }
 
 
