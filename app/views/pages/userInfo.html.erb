@@ -11,7 +11,6 @@
   <div class="container">
 
     <div class="user">
-      <!--樣式模板>>-->
       <div class="card mb-3 mx-auto" style="max-width: 540px;">
         <div class="row no-gutters">
           <div class="col-4">
@@ -19,29 +18,28 @@
           </div>
           <div class="col-8">
             <div class="card-body">
-              <h5 class="card-title">用戶名稱：</h5>
-              <p class="card-text">用戶類型：</p>
-              <p class="card-text">電子信箱：</p>
-              <p class="card-text">手機號碼：</p>
-              <p class="card-text">個人資訊：</p>
+              <h5 class="card-title">用戶名稱：<%= current_user.username %></h5>
+              <p class="card-text">用戶類型：<%= {1 => "Passenger", 2 => "Driver"}[current_user.roles] %></p>
+              <p class="card-text">電子信箱：<%= current_user.email %></p>
+              <p class="card-text">手機號碼：<%= current_user.phone %></p>
+              <p class="card-text">個人資訊：<%= current_user.bio %></p>
             </div>
           </div>
         </div>
       </div>
-      <!--<<樣式模板-->
     </div>
 
     <div class="row">
       <div class="col-12 px-2 py-2">
-        <a href="accountChange.html"><button type="button" class="btn btn-outline-info btn-block">編輯帳號</button></a>
+        <a href="/user/edit/account"><button type="button" class="btn btn-outline-info btn-block">編輯帳號</button></a>
       </div>
       <hr>
       <div class="col-12 px-2 py-2">
-        <a href="passwordChange.html"><button type="button" class="btn btn-outline-info btn-block">修改密碼</button></a>
+        <a href="/user/edit/account/password"><button type="button" class="btn btn-outline-info btn-block">修改密碼</button></a>
       </div>
       <hr>
       <div class="col-12 px-2 py-2">
-        <a href="accountText.html"><button type="button" class="btn btn-outline-info btn-block">編輯個人資訊</button></a>
+        <a href="/user/edit/bio"><button type="button" class="btn btn-outline-info btn-block">編輯個人資訊</button></a>
       </div>
       <hr>
       <div class="col-12 px-2 py-2">
@@ -55,7 +53,7 @@
 <nav class="navbar navbar-expand fixed-bottom navbar-dark bg-primary bd-navbar py-0">
   <div class="row navbar-nav m-auto p-auto">
     <div class="col-3">
-      <a class="nav-item nav-link pt-2 pb-0" href="main.html">
+      <a class="nav-item nav-link pt-2 pb-0" href="/home">
         <p class="text-center my-0"><i class="fas fa-home fa-lg"></i></p>
         <p class="text-center my-0">Home</p>
       </a>

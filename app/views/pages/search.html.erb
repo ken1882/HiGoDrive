@@ -10,12 +10,12 @@
 <main>
   <div class="container">
     <div class="my-2">
-      <form action="">
+      <form id="search-user">
         <input class="form-control my-1 col-10" type="search" placeholder="我想要找" aria-label="搜尋其他使用者" id="search"
           name="username" required>
         <button class="btn btn-outline-success my-1 col-2" type="submit"><i class="fas fa-search"></i></button>
-      </form>
-    </div>
+      </div>
+    </form>
     <hr>
 
     <div class="userList">
@@ -36,13 +36,6 @@
             </div>
           </div>
         </div>
-      </div>
-      -->
-      <!--
-      <div class="notFound">
-        <br>
-        <h3 class="text-center">很抱歉！找不到該使用者</h3>
-        <hr>
       </div>
       -->
       <!--<<樣式模板-->
@@ -80,3 +73,68 @@
     </div>
   </div>
 </nav>
+
+<script>
+  function listUserInfo(result) {
+    console.log(result);
+    var username = result.username;
+    if (result.nickname) {
+      username = username + " (" + result.nickname + ")"
+    }
+    var email = undefined;
+    var phone = undefined;
+    var bio = undefined;
+    $(".userList").html('' +
+      '<div class="card mb-3 mx-auto" style="max-width: 540px;">' +
+      '  <div class="row no-gutters">' +
+      '    <div class="col-4">' +
+      '      <img id="user" src="/assets/user-circle-regular.svg" type="image/svg+xml" class="card-img" alt="user">' +
+      '    </div>' +
+      '    <div class="col-8">' +
+      '      <div class="card-body">' +
+      '        <h5 class="card-title">用戶名稱：' + username + '</h5>' +
+      '        <p class="card-text">電子信箱：' + email + '</p>' +
+      '        <p class="card-text">手機號碼：' + phone + '</p>' +
+      '        <p class="card-text">個人資訊：' + bio + '</p>' +
+      '        <p class="card-text text-primary">' +
+      // '          <small class="text-muted">18:00~19:00已被預約</small>' +
+      '        </p>' +
+      '      </div>' +
+      '    </div>' +
+      '  </div>' +
+      '</div>');
+  }
+
+  function userFound(result) {
+    var id = result.uid;
+    Util.ajax(
+        "GET",
+        "http://localhost:3000/api/v0/users/" + id,
+        null,
+        listUserInfo,
+        function (re) { console.log("unexpected error"); });
+  }
+
+  function userNotFound(result) {
+    $(".userList").html('' +
+      '<div class="notFound">' +
+      '  <br>' +
+      '  <h3 class="text-center">很抱歉！找不到該使用者</h3>' +
+      '  <hr>' +
+      '</div>');
+  }
+
+  $("#search-user").submit(function() {
+    $(".userList").html("");
+    var username = $("input[name='username']")[0].value;
+    if (username) {
+      Util.ajax(
+          "GET",
+          "http://localhost:3000/api/v0/users/search/" + username,
+          null,
+          userFound,
+          userNotFound);
+    }
+    return false;
+  });
+</script>

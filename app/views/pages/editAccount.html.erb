@@ -1,0 +1,35 @@
+<% provide :page_title, "Edit Account" %>
+
+<div class="container">
+
+  <div class="mt-4 mb-0 p-2">
+    <a href="/user" class="list-group-item-action">
+      <h2 class="text-center">HiGoDrive</h2>
+    </a>
+    <img id="motor" class="rounded mx-auto d-block" src="/assets/motorcycle-solid.svg" type="image/svg+xml" />
+    <hr>
+  </div>
+
+  <%= form_tag("/api/v0/users/#{current_user.id}", method: 'PATCH') do %>
+    <div class="form-group">
+      <label for="name">真實姓名</label>
+      <input type="text" class="form-control" id="name" name="name" value="<%= current_user.realname %>" readonly>
+    </div>
+    <!--
+    <div class="form-group">
+      <label for="phone">手機號碼</label>
+      <input type="tel" class="form-control" id="phone" name="phone" readonly>
+    </div>
+    -->
+    <div class="form-group">
+      <label for="email">電子信箱</label>
+      <input type="email" class="form-control" id="email" name="email" value="<%= current_user.email %>" required>
+    </div>
+    <br>
+    <br>
+    <div class="px-5 py-3">
+      <button type="submit" class="btn btn-success btn-lg btn-block">確認更改</button>
+    </div>
+  <% end %>
+
+</div>
