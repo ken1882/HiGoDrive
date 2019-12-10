@@ -312,7 +312,8 @@ function taskrunning() { //if driver accept task call back
 
 function taskStatus() { // api block get driver finish task status
   var status = fakeGetTaskStatusApi();
-  if (status) {
+  if (!status) {
+    console.log('wait for finish')
     return setTimeout('taskStatus()', 3000); // block stock
   } else {
     taskFinish();
