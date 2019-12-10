@@ -292,90 +292,7 @@ function initMap() {
 
 
 
-function onReceiveTask(dest) {
-  console.log(dest);
-  task.style.display = "block";
-  document.getElementById("taskType").innerHTML = dest.datetimepicker;
-  document.getElementById("distDriver").innerHTML = dest.placeName;
-  document.getElementById("distanceDriver").innerHTML = dest.distance.text;
 
-
-
-  window.setTimeout(function () { directionDrive(dest.lat, dest.lng, dest.passengerlat, dest.passengerlng) }, 300)
-
-  var sec = 15;
-  var secHtml = document.getElementById("sec");
-  isaccept = false;
-  clearInterval(timesetInterval);
-  timesetInterval = window.setInterval(function () {
-
-    secHtml.innerHTML = sec;
-    if (sec > 0) sec--;
-    else {
-      clearInterval(timesetInterval);
-      if (isaccept == false) {
-        rejectTask("time out");
-      }
-      return;
-    }
-  }, 1000)
-
-
-}
-
-
-function directionDrive(destlat, destlng, passengerlat, passengerlng) {
-  var request = {
-    origin: { lat: parseFloat(passengerlat), lng: parseFloat(passengerlng) },
-    destination: { lat: parseFloat(destlat), lng: parseFloat(destlng) },
-    travelMode: 'DRIVING',
-    //avoidTolls: 'true'
-  };
-
-  console.log(request)
-
-  var infowindows = [];
-  var markers = [];
-  directionsService.route(request, function (result, status) {
-    if (status == 'OK') {
-      directionsDisplay.setDirections(result);
-
-
-    }
-    else {
-      console.log(status);
-    }
-  });
-}
-
-//check api /api/v0/task status
-function acceptTask() {
-
-  var status = '0'; //check api status again 
-  if (status == '0') {
-    isaccept = true;
-    console.log(task_id) //set api status = 1;
-
-  } else {
-    rejectTask("task is accepted by other driver");
-    return;
-  }
-  map.controls[google.maps.ControlPosition.LEFT_BOTTOM].push(document.getElementById('errand'));
-  console.log("task accept");
-  document.getElementById("googleMap").href = "https://www.google.com/maps/dir/" + lat + ',' + lng + '/' + dest.passengerlat + ',' + dest.passengerlng + '/' + dest.lat + ',' + dest.lng;
-
-}
-
-function rejectTask(reason) {
-  //api reject 婉拒
-
-  //set user view
-  directionsDisplay.set('directions', null);
-  //map.setCenter({ lat: lat, lng: lng });
-  // map.setZoom(zoom);
-  task.style.display = "none";
-
-}
 
 //driver on line
 
@@ -467,7 +384,90 @@ function offlineTask() {
   clearInterval(timesetInterval);
 }
 
+function onReceiveTask(dest) {
+  console.log(dest);
+  task.style.display = "block";
+  document.getElementById("taskType").innerHTML = dest.datetimepicker;
+  document.getElementById("distDriver").innerHTML = dest.placeName;
+  document.getElementById("distanceDriver").innerHTML = dest.distance.text;
 
+
+
+  window.setTimeout(function () { directionDrive(dest.lat, dest.lng, dest.passengerlat, dest.passengerlng) }, 300)
+
+  var sec = 15;
+  var secHtml = document.getElementById("sec");
+  isaccept = false;
+  clearInterval(timesetInterval);
+  timesetInterval = window.setInterval(function () {
+
+    secHtml.innerHTML = sec;
+    if (sec > 0) sec--;
+    else {
+      clearInterval(timesetInterval);
+      if (isaccept == false) {
+        rejectTask("time out");
+      }
+      return;
+    }
+  }, 1000)
+
+
+}
+
+
+function directionDrive(destlat, destlng, passengerlat, passengerlng) {
+  var request = {
+    origin: { lat: parseFloat(passengerlat), lng: parseFloat(passengerlng) },
+    destination: { lat: parseFloat(destlat), lng: parseFloat(destlng) },
+    travelMode: 'DRIVING',
+    //avoidTolls: 'true'
+  };
+
+  console.log(request)
+
+  var infowindows = [];
+  var markers = [];
+  directionsService.route(request, function (result, status) {
+    if (status == 'OK') {
+      directionsDisplay.setDirections(result);
+
+
+    }
+    else {
+      console.log(status);
+    }
+  });
+}
+
+//check api /api/v0/task status
+function acceptTask() {
+
+  var status = '0'; //check api status again 
+  if (status == '0') {
+    isaccept = true;
+    console.log(task_id) //set api status = 1;
+
+  } else {
+    rejectTask("task is accepted by other driver");
+    return;
+  }
+  map.controls[google.maps.ControlPosition.LEFT_BOTTOM].push(document.getElementById('errand'));
+  console.log("task accept");
+  document.getElementById("googleMap").href = "https://www.google.com/maps/dir/" + lat + ',' + lng + '/' + dest.passengerlat + ',' + dest.passengerlng + '/' + dest.lat + ',' + dest.lng;
+
+}
+
+function rejectTask(reason) {
+  //api reject 婉拒
+
+  //set user view
+  directionsDisplay.set('directions', null);
+  //map.setCenter({ lat: lat, lng: lng });
+  // map.setZoom(zoom);
+  task.style.display = "none";
+
+}
 
 function initDriver() {
   var onlineState = document.getElementById("onlineState");
