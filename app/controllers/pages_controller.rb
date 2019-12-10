@@ -5,7 +5,7 @@ class PagesController < ApplicationController
   end
 
   def home
-    return login unless logged_in?
+    return index unless logged_in?
     render 'main'
   end
 
