@@ -1,8 +1,7 @@
 module TasksHelper
   include ApplicationHelper
   private
-  TaskInitParams = [:type, :title, :end_day, :end_time, :pos, 
-    :pos_info, :event_start, :event_end, :avatar_url, :dest]
+  TaskInitParams = [:dest]
   
 
   def task_init_params

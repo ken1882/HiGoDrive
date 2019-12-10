@@ -4,11 +4,12 @@ class Task
   belongs_to :user
   has_many :reviews
 
-  field :pos, type: String
-  field :pos_info, type: String
   field :dest, type: String
 
-  validates :pos, presence: true
   validates :dest, presence: true
+
+
+  def author; self.user; end
+  def author_id; self.user_id; end
   
 end
