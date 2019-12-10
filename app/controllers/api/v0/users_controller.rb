@@ -4,7 +4,7 @@ module Api
       include UsersHelper
 
       before_action :set_user, only: [:show, :getpos, :forgot_password,
-        :reset_password]
+        :reset_password, :peak]
       before_action :set_current_user, only: [:update, :setpos]
       # ----------
       before_action :validate_init_params, only: [:create]
@@ -22,6 +22,11 @@ module Api
       # GET /users/1.json
       def show
         render json: @user.public_json_info, status: :ok
+      end
+
+      # GET /users/search/:username
+      def peak
+        render json: {uid: @user.id.to_s}, status: :ok
       end
 
       # POST /checkusername

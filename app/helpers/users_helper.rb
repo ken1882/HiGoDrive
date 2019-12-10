@@ -4,8 +4,8 @@ module UsersHelper
   private
 
   UserInitParms    = [:username, :password, :password_confirmation, :email, :phone, :realname, :roles]
-  UserUpdateParams = [:nickname, :old_password, :password, :password_confirmation, :email, :avatar_url]
-  UserUpdateFields = [:nickname, :password, :password_confirmation, :email, :avatar_url]
+  UserUpdateParams = [:nickname, :old_password, :password, :password_confirmation, :email, :avatar_url, :bio]
+  UserUpdateFields = [:nickname, :password, :password_confirmation, :email, :avatar_url, :bio]
   UserFindParms    = [:id, :username, :email]
   UserPosParams    = [:lat, :lng]
   UserResetParams  = [:username, :token, :password, :password_confirmation]

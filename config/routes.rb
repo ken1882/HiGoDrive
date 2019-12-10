@@ -1,7 +1,6 @@
 CurrentVersion = 'v0'
 Rails.application.routes.draw do
 
-  resources :tasks
   # home page
   root 'pages#index'
   get '/index', to: 'pages#index'
@@ -29,6 +28,7 @@ Rails.application.routes.draw do
       resources :handshake
       resources :users
       resources :tasks
+      resources :reviews
 
       post '/checkusername', to: 'users#checkusername'
       post '/checkemail', to: 'users#checkemail'
@@ -36,10 +36,13 @@ Rails.application.routes.draw do
       post '/forgotpassword', to: 'users#forgot_password'
       post '/resetpassword', to: 'users#reset_password'
 
+      match '/users/search/:username', to: 'users#peak', via: [:get]
+
       put '/user/update', to: 'users#update'
       post '/user/setpos', to: 'users#setpos'
       get '/user/getpos', to: 'users#getpos'
-      get '/search', to: 'users#show'
+
+
     end
   end
 

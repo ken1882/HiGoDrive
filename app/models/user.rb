@@ -2,6 +2,7 @@ class User
   include Mongoid::Document
   include Mongoid::Timestamps
   include ActiveModel::SecurePassword
+  has_many :tasks, dependent: :destroy
 
   UsernameRegex = /\A[[:alnum:]]*\z/
   EmailRegex = /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i
@@ -22,6 +23,7 @@ class User
   field :lat, type: Float
   field :lng, type: Float
   field :password_reset_token, type: String
+  field :bio, type: String
 
   validates :roles, numericality: { only_integer: true }
   validates :username, presence: true, length: {in: 6..32}, 
@@ -34,10 +36,10 @@ class User
   validates :phone, presence: true, uniqueness: true, 
     format: {with: PhoneRegex}
 
+  validates :bio, length: {in: 0..2000}
+
   has_secure_password
   validates :password_digest, presence: true, length: {in: 6..256}
-  
-  has_many :tasks, dependent: :destroy
 
   def self.username_exist?(uname)
     self.where({'username' => uname}).count != 0
