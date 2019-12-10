@@ -1,4 +1,4 @@
-//function : acceptTask  rejectTask onlineTask 需串 api  acceptTask 備註待更改
+//function : acceptTask  rejectTask onlineTask taskrunning 需串 api  acceptTask 備註待更改
 var map, marker, directionsService, directionsDisplay, info;
 var zoom = 17, lat = 25.1506194, lng = 121.7760687;
 var relocateTimer, relocateTime = 10000, postLocationTimer, postTime = 8000;
@@ -314,7 +314,7 @@ function taskStatus() { // api block get driver finish task status
   var status = fakeGetTaskStatusApi();
   if (!status) {
     console.log('wait for finish')
-    return setTimeout('taskStatus()', 3000); // block stock
+    return setTimeout('taskStatus()', 5000); // block stock
   } else {
     taskFinish();
   }
@@ -411,7 +411,7 @@ function onlineTask() {
   var taskinfo;
 
 
-  ///api/v0/task/next 
+  ///api/v0/task/next
   taskinfo = getTaskid(taskid.nowid); //fake api first time give 0
   console.log(taskinfo);
   if (taskid.nowid == 0) {
@@ -451,7 +451,7 @@ function offlineTask() {
   clearInterval(timesetInterval);
 }
 
-//driver get task 
+//driver get task
 function onReceiveTask(dest) {
   console.log(dest);
   task.style.display = "block";
@@ -486,7 +486,7 @@ function onReceiveTask(dest) {
 
 }
 
-// preview route between passenger position and destination 
+// preview route between passenger position and destination
 function directionDrive(destlat, destlng, passengerlat, passengerlng) {
   var request = {
     origin: { lat: parseFloat(passengerlat), lng: parseFloat(passengerlng) },
@@ -514,10 +514,10 @@ function directionDrive(destlat, destlng, passengerlat, passengerlng) {
 //check api /api/v0/task status task_id = taskid.nowid
 function acceptTask() {
 
-  var status = '0'; //check api status again 
+  var status = '0'; //check api status again
   if (status == '0') {
     isaccept = true;
-    console.log(taskid.nowid) //set api status = 1; give driver id 
+    console.log(taskid.nowid) //set api status = 1; give driver id
 
   } else {
     rejectTask("task is accepted by other driver");
@@ -558,5 +558,3 @@ function initDriver() {
   map.controls[google.maps.ControlPosition.LEFT_BOTTOM].push(task);
 
 }
-
-
