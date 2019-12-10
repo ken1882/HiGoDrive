@@ -306,6 +306,27 @@ function taskrunning() { //if driver accept task call back
 
   var ps = document.getElementById("psText").innerHTML // web get driver ps text
   driverReceive();
+  taskStatus()
+
+}
+
+function taskStatus() { // api block get driver finish task status
+  var status = fakeGetTaskStatusApi();
+  if (status) {
+    return setTimeout('taskStatus()', 3000); // block stock
+  } else {
+    taskFinish();
+  }
+}
+
+function taskFinish() { //if task done
+  location.reload();
+}
+
+
+//test api function
+function fakeGetTaskStatusApi() {
+  return false;
 }
 
 
