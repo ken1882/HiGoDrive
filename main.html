@@ -157,22 +157,22 @@
 
       <div id="task" class="task" style="display: none;">
         <div class="row">
-          <div class="col-8 offset-2">
+          <div class="col-8 offset-1">
             <span>服務時效：</span>
             <span id="taskType">立即</span>
           </div>
-          <div class="col-2">
+          <div class="col-3">
             <span id="sec"></span>
           </div>
         </div>
         <div class="row">
-          <div class="col-10 offset-2">
-            <span>乘客目的地</span>
+          <div class="col-10 offset-1">
+            <span>乘客目的地：</span>
             <span id="distDriver">基隆火車站</span>
           </div>
         </div>
         <div class="row">
-          <div class="col-10  offset-2">
+          <div class="col-10  offset-1">
             <span>路程：</span>
             <span id="distanceDriver">2.7km</span>
           </div>
@@ -210,8 +210,8 @@
                 <textarea class="form-control" id="rejectText" name="rejectText" placeholder="拒絕原因" rows="1"></textarea>
               </div>
               <div class="col-2">
-                <button type="submit" class="btn btn-sucess"
-                  onclick="rejectTask(getElementById('rejectText').innerHTML);onlineTask();"><i
+                <button type="button" class="btn btn-sucess"
+                  onclick="rejectTask(getElementById('rejectText').innerHTML);"><i
                     class="fas fa-paper-plane"></i></button>
               </div>
             </div>
@@ -328,7 +328,7 @@
       document.getElementById('statusSwitch').checked = false;
       document.getElementById('task').style.display = "none";
       offlineTask();
-      window.alert("你已下線!!");
+      window.alert("你即將下線!!");
       location.reload();
     }
 
