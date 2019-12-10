@@ -300,9 +300,9 @@ function taskrunning() { //if driver accept task call back
   var driverid = 'driver01' // api get driver id
 
   document.getElementById("driverid").innerHTML = "乘客：" + driverid;
-  document.getElementById("destination").innerHTML = dest.placeName
-  document.getElementById("distance").innerHTML = dest.distance.text
-  document.getElementById("fare").innerHTML = dest.fare + '元'
+  document.getElementById("destinationTask").innerHTML = dest.placeName
+  document.getElementById("distanceTask").innerHTML = dest.distance.text
+  document.getElementById("fareTask").innerHTML = dest.fare + '元'
 
   var ps = document.getElementById("psText").innerHTML // web get driver ps text
   driverReceive();
