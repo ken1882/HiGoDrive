@@ -106,6 +106,11 @@ class User
       'id'       => id.to_s,
       'username' => username,
       'nickname' => nickname,
+      'realname' => realname,
+      'phone'    => phone,
+      'email'    => email,
+      'roles'    => roles,
+      'bio'      => bio,
     }
   end
 
