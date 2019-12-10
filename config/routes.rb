@@ -1,7 +1,6 @@
 CurrentVersion = 'v0'
 Rails.application.routes.draw do
   
-  resources :tasks
   # home page
   root 'static_pages#home'
   get '/index', to: 'static_pages#home'
@@ -21,6 +20,7 @@ Rails.application.routes.draw do
       resources :handshake
       resources :users
       resources :tasks
+      resources :reviews
       
       post '/checkusername', to: 'users#checkusername'
       post '/checkemail', to: 'users#checkemail'

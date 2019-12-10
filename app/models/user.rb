@@ -2,7 +2,8 @@ class User
   include Mongoid::Document
   include Mongoid::Timestamps
   include ActiveModel::SecurePassword
-
+  has_many :tasks, dependent: :destroy
+  
   UsernameRegex = /\A[[:alnum:]]*\z/
   EmailRegex = /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i
   PhoneRegex = /\+([0-9]{3})-([0-9]+)-([0-9]{8})/
@@ -36,8 +37,6 @@ class User
 
   has_secure_password
   validates :password_digest, presence: true, length: {in: 6..256}
-  
-  has_many :tasks, dependent: :destroy
 
   def self.username_exist?(uname)
     self.where({'username' => uname}).count != 0
