@@ -34,7 +34,7 @@
           <span id="timePassenger"></span>
         </div>
       </div>
-      <form action="#">
+      <form action="javascript:void(0);">
         <div class="form-row">
           <div class="col px-1">
             <label>自備配件:</label>
@@ -72,7 +72,7 @@
             <button type="button" class="btn btn-success btn-block" onclick="resv(this)">預約行程</button>
           </div>
           <div class="col px-2">
-            <button type="button" class="btn btn-success btn-block" onclick="errandPassenger()">開始行程</button>
+            <button type="submit" class="btn btn-success btn-block" onclick="errandPassenger()">開始行程</button>
           </div>
         </div>
       </form>
@@ -80,35 +80,17 @@
     </div>
 
     <div id="offlineState" class="offlineState" style="display: none;">
-      <form action="#">
-        <!--
-        <div class="form-row">
-          <div class="col px-1">
-            <label>配件提供:</label>
-            <div class="form-check form-check-inline">
-              <input class="form-check-input" type="checkbox" name="helmetDriver" id="helmetDriver" value="helmet">
-              <label class="form-check-label" for="helmet">安全帽</label>
-            </div>
-            <div class="form-check form-check-inline">
-              <input class="form-check-input" type="checkbox" name="raincoatDriver" id="raincoatDriver"
-                value="raincoat">
-              <label class="form-check-label" for="raincoat">雨衣</label>
-            </div>
-          </div>
-        </div>
-        -->
-        <div class="px-3">
-          <p class="text-center"><button type="submit" class="btn btn-lg btn-success" onclick="online()">上線</button>
-          </p>
-        </div>
-      </form>
+      <div class="px-3">
+        <p class="text-center"><button type="button" class="btn btn-lg btn-success" onclick="online()">上線</button>
+        </p>
+      </div>
     </div>
 
     <div id="task" class="task" style="display: none;">
       <div class="row">
         <div class="col-8 offset-1">
           <span>服務時效：</span>
-          <span id="taskType">立即</span>
+          <span id="taskType">###</span>
         </div>
         <div class="col-3">
           <span id="sec"></span>
@@ -117,13 +99,13 @@
       <div class="row">
         <div class="col-10 offset-1">
           <span>乘客目的地：</span>
-          <span id="distDriver">基隆火車站</span>
+          <span id="distDriver">###</span>
         </div>
       </div>
       <div class="row">
         <div class="col-10  offset-1">
           <span>路程：</span>
-          <span id="distanceDriver">2.7km</span>
+          <span id="distanceDriver">###</span>
         </div>
       </div>
       <div id="option" class="option">
@@ -140,7 +122,7 @@
       </div>
 
       <div id="reject" class="reject">
-        <form action="#">
+        <form action="javascript:void(0);">
           <div class="form-row mb-1">
             <div class="col">
               <button type="button" class="btn btn-info btn-block" onclick="tooFar()">太遠了</button>
@@ -159,7 +141,7 @@
               <textarea class="form-control" id="rejectText" name="rejectText" placeholder="拒絕原因" rows="1"></textarea>
             </div>
             <div class="col-2">
-              <button type="button" class="btn btn-sucess" onclick="rejectTaskbtn()"><i class="fas fa-paper-plane"></i></button>
+              <button type="submit" class="btn btn-sucess" onclick="rejectTaskbtn()"><i class="fas fa-paper-plane"></i></button>
             </div>
           </div>
         </form>
@@ -189,7 +171,7 @@
           <p><span>備註：</span><span id="psText">###</span></p>
         </div>
       </div>
-      <form action="#">
+      <form action="javascript:void(0);">
         <div class="form-row">
           <div class="col-8">
             <textarea class="form-control" id="errand_text_send" name="errand_text_send" placeholder="輸入備註" rows="1"></textarea>
@@ -209,19 +191,19 @@
 
       <div id="taskLoading" class="align-items-center">
         <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
-        <strong>等待司機...</strong>
+        <strong>訂單已發送請等待司機...</strong>
       </div>
 
       <div id="taskGoing" class="" style="display: none;">
         <div class="row">
           <div class="col-4">
-            <p class="text-center"><img class="user_img" src="/assets/user-circle-regular.svg" alt="user_img"></p>
-            <p class="text-center" id="userid">drive_id</p>
+            <p class="text-center"><img class="user_img" src="/assets/user-circle-regular.svg" alt="driver_img"></p>
+            <p class="text-center" id="driverid">driver_id</p>
           </div>
           <div class="col-6">
-            <p><span>目的地:</span><span id="destination">###</span></p>
-            <p><span>距離:</span><span id="distance">###</span></p>
-            <p><span>費用:</span><span id="fare">###</span></p>
+            <p><span>目的地:</span><span id="destinationTask">###</span></p>
+            <p><span>距離:</span><span id="distanceTask">###</span></p>
+            <p><span>費用:</span><span id="fareTask">###</span></p>
           </div>
           <div class="col-2">
             <!--打開report.html需傳入差事id-->
@@ -233,7 +215,7 @@
             <p><span>備註：</span><span id="psText">###</span></p>
           </div>
         </div>
-        <form action="#">
+        <form action="javascript:void(0);">
           <div class="form-row">
             <div class="col-8">
               <textarea class="form-control" id="errand_text_send" name="errand_text_send" placeholder="輸入備註" rows="1"></textarea>
@@ -334,6 +316,7 @@
     document.getElementById('reject').style.display = "none";
     console.log("reject btn click")
     setTimeout('onlineTask()', 500);
+    return false;
   }
 
   function errandDriver() {
@@ -353,9 +336,10 @@
     map.controls[google.maps.ControlPosition.LEFT_BOTTOM].push(document.getElementById('resvtask'));
 
     console.log("errand start!");
+    return false;
   }
 
-  function driverReceive(){
+  function driverReceive() {
     document.getElementById('taskLoading').style.display = "none";
     document.getElementById('taskGoing').style.display = "block";
   }
