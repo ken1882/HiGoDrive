@@ -12,7 +12,6 @@
     <h4 class="text-center my-3">訂單紀錄</h4>
     <hr>
     <div class="accordion" id="accordion">
-
 <%
 =begin
       <!--樣式模板>>-->
@@ -123,12 +122,8 @@
       </div>
       <!--<<樣式模板-->
 =end %>
-
-      <div class="noTask">
-        <h5 class="text-center">沒有訂單紀錄</h5>
-        <hr>
-      </div>
     </div>
+    <div id="important-temp-block" style="display: none;"></div>
   </div>
 
 </main>
@@ -180,7 +175,105 @@
 </script>
 
 <script>
-$(document).ready(function() {
+function getUsername(user_id) {
+  Util.syncAjax(
+      "GET",
+      "http://localhost:3000/api/v0/users/" + user_id,
+      null,
+      function (result) {
+        $("#important-temp-block").html(result.username);
+      },
+      function (xhr, ajaxOptions, thrownError) {
+        console.log("unexpected error: ", thrownError);
+      }
+  );
+  var username = $("#important-temp-block").text();
+  return username;
+}
 
+function renderTaskToPage(task) {
+  var id = $("#important-temp-block").text();
+  var dest = task.dest;
+  var author_name = getUsername(task.author_id);
+  var depart_time = new Date(task.depart_time).toLocaleString();
+  var status = task.status;
+  var status_msg = {
+      0: "Waiting",
+      1: "Processing",
+      2: "Cancelled",
+      3: "Finished"
+  }[status];
+
+  $("#accordion").append('' +
+      '<div class="card">' +
+      '  <div class="card-header px-0" id="heading-' + id + '">' +
+      '    <button class="btn btn-block" data-toggle="collapse" data-target="#collapse-' + id + '" aria-expanded="false"' +
+      '      aria-controls="collapse-' + id + '">' +
+      '      <div class="row">' +
+      '        <div class="col-4 px-0">' +
+      '          <p class="mb-0"><img class="user_task" src="/assets/user-circle-regular.svg" type="image/svg+xml"' +
+      '              alt="user">' +
+      '          </p>' +
+      '          <p name="user_id" class="mb-0">' + author_name + '</p>' +
+      '        </div>' +
+      '        <div class="col-6 px-0">' +
+      '          <p name="dist" class="text-primary">目的地：' + dest + '</p>' +
+      '          <p name="route" class="text-primary mb-0">時間：' + depart_time + '</p>' +
+      '        </div>' +
+      '        <div class="col-2 px-0">' +
+      '          <p class="text-danger tag" id="task-status">' + status_msg + '</p>' +
+      '          <i class="fas fa-sort-down fa-lg"></i>' +
+      '        </div>' +
+      '      </div>' +
+      '    </button>' +
+      '  </div>' +
+      '  <div id="collapse-' + id + '" class="collapse" aria-labelledby="heading-' + id + '" data-parent="#accordion">' +
+      '    <div class="card-body">' +
+      '      <span>' + '訊息：######' + '</span>' +
+      '    </div>' +
+      '  </div>' +
+      '</div>');
+
+  $("#task-status").attr("class", { 0: "text-primary tag",
+                                    1: "text-primary tag",
+                                    2: "text-primary tag",
+                                    3: "text-success tag",
+                                    4: "text-danger tag" }[status]);
+  $("#task-status").attr("id", "task-" + id + "-status");
+  $("#important-temp-block").html("");
+}
+
+function getTaskList(task_list) {
+  console.log("task list", task_list);
+  if (task_list && task_list.length) {
+    $("#accordion").html("");
+    task_list.forEach(function(task_id) {
+      $("#important-temp-block").html(task_id);
+      Util.syncAjax(
+          "GET",
+          "http://localhost:3000/api/v0/tasks/" + task_id,
+          null,
+          renderTaskToPage,
+          function (xhr, ajaxOptions, thrownError) {
+            console.log("unexpected error: ", thrownError);
+          }
+      );
+    });
+  } else {
+    $("#accordion").html('' +
+        '<div class="noTask">' +
+        '  <h5 class="text-center alert alert-danger">沒有訂單紀錄</h5>' +
+        '</div>');
+  }
+}
+
+$(document).ready(function() {
+  Util.ajax(
+      "GET",
+      "http://localhost:3000/api/v0/mytasks",
+      null,
+      getTaskList,
+      function(re) { console.log("unexpected error"); }
+  );
 });
 </script>
