@@ -9,9 +9,18 @@ class Task
   field :depart_time, type: DateTime
   field :status, type: Integer
   field :equipments, type: Integer
+  field :driver_id, type: BSON::ObjectId
 
   validates :dest, presence: true
   validates :depart_time, presence: true
+
+  ProgressStatus = {
+    :new      => 0,
+    :accepted => 1,
+    :engaging => 2,
+    :finished => 3,
+    :canceled => 4,
+  }
 
   @@mutex = Mutex.new
   @@next_id = (self.all.last.id.to_i rescue 0) + 1
@@ -50,10 +59,44 @@ class Task
     }
   end
 
-  def finish
+  def accept(_did)
     @@mutex.synchronize{$task_queue.delete(self.id.to_i)}
-    update_attribute :status, 1
+    self.update({
+      status: ProgressStatus[:accepted],
+      driver_id: _did
+    })
+    driver.engage_task(self.id)
   end
 
-  def accepted?; (self.attributes[:status] || 0) != 0; end
+  def engage
+    update_attribute :status, ProgressStatus[:engaging]
+  end
+
+  def finish
+    update_attribute :status, ProgressStatus[:finished]
+    driver.resolve_task(self.id)
+  end
+
+  def cancel
+    update_attribute :status, ProgressStatus[:canceled]
+    driver.resolve_task(self.id)
+  end
+
+  def accepted?
+    (status || 0) != ProgressStatus[:new]
+  end
+
+  def engaging?
+    status == ProgressStatus[:engaging]
+  end
+
+  def closed?
+    (status || 0) >= ProgressStatus[:finished]
+  end
+
+  def driver
+    return @driver = nil unless driver_id
+    return @driver if @driver
+    return @driver = User.find(driver_id)
+  end
 end

@@ -199,7 +199,7 @@ module Api
       end
 
       def user_url
-        "/user/#{@user.username}"
+        "/home"
       end
 
     end # class

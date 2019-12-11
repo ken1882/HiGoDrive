@@ -3,13 +3,17 @@ module Api
     class TasksController < ApplicationController
       include TasksHelper
 
-      before_action :set_task, only: [:show, :update, :destroy]
-
-      before_action :validate_login, only: [:create, :update, :destroy,
-        :next_task]
+      before_action :set_task, except: [:index, :create, :next_task]
+      before_action :validate_login, except: [:index]
+      before_action :validate_driver, only: [:accept, :reject, :engage,
+        :finish]
       before_action :validate_timelock, only: [:create]
       before_action :validate_init_params, only: [:create]
-    
+      before_action :validate_status, only: [:accept, :reject, :engage, 
+        :finish, :cancel]
+      
+      @@mutex = Mutex.new
+
       # GET /tasks
       # GET /tasks.json
       def index
@@ -75,6 +79,33 @@ module Api
         render json: {task_id: ret_cur || 0, next_id: ret_nxt || 0}
       end
 
+      # POST /task/accept
+      def accept
+        @@mutex.synchronize{
+          return unprocessable_entity if @task.accepted?
+          @task.accept(current_user.id)
+        }
+        return_ok
+      end
+
+      # POST /task/reject
+      def reject
+        return_wip
+      end
+
+      # POST /task/engage
+      def engage
+        @task.engage 
+        return_ok
+      end
+
+      # POST /task/finish
+      def finish
+        return unprocessable_entity unless @task.engaging?
+        @task.finish
+        return_ok
+      end
+
       private
       # Use callbacks to share common setup or constraints between actions.
       def set_task
@@ -102,6 +133,17 @@ module Api
         curt  = Time.now.to_i
         return bad_request unless params[:dest].length.between?(1,256)
         return bad_request unless _time.between?(curt - 180, curt + 60 * 60 * 24 * 100)
+        return true
+      end
+
+      def validate_driver
+        return forbidden unless current_user.licensed?
+        return forbidden unless @task.driver.nil? || @task.driver != current_user.id
+        return true
+      end
+
+      def validate_status
+        return unprocessable_entity if @task.closed?
         return true
       end
 
