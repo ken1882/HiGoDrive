@@ -5,7 +5,8 @@ module Api
       
       before_action :set_user, only: [:show, :getpos, :forgot_password,
         :reset_password, :peak]
-      before_action :set_current_user, only: [:update, :setpos]
+      before_action :set_current_user, only: [:update, :setpos,
+        :user_tasks, :tasks_engaging]
       # ----------
       before_action :validate_init_params, only: [:create]
       before_action :validate_update_params, only: [:update]
@@ -104,6 +105,16 @@ module Api
       def reset_password
         @user.reset_password(user_reset_fields)
         return_ok
+      end
+
+      # GET /mytasks
+      def user_tasks
+        render json: @user.tasks.collect{|t| t.id.to_s}, status: :ok
+      end
+
+      # GET /tasks_engaging
+      def tasks_engaging
+        render json: @user.tasks_engaging || [], status: :ok
       end
 
       private

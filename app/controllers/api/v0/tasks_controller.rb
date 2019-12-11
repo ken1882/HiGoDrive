@@ -6,7 +6,7 @@ module Api
       before_action :set_task, only: [:show, :update, :destroy]
 
       before_action :validate_login, only: [:create, :update, :destroy,
-        :user_tasks, :next_task]
+        :next_task]
       before_action :validate_timelock, only: [:create]
       before_action :validate_init_params, only: [:create]
     
@@ -20,11 +20,6 @@ module Api
       # GET /tasks/1.json
       def show
         render json: @task.public_json_info, status: :ok
-      end
-      
-      # GET /tasks/mine
-      def user_tasks
-        render json: current_user.tasks.collect{|t| t.id.to_s}, status: :ok
       end
 
       # POST /tasks
