@@ -12,7 +12,7 @@ module Api
       before_action :validate_update_params, only: [:update]
       before_action :validate_forgotpwd_params, only: [:forgot_password]
       before_action :validate_resetpwd_params, only: [:reset_password]
-      
+
       BioMaxLen = 2000
 
       # GET /users
@@ -198,13 +198,10 @@ module Api
         return x && y
       end
 
-<<<<<<< HEAD
-=======
       def user_url
         "/home"
       end
 
->>>>>>> backend
     end # class
   end
 end
