@@ -1,7 +1,7 @@
 class Task
   include Mongoid::Document
   include Mongoid::Timestamps
-  
+
   belongs_to :user
   has_many :reviews
 
@@ -34,7 +34,7 @@ class Task
     end
   end
   def self.mutex; @@mutex; end
-  
+
   def initialize(_params)
     _params[:equipments] ||= 0
     _params[:status]       = 0
@@ -48,13 +48,14 @@ class Task
   end
 
   def author; self.user; end
-  def author_id; self.user_id; end  
+  def author_id; self.user_id; end
 
   def public_json_info
     {
       author_id: author_id.to_s,
       dest: dest,
       depart_time: depart_time.to_i,
+      driver_id: driver_id.to_s,
       equipments: equipments,
       status: status
     }
