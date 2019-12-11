@@ -16,7 +16,7 @@ class Util{
     // Chrome 1+
     this.isChrome = !!window.chrome;
 
-    // Safari 3.0+ "[object HTMLElementConstructor]" 
+    // Safari 3.0+ "[object HTMLElementConstructor]"
     this.isSafari = /constructor/i.test(window.HTMLElement) || (function (p) { return p.toString() === "[object SafariRemoteNotification]"; })(!window['safari'] || (typeof safari !== 'undefined' && safari.pushNotification));
 
     // Whether is mobile
@@ -48,6 +48,29 @@ class Util{
       data: _data,
       success: on_succ,
       error: on_error
+    });
+  }
+
+  /**
+   * Emit an ajax request (synchronous)
+   * @param {String} _type Request type (GET/POST...)
+   * @param {String} _url Target location
+   * @param {Object} _data Request arguments
+   */
+  static syncAjax(_type, _url, _data, on_succ, on_error=null){
+    _type = _type.toUpperCase();
+    _data = _data || {};
+    if(_type != "GET"){
+      _data["authenticity_token"] = this.AuthToken;
+    }
+    $.ajax({
+      type: _type,
+      url: _url,
+      dataType: "json",
+      data: _data,
+      success: on_succ,
+      error: on_error,
+      async: false
     });
   }
 
@@ -227,7 +250,7 @@ class Util{
     return tmp;
   }
   /**----------------------------------------------------------------------------
-   * > Check whether the object is interable 
+   * > Check whether the object is interable
    * @param {Object} obj - the object to checl
    */
   static isIterable(obj) {
@@ -248,7 +271,7 @@ class Util{
     if(!handler){ handler = function(){} }
     xhr.open('GET', path, true);
     xhr.responseType = 'blob';
-    xhr.onload = function(e) { 
+    xhr.onload = function(e) {
       if(this.status == 200){
         var file = new File([this.response], 'temp');
         var fileReader = new FileReader();
