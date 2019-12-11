@@ -158,22 +158,6 @@
   </div>
 </nav>
 
-<script type="text/javascript">
-  $('.collapse').collapse();
-  $('.score').raty({
-    number: 5,
-    targetType: 'score',
-    path: 'assets',
-    hints: ['非常差', '差', '普通', '好', '非常好'],
-    size: 24,
-    starHalf: 'star-half.png',
-    starOff: 'star-off.png',
-    starOn: 'star-on.png',
-    target: '#star',
-    cancel: false,
-  });
-</script>
-
 <script>
 function getUsername(user_id) {
   Util.syncAjax(
@@ -193,16 +177,60 @@ function getUsername(user_id) {
 
 function renderTaskToPage(task) {
   var id = $("#important-temp-block").text();
-  var dest = task.dest;
+
+  // var dest_json = JSON.parse(task.dest);
+  // var dest = dest_json.placeName;
+
+  var dest = undefined;
+  try {
+    var dest_json = JSON.parse(task.dest);
+    dest = dest_json.placeName;
+  } catch (e) {
+    dest = task.dest;
+  }
+  // TODO: author_name or driver_name
   var author_name = getUsername(task.author_id);
-  var depart_time = new Date(task.depart_time).toLocaleString();
+  var depart_time = new Date(task.depart_time * 1000).toLocaleString();
   var status = task.status;
   var status_msg = {
-      0: "Waiting",
-      1: "Processing",
-      2: "Cancelled",
-      3: "Finished"
+      0: "等待中",
+      1: "已接受",
+      2: "接客中",
+      3: "已完成",
+      4: "已取消"
   }[status];
+
+  var msg = "";
+
+  if (status == 0) {         // waiting
+    msg = '      <span>狀態：尚無司機接單</span>';
+  } else if (status == 1) {  // accepted
+    msg = '      <span>狀態：已被司機接單</span>';
+  } else if (status == 2) {  // processing
+    msg = '      <span>狀態：送客中</span>';
+  } else if (status == 3) {  // finished
+    msg = '' +
+        '      <form action="task.html">' +
+        '        <div class="score p-2">' +
+        '          <div id="score" class="target"></div>' +
+        '          <div id="star" style="display: none;"></div>' +
+        '        </div>' +
+        '        <div class="form-group">' +
+        '          <textarea class="form-control" id="scoreTextarea" name="scoreTextarea" rows="2"' +
+        '            placeholder="評價敘述"></textarea>' +
+        '        </div>' +
+        '        <div class="form-row">' +
+        '          <div class="col-6">' +
+        '            <a href="report.html"><button type="button" class="btn btn-success btn-block p-2">我要申訴</button></a>' +
+        '          </div>' +
+        '          <div class="col-6">' +
+        '            <button type="submit" class="btn btn-success btn-block p-2">送出評價</button>' +
+        '          </div>' +
+        '        </div>' +
+        '      </form>';
+  } else if (status == 4) {  // cancelled
+    msg = '      <span>取消原因：已過期</span>';
+  }
 
   $("#accordion").append('' +
       '<div class="card">' +
@@ -229,7 +257,7 @@ function renderTaskToPage(task) {
       '  </div>' +
       '  <div id="collapse-' + id + '" class="collapse" aria-labelledby="heading-' + id + '" data-parent="#accordion">' +
       '    <div class="card-body">' +
-      '      <span>' + '訊息：######' + '</span>' +
+      msg +
       '    </div>' +
       '  </div>' +
       '</div>');
@@ -241,12 +269,25 @@ function renderTaskToPage(task) {
                                     4: "text-danger tag" }[status]);
   $("#task-status").attr("id", "task-" + id + "-status");
   $("#important-temp-block").html("");
+  $('.score').raty({
+    number: 5,
+    targetType: 'score',
+    path: 'assets',
+    hints: ['非常差', '差', '普通', '好', '非常好'],
+    size: 24,
+    starHalf: 'star-half.png',
+    starOff: 'star-off.png',
+    starOn: 'star-on.png',
+    target: '#star',
+    cancel: false,
+  });
 }
 
 function getTaskList(task_list) {
   console.log("task list", task_list);
   if (task_list && task_list.length) {
     $("#accordion").html("");
+    task_list = task_list.reverse();
     task_list.forEach(function(task_id) {
       $("#important-temp-block").html(task_id);
       Util.syncAjax(
