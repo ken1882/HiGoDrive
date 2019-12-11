@@ -94,14 +94,21 @@
         "http://localhost:3000/api/v0/users/" + id,
         null,
         listUserInfo,
-        function (result) { console.log("unexpected error"); });
+        function (xhr, ajaxOptions, thrownError) {
+          console.log("unexpected error: ", thrownError);
+        }
+    );
   }
 
-  function userNotFound(result) {
-    $(".userList").html('' +
-      '<div class="notFound">' +
-      '  <h3 class="text-center alert alert-danger">很抱歉！找不到該使用者</h3>' +
-      '</div>');
+  function userNotFound(xhr, ajaxOptions, thrownError) {
+    if (xhr.status == 404) {
+      $(".userList").html('' +
+        '<div class="notFound">' +
+        '  <h3 class="text-center alert alert-danger">很抱歉！找不到該使用者</h3>' +
+        '</div>');
+    } else {
+      console.log("unexpected error", thrownError);
+    }
   }
 
   $("#search-user").submit(function() {
