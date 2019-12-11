@@ -39,11 +39,11 @@
           <div class="col px-1">
             <label>自備配件:</label>
             <div class="form-check form-check-inline">
-              <input class="form-check-input" type="checkbox" name="helmetPassenger" id="helmetPassenger" value="helmet">
+              <input class="form-check-input" type="checkbox" name="helmetPassenger" id="helmetPassenger">
               <label class="form-check-label" for="helmet">安全帽</label>
             </div>
             <div class="form-check form-check-inline">
-              <input class="form-check-input" type="checkbox" name="raincoatPassenger" id="raincoatPassenger" value="raincoat">
+              <input class="form-check-input" type="checkbox" name="raincoatPassenger" id="raincoatPassenger">
               <label class="form-check-label" for="raincoat">雨衣</label>
             </div>
           </div>
@@ -265,6 +265,7 @@
 </nav>
 
 <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBpBgVKm6TqmDB0b3w-y3VoP3Oo-jWPWGY&libraries=places&callback=initMap"></script>
+
 <script type="text/javascript">
   function resv(item) {
     document.getElementById('datetimepickerDiv').style.display = "flex";
@@ -297,7 +298,6 @@
     document.getElementById('statusSwitch').checked = false;
     document.getElementById('task').style.display = "none";
     offlineTask();
-    window.alert("你即將下線!!");
     location.reload();
   }
 
@@ -330,11 +330,22 @@
     document.getElementById('order').style.display = "none";
     document.getElementById('locSearch').style.display = "none";
     document.getElementById('resvtask').style.display = "block";
-    dest.helmet = (document.getElementById('helmetPassenger').check == true);
-    dest.raincoat = (document.getElementById('raincoatPassenger').check == true);
+    dest.helmet = document.getElementById('helmetPassenger').checked;
+    dest.raincoat = document.getElementById('raincoatPassenger').checked;
     dest.datetimepicker = document.getElementById('resvtime').value;
     map.controls[google.maps.ControlPosition.LEFT_BOTTOM].push(document.getElementById('resvtask'));
-
+    var dest_json = JSON.stringify(dest);
+    var dest_data = {
+      dest: dest_json,
+      depart_time: parseInt(Date.parse(dest.datetimepicker) / 1000),
+      equipments: (dest.helmet ? 1 : 0) + (dest.raincoat ? 2 : 0),
+    };
+    Util.ajax(
+        "POST",
+        "http://localhost:3000/api/v0/tasks",
+        dest_data,
+        function (re) {console.log(re); },
+    );
     console.log("errand start!");
     return false;
   }
