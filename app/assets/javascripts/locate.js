@@ -5,7 +5,7 @@ var relocateTimer, relocateTime = 10000, postLocationTimer, postTime = 8000;
 var durationFareDegree = 0.1
 var distanceFareDegree = 0.01
 var infoFare, infoDistance, infoTime;
-var isDriver = false; //change passenger mode or driver mode
+var isDriver = false;  //change passenger mode or driver mode
 var geoFirst = true;
 var task;
 var isaccept = false;
@@ -294,7 +294,7 @@ function cancelDest() {
 }
 
 
-
+// TODO: API
 function taskrunning() { //if driver accept task call back
 
   var driverid = 'driver01' // api get driver id
@@ -406,6 +406,7 @@ function getTasks(task_id) { // fake /api/v0/tasks
   return "-1";
 }
 
+// TODO: API
 //driver on line
 function onlineTask() {
   var taskinfo;
@@ -511,6 +512,7 @@ function directionDrive(destlat, destlng, passengerlat, passengerlng) {
   });
 }
 
+// TODO: API
 //check api /api/v0/task status task_id = taskid.nowid
 function acceptTask() {
 
@@ -537,6 +539,7 @@ function acceptTask() {
 }
 
 
+// TODO: API
 function rejectTask(reason) {
   //api reject 婉拒
   taskid.nowid = taskid.nextid; //switch to next task
