@@ -24,6 +24,7 @@ class User
   field :lng, type: Float
   field :password_reset_token, type: String
   field :bio, type: String
+  field :tasks_engaging, type: Array
 
   validates :roles, numericality: { only_integer: true }
   validates :username, presence: true, length: {in: 6..32}, 
@@ -47,8 +48,13 @@ class User
     self.where({'email' => email}).count != 0
   end
 
+  def self.phone_exist?(phone)
+    self.where({'phone' => phone}).count != 0
+  end
+
   def self.exist?(params)
-    return username_exist?(params[:username]) || email_exist?(params[:email])
+    return username_exist?(params[:username]) || 
+      email_exist?(params[:email]) || phone_exist?(params[:phone])
   end
 
   def self.register_param_ok?(params)
@@ -68,6 +74,11 @@ class User
 
   def self.new_token; SecureRandom.urlsafe_base64; end
 
+  def initialize(_params)
+    _params[:phone] = Util.format_phone_number(_params[:phone])
+    super
+  end
+
   def init_roles
     bt = (@attributes['roles'] || 0) | RoleManager.get_role_bitset(:passenger)
     update_attribute :roles, bt
@@ -76,7 +87,7 @@ class User
   def set_roles(*roles, **kwargs)
     bitset = 0
     roles.each do |role|
-      bt = RoleManager.get_role_bitset(role) if role.is_a?(Symbol)
+      bt = RoleManager.get_bitset(role) if role.is_a?(Symbol)
       bt = Integer(role) rescue 0
       bitset |= bt
     end
@@ -87,7 +98,7 @@ class User
   def remove_roles(*roles, **kwargs)
     bitset = 0xffff
     roles.each do |role|
-      bt = RoleManager.get_role_bitset(role) if role.is_a?(Symbol)
+      bt = RoleManager.get_bitset(role) if role.is_a?(Symbol)
       bt = Integer(role) rescue 0
       bitset &= ~bt
     end
@@ -163,4 +174,9 @@ class User
     return false
   end
 
+  def mutex 
+    return @mutex if @mutex
+    @mutex = Mutex.new
+  end
+  
 end

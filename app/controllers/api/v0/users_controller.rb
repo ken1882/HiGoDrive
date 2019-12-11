@@ -5,7 +5,8 @@ module Api
 
       before_action :set_user, only: [:show, :getpos, :forgot_password,
         :reset_password, :peak]
-      before_action :set_current_user, only: [:update, :setpos]
+      before_action :set_current_user, only: [:update, :setpos,
+        :user_tasks, :tasks_engaging]
       # ----------
       before_action :validate_init_params, only: [:create]
       before_action :validate_update_params, only: [:update]
@@ -34,14 +35,21 @@ module Api
       # POST /checkusername
       def checkusername
         _username = user_init_params[:username] || ''
-        return unprocessable_entity unless _username.length.between?(3, 20)
+        return bad_request unless _username.length.between?(3, 20)
         render json: {'message': User.username_exist?(_username)}
+      end
+
+      # POST /checkphone
+      def checkphone
+        number = Util.format_phone_number(params[:phone]) || ''
+        return bad_request unless number.match(User::PhoneRegex)
+        render json: {'message': User.phone_exist?(number)}
       end
 
       # POST /checkemail
       def checkemail
         _email = user_init_params[:email] || ''
-        return unprocessable_entity unless _email.length.between?(3, 255)
+        return bad_request unless _email.length.between?(3, 255)
         render json: {'message': User.email_exist?(_email)}
       end
 
@@ -97,6 +105,16 @@ module Api
       def reset_password
         @user.reset_password(user_reset_fields)
         return_ok
+      end
+
+      # GET /mytasks
+      def user_tasks
+        render json: @user.tasks.collect{|t| t.id.to_s}, status: :ok
+      end
+
+      # GET /tasks_engaging
+      def tasks_engaging
+        render json: @user.tasks_engaging || [], status: :ok
       end
 
       private

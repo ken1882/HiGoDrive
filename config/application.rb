@@ -39,7 +39,8 @@ module GuaneiArk
     # -- all .rb files in that directory are automatically loaded after loading
     # the framework and any gems in your application.
     config.after_initialize do 
-      puts "#{SPLIT_LINE}Loading namespaces"
+      puts "#{SPLIT_LINE}Pre-init"
+      Task.setup
       # Rails.application.eager_load!
       Mongoid.raise_not_found_error = false
       puts "Rail server started! (#{Rails.env})\n#{SPLIT_LINE}"
