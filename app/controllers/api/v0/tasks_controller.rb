@@ -12,10 +12,16 @@ module Api
       before_action :validate_status, only: [:accept, :reject, :engage, 
         :finish, :cancel]
       before_action :validate_rejections, only: [:reject]
-      
+      before_action :pick_mutex, only: [:accept]
+
       RejectReasonLimit = 100
-      
-      @@mutex = Mutex.new
+
+      @@mutex   = Mutex.new
+      @@mutexes = 5.times.collect do
+        mu = Mutex.new
+        class << mu; attr_accessor :target; end
+        mu
+      end
 
       # GET /tasks
       # GET /tasks.json
@@ -70,7 +76,6 @@ module Api
         end
       end
       
-
       # GET /next_task
       def next_task
         tid = params[:id].to_i rescue nil
@@ -84,9 +89,10 @@ module Api
 
       # POST /task/accept
       def accept
-        @@mutex.synchronize{
+        @mutex.synchronize{
           return unprocessable_entity if @task.accepted?
           @task.accept(current_user.id)
+          @mutex.target = nil
         }
         return_ok
       end
@@ -157,6 +163,27 @@ module Api
         return limit_excessed if strlen > RejectReasonLimit
         return true
       end
+
+      def pick_mutex
+        return conflict if @@mutexes.any?{|m| m.target == @task.id}
+        @mutex = nil
+        timeout = 0
+        # Pick idle mutex
+        while @mutex.nil?
+          @@mutex.synchronize{
+            @@mutexes.each do |mu|
+              next if mu.target
+              mu.target = @task.id
+              @mutex = mu
+              break
+            end
+          }
+          return overloaded if timeout >= AjaxTimeLimit
+          timeout += 100
+          sleep(0.1)
+        end
+      end
+
     end # controller
   end # V0
 end # API
