@@ -10,6 +10,7 @@ class Task
   field :status, type: Integer
   field :equipments, type: Integer
   field :driver_id, type: BSON::ObjectId
+  field :reject_reasons, type: Array
 
   validates :dest, presence: true
   validates :depart_time, presence: true
@@ -80,6 +81,10 @@ class Task
   def cancel
     update_attribute :status, ProgressStatus[:canceled]
     driver.resolve_task(self.id)
+  end
+
+  def reject(msg)
+    self.add_to_set(reject_reasons: msg)
   end
 
   def accepted?

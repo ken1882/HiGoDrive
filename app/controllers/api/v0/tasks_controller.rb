@@ -11,6 +11,9 @@ module Api
       before_action :validate_init_params, only: [:create]
       before_action :validate_status, only: [:accept, :reject, :engage, 
         :finish, :cancel]
+      before_action :validate_rejections, only: [:reject]
+      
+      RejectReasonLimit = 100
       
       @@mutex = Mutex.new
 
@@ -90,7 +93,8 @@ module Api
 
       # POST /task/reject
       def reject
-        return_wip
+        @task.reject
+        return_ok
       end
 
       # POST /task/engage
@@ -147,6 +151,12 @@ module Api
         return true
       end
 
-    end    
-  end
-end
+      def validate_rejections
+        strlen = (params[:reason] || '').length
+        return unprocessable_entity if strlen == 0
+        return limit_excessed if strlen > RejectReasonLimit
+        return true
+      end
+    end # controller
+  end # V0
+end # API

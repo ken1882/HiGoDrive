@@ -12,6 +12,7 @@ class ApplicationController < ActionController::Base
   def unprocessable_entity(*args); return_httpcode(422, *args); end
   def unsupported_media_type(*args); return_httpcode(415, *args); end
   def internel_error(*args); return_httpcode(500, *args); end
+  def limit_excessed(*args); return_httpcode(420, *args); end
 
   private
   def return_httpcode(code, *messages, **kwargs)
