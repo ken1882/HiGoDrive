@@ -1,9 +1,8 @@
-module RoleManager
+module EquipmentManager
   extend BitsetTranslator
   Table = {
-    :passenger  => 0,
-    :driver     => 1,
-    :admin      => 2,
+    :hemlet    => 0,
+    :raincoat  => 1
   }
   Table.each{|k, v| Table[k] = (1 << v)}
 end

@@ -71,7 +71,7 @@ module Api
 
       # GET /next_task
       def next_task
-        tid = params[:id].to_i
+        tid = params[:id].to_i rescue nil
         return bad_request if tid.nil?
         ret_cur = 0; ret_nxt = 0;
         idx = (tid == 0 ? 0 : $task_queue.index(tid)) || 0

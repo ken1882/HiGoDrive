@@ -86,7 +86,7 @@ class User
   def set_roles(*roles, **kwargs)
     bitset = 0
     roles.each do |role|
-      bt = RoleManager.get_role_bitset(role) if role.is_a?(Symbol)
+      bt = RoleManager.get_bitset(role) if role.is_a?(Symbol)
       bt = Integer(role) rescue 0
       bitset |= bt
     end
@@ -97,7 +97,7 @@ class User
   def remove_roles(*roles, **kwargs)
     bitset = 0xffff
     roles.each do |role|
-      bt = RoleManager.get_role_bitset(role) if role.is_a?(Symbol)
+      bt = RoleManager.get_bitset(role) if role.is_a?(Symbol)
       bt = Integer(role) rescue 0
       bitset &= ~bt
     end

@@ -7,9 +7,8 @@ class Task
 
   field :dest, type: String
   field :depart_time, type: DateTime
-  field :helmet, type: Boolean
-  field :raincoat, type: Boolean
   field :status, type: Integer
+  field :equipments, type: Integer
 
   validates :dest, presence: true
   validates :depart_time, presence: true
@@ -27,10 +26,9 @@ class Task
   def self.mutex; @@mutex; end
   
   def initialize(_params)
-    _params[:helmet]    ||= false
-    _params[:raincoat]  ||= false
-    _params[:status]      = 0
-    _params[:depart_time] = Time.at(_params[:depart_time].to_i)
+    _params[:equipments] ||= 0
+    _params[:status]       = 0
+    _params[:depart_time]  = Time.at(_params[:depart_time].to_i)
     @@mutex.synchronize{
       $task_queue << @@next_id
       _params[:id] = @@next_id
@@ -47,8 +45,7 @@ class Task
       author_id: author_id.to_s,
       dest: dest,
       depart_time: depart_time.to_i,
-      helmet: helmet,
-      raincoat: raincoat,
+      equipments: equipments,
       status: status
     }
   end
