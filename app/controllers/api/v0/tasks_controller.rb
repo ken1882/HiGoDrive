@@ -9,7 +9,7 @@ module Api
         :finish]
       before_action :validate_timelock, only: [:create]
       before_action :validate_init_params, only: [:create]
-      before_action :validate_status, only: [:accept, :reject, :engage, 
+      before_action :validate_status, only: [:accept, :reject, :engage,
         :finish, :cancel]
       before_action :validate_rejections, only: [:reject]
       before_action :pick_mutex, only: [:accept]
@@ -28,7 +28,7 @@ module Api
       def index
         render json: {size: Task.count}, status: :ok
       end
-    
+
       # GET /tasks/1
       # GET /tasks/1.json
       def show
@@ -49,7 +49,7 @@ module Api
           end
         end
       end
-    
+
       # PATCH/PUT /tasks/1
       # PATCH/PUT /tasks/1.json
       def update
@@ -64,7 +64,7 @@ module Api
           end
         end
       end
-    
+
       # DELETE /tasks/1
       # DELETE /tasks/1.json
       def destroy
@@ -75,7 +75,7 @@ module Api
           format.json { head :no_content }
         end
       end
-      
+
       # GET /next_task
       def next_task
         tid = params[:id].to_i rescue nil
@@ -105,7 +105,7 @@ module Api
 
       # POST /task/engage
       def engage
-        @task.engage 
+        @task.engage
         return_ok
       end
 
@@ -122,12 +122,12 @@ module Api
         @task = Task.find(params[:id].to_i)
         return not_found unless @task
       end
-    
+
       def validate_login
         return unauthorized unless logged_in?
         return true
       end
-      
+
       def validate_timelock
         current_user.mutex.synchronize do
           lct = current_user.tasks.last.created_at.to_i rescue 0
@@ -141,7 +141,7 @@ module Api
       def validate_init_params
         _time = params[:depart_time].to_i || 0
         curt  = Time.now.to_i
-        return bad_request unless params[:dest].length.between?(1,256)
+        return bad_request unless params[:dest].length.between?(1,25600)
         return bad_request unless _time.between?(curt - 180, curt + 60 * 60 * 24 * 100)
         return true
       end
