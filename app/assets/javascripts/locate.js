@@ -11,8 +11,8 @@ var task;
 var isaccept = false;
 var timesetInterval;
 var taskid = {
-  nowid: '0',
-  nextid: '0'
+  nowid: 0,
+  nextid: 0
 };
 var request;
 
@@ -129,6 +129,24 @@ function geoloaction(isFirst) {
   }
 }
 
+function getCurrentUserId() {
+  var current_user_id = undefined;
+  $.ajax({
+    type: "POST",
+    url: "http://localhost:3000/api/v0/currentuser",
+    dataType: "json",
+    data: { authenticity_token: $('meta[name=csrf-token]')[0].content },
+    success: function on_succ(result) {
+      current_user_id = result.uid;
+    },
+    error: function (xhr, ajaxOptions, thrownError) {
+      console.log("unexpected error: ", thrownError);
+    },
+    async: false
+  });
+  return current_user_id;
+}
+
 function initMap() {
   //initial Map
   map = new google.maps.Map(document.getElementById('map'), {
@@ -147,18 +165,19 @@ function initMap() {
   directionsDisplay = new google.maps.DirectionsRenderer();
   directionsDisplay.setMap(map)
 
-  if (isDriver) {
-    initDriver();
-  } else {
+  var current_user = getUserInfo(getCurrentUserId());
+
+  if (current_user.roles == 1) {
+    isDriver = false;
     initPassenger();
+  } else {
+    isDriver = true;
+    initDriver();
   }
 
   setIcon();
   geoloaction(geoFirst)
   relocateTimer = window.setInterval(function () { geoloaction(geoFirst); }, relocateTime);
-
-
-
 }
 
 
@@ -296,8 +315,21 @@ function cancelDest() {
 
 // TODO: API
 function taskrunning() { //if driver accept task call back
-
   var driverid = 'driver01' // api get driver id
+  $.ajax({
+    type: "GET",
+    url: "http://localhost:3000/api/v0/tasks/" + task_id,
+    dataType: "json",
+    data: null,
+    success: function on_succ(result) {
+      console.log(result);
+      driverid = result.driver_id;
+    },
+    error: function (xhr, ajaxOptions, thrownError) {
+      console.log("unexpected error: ", thrownError);
+    },
+    async: false
+  });
 
   document.getElementById("driverid").innerHTML = "乘客：" + driverid;
   document.getElementById("destinationTask").innerHTML = dest.placeName
@@ -311,7 +343,8 @@ function taskrunning() { //if driver accept task call back
 }
 
 function taskStatus() { // api block get driver finish task status
-  var status = fakeGetTaskStatusApi();
+  var status = getTask(taskid.nowid).status;
+  // TODO: what does this do?
   if (!status) {
     console.log('wait for finish')
     return setTimeout('taskStatus()', 5000); // block stock
@@ -330,121 +363,159 @@ function fakeGetTaskStatusApi() {
   return false;
 }
 
-
-
-
-
-
-
 //driver on line
 
-var fakeTaskNext = { "task_id": "111", "next_id": "112" };
-var fakeTaskNext2 = { "task_id": "112", "next_id": "-1" };
-var fakeTaskDest111 = {
-  dest: {
-    passengerlng: "121.78009159",
-    passengerlat: "25.1510101",
-    lng: "121.5658191",
-    lat: "25.0353647",
-    placeName: "place a",
-    distance: {
-      text: "33.8 公里",
-      value: 33822,
-    },
-    duration: {
-      text: "39 分鐘",
-      value: 2362,
-    },
-    fare: "574",
-    helmet: "true",
-    raincoat: "true",
-    datetimepicker: "12/09/2019 7:36 PM"
-  },
-  username: "user1",
-  status: "0"
+// var fakeTaskNext = { "task_id": "111", "next_id": "112" };
+// var fakeTaskNext2 = { "task_id": "112", "next_id": "-1" };
+// var fakeTaskDest111 = {
+//   dest: {
+//     passengerlng: "121.78009159",
+//     passengerlat: "25.1510101",
+//     lng: "121.5658191",
+//     lat: "25.0353647",
+//     placeName: "place a",
+//     distance: {
+//       text: "33.8 公里",
+//       value: 33822,
+//     },
+//     duration: {
+//       text: "39 分鐘",
+//       value: 2362,
+//     },
+//     fare: "574",
+//     helmet: "true",
+//     raincoat: "true",
+//     datetimepicker: "12/09/2019 7:36 PM"
+//   },
+//   username: "user1",
+//   status: "0"
 
-}
-var fakeTaskDest112 = {
-  dest: {
-    passengerlng: "121.6176128",
-    passengerlat: "25.0486784",
-    lng: "121.5658191",
-    lat: "25.0353647",
-    placeName: "place b",
-    distance: {
-      text: "9.7 公里",
-      value: 9691,
-    },
-    duration: {
-      text: "15 分鐘",
-      value: 895,
-    },
-    fare: "574",
-    helmet: "true",
-    raincoat: "true",
-    datetimepicker: "12/09/2019 8:36 PM"
-  },
-  username: "user2",
-  status: "0"
-}
+// }
+// var fakeTaskDest112 = {
+//   dest: {
+//     passengerlng: "121.6176128",
+//     passengerlat: "25.0486784",
+//     lng: "121.5658191",
+//     lat: "25.0353647",
+//     placeName: "place b",
+//     distance: {
+//       text: "9.7 公里",
+//       value: 9691,
+//     },
+//     duration: {
+//       text: "15 分鐘",
+//       value: 895,
+//     },
+//     fare: "574",
+//     helmet: "true",
+//     raincoat: "true",
+//     datetimepicker: "12/09/2019 8:36 PM"
+//   },
+//   username: "user2",
+//   status: "0"
+// }
 
 // above is fake data
 
-function getTaskid(task_id) {
-  if (task_id == '0') { // GET "/api/v0/task/next?task_id = 0"
-    return fakeTaskNext;
-  } else if (task_id == '112') { // GET "/api/v0/task/next?task_id = 112"
-    return fakeTaskNext2;
-  } else {
-    return "-1";
-  }
+function getUserInfo(uid) {
+  var user_info = undefined;
+  $.ajax({
+    type: "GET",
+    url: "http://localhost:3000/api/v0/users/" + uid,
+    dataType: "json",
+    data: null,
+    success: function on_succ(result) {
+      user_info = result;
+    },
+    error: function (xhr, ajaxOptions, thrownError) {
+      console.log("unexpected error: ", thrownError);
+    },
+    async: false
+  });
+  return user_info;
 }
 
-function getTasks(task_id) { // fake /api/v0/tasks
-  if (task_id == "111") return fakeTaskDest111;
-  if (task_id == "112") return fakeTaskDest112;
-  return "-1";
+function getTaskid(task_id) {
+  var taskinfo = undefined;
+  $.ajax({
+    type: "GET",
+    url: "http://localhost:3000/api/v0/next_task",
+    dataType: "json",
+    data: {id: task_id},
+    success: function on_succ(result) {
+      taskinfo = result;
+    },
+    error: function (xhr, ajaxOptions, thrownError) {
+      console.log("unexpected error: ", thrownError);
+    },
+    async: false
+  });
+  return taskinfo;
+}
+
+function getTask(task_id_) {
+  var task_ = {
+    valid: false,
+    dest: undefined,
+    username: undefined,
+    status: undefined
+  };
+  $.ajax({
+    type: "GET",
+    url: "http://localhost:3000/api/v0/tasks/" + task_id_,
+    dataType: "json",
+    data: null,
+    success: function on_succ(result) {
+      task_.valid = true;
+      task_.dest = JSON.parse(result.dest);
+      task_.username = getUserInfo(result.author_id).username;
+      task_.status = result.status;
+    },
+    error: function (xhr, ajaxOptions, thrownError) {
+      console.log("unexpected error: ", thrownError);
+    },
+    async: false
+  });
+  console.log("task_", task_);
+  return task_;
 }
 
 // TODO: API
 //driver on line
 function onlineTask() {
-  var taskinfo;
+  // while (taskid.nowid < 8)  ++taskid.nowid;  // FIXME: test only
 
+  var taskinfo = getTaskid(taskid.nowid); // first time give 0
 
-  ///api/v0/task/next
-  taskinfo = getTaskid(taskid.nowid); //fake api first time give 0
-  console.log(taskinfo);
-  if (taskid.nowid == 0) {
-    taskid.nowid = taskinfo.task_id
-  }
+  console.log("taskinfo", taskinfo);
+
+  taskid.nowid = taskinfo.task_id;
   taskid.nextid = taskinfo.next_id;
 
-  if (taskinfo == "-1") {
-    console.log("getTaskid error");
-
+  if (false) {
+    console.log("no task available");
     return setTimeout('onlineTask()', 5000); // fail request or no task
-
   }
 
-  request = getTasks(taskid.nowid);
-  if (request == "-1") {
+  if (taskid.nowid == 0) {
+    console.log("getTaskid error");
+    return setTimeout('onlineTask()', 5000); // fail request or no task
+  }
+
+  request = getTask(taskid.nowid);
+  if (!request.valid) {
     taskid.nowid = '0';
+    taskid.nextid = '0';
     console.log("getTask error");
     //setTimeout('onlineTask()', 5000);
-    return setTimeout('onlineTask()', 5000);// fail request or no task
-
+    return setTimeout('onlineTask()', 5000);  // fail request or no task
   }
 
   dest = request.dest;
 
-  console.log(taskinfo);
   setTimeout((() => onReceiveTask(dest)), 500);
 
-
   //done
-
-
 }
 
 //driver off line
@@ -459,8 +530,6 @@ function onReceiveTask(dest) {
   document.getElementById("taskType").innerHTML = dest.datetimepicker;
   document.getElementById("distDriver").innerHTML = dest.placeName;
   document.getElementById("distanceDriver").innerHTML = dest.distance.text;
-
-
 
   window.setTimeout(function () { directionDrive(dest.lat, dest.lng, dest.passengerlat, dest.passengerlng) }, 300)
 
@@ -503,10 +572,7 @@ function directionDrive(destlat, destlng, passengerlat, passengerlng) {
   directionsService.route(request, function (result, status) {
     if (status == 'OK') {
       directionsDisplay.setDirections(result);
-
-
-    }
-    else {
+    } else {
       console.log(status);
     }
   });
@@ -515,40 +581,83 @@ function directionDrive(destlat, destlng, passengerlat, passengerlng) {
 // TODO: API
 //check api /api/v0/task status task_id = taskid.nowid
 function acceptTask() {
-
-  var status = '0'; //check api status again
-  if (status == '0') {
+  var task_ = getTask(taskid.nowid);
+  var status = task_.status;
+  console.log("task status", status);
+  if (status == 0) {
     isaccept = true;
-    console.log(taskid.nowid) //set api status = 1; give driver id
+    console.log("taskid.nowid", taskid.nowid) //set api status = 1; give driver id
+    var data_ = {
+      authenticity_token: $('meta[name=csrf-token]')[0].content,
+      id: getCurrentUserId()
+    };
+    // FIXME: always failed
+    $.ajax({
+      type: "POST",
+      url: "http://localhost:3000/api/v0/task/accept",
+      dataType: "json",
+      data: data_,
+      success: function on_succ(result) {
+        console.log(result);
+        map.controls[google.maps.ControlPosition.LEFT_BOTTOM].push(document.getElementById('errand'));
+        // console.log("task accept");
 
+        // open map  on mobile  app
+        document.getElementById("googleMap").href = "https://www.google.com/maps/dir/" + lat + ',' + lng + '/' + dest.passengerlat + ',' + dest.passengerlng + '/' + dest.lat + ',' + dest.lng;
+
+        document.getElementById("userid").innerHTML = "乘客：" + request.username
+        document.getElementById("destination").innerHTML = request.dest.placeName
+        document.getElementById("distance").innerHTML = request.dest.distance.text
+        document.getElementById("fare").innerHTML = request.dest.fare + '元'
+        var ps = document.getElementById("psText").innerHTML // web get driver ps text
+        // TODO: update ps to database
+      },
+      error: function (xhr, ajaxOptions, thrownError) {
+        console.log("unexpected error: ", thrownError);
+        rejectTask("task is accepted by other driver");
+      },
+      async: false
+    });
   } else {
     rejectTask("task is accepted by other driver");
     return;
   }
-  map.controls[google.maps.ControlPosition.LEFT_BOTTOM].push(document.getElementById('errand'));
-  console.log("task accept");
-
-  // open map  on mobile  app
-  document.getElementById("googleMap").href = "https://www.google.com/maps/dir/" + lat + ',' + lng + '/' + dest.passengerlat + ',' + dest.passengerlng + '/' + dest.lat + ',' + dest.lng;
-
-  document.getElementById("userid").innerHTML = "乘客：" + request.username
-  document.getElementById("destination").innerHTML = request.dest.placeName
-  document.getElementById("distance").innerHTML = request.dest.distance.text
-  document.getElementById("fare").innerHTML = request.dest.fare + '元'
-  var ps = document.getElementById("psText").innerHTML // web get driver ps text
 }
 
 
-// TODO: API
 function rejectTask(reason) {
   //api reject 婉拒
+  var data_ = {
+    authenticity_token: $('meta[name=csrf-token]')[0].content,
+    id: getCurrentUserId(),
+    reason: reason
+  };
+  // FIXME: always failed
+  $.ajax({
+    type: "POST",
+    url: "http://localhost:3000/api/v0/task/reject",
+    dataType: "json",
+    data: data_,
+    success: function on_succ(result) {
+      console.log(result);
+    },
+    error: function (xhr, ajaxOptions, thrownError) {
+      console.log(xhr, ajaxOptions, thrownError);
+      console.log("unexpected error: ", thrownError);
+    },
+    async: false
+  });
+
   taskid.nowid = taskid.nextid; //switch to next task
+  taskid.nextid = 0;
+
+  console.log("taskid after reject:", taskid);
+
   //set user view
   directionsDisplay.set('directions', null);
   map.setCenter({ lat: lat, lng: lng });
   map.setZoom(zoom);
   task.style.display = "none";
-
 }
 
 function initDriver() {
@@ -559,5 +668,4 @@ function initDriver() {
   map.controls[google.maps.ControlPosition.TOP_RIGHT].push(onlineState);
   map.controls[google.maps.ControlPosition.BOTTOM_CENTER].push(offlineState);
   map.controls[google.maps.ControlPosition.LEFT_BOTTOM].push(task);
-
 }
