@@ -171,7 +171,7 @@ class User
   end
 
   def licensed?
-    return false
+    return RoleManager.match?(roles, :driver)
   end
 
   def mutex 
@@ -179,4 +179,11 @@ class User
     @mutex = Mutex.new
   end
   
+  def engage_task(tid)
+    self.add_to_set(tasks_engaging: tid)
+  end
+
+  def resolve_task(tid)
+    self.pull(tasks_engaging: tid)
+  end
 end

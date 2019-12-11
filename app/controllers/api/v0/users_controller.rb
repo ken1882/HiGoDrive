@@ -198,6 +198,13 @@ module Api
         return x && y
       end
 
+<<<<<<< HEAD
+=======
+      def user_url
+        "/home"
+      end
+
+>>>>>>> backend
     end # class
   end
 end

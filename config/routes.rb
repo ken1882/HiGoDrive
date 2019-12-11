@@ -49,6 +49,12 @@ Rails.application.routes.draw do
       get '/mytasks', to: 'users#user_tasks'
       get '/tasks_engaging', to: 'users#tasks_engaging'
       get '/next_task', to: 'tasks#next_task'
+
+      post '/task/accept', to: 'tasks#accept'
+      post '/task/engage', to: 'tasks#engage'
+      post '/task/reject', to: 'tasks#reject'
+      post '/task/finish', to: 'tasks#finish'
+      post '/task/report', to: 'tasks#report'
     end
   end
 
