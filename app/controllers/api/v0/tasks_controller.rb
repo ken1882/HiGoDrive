@@ -102,7 +102,7 @@ module Api
 
       # POST /task/reject
       def reject
-        @task.reject
+        @task.reject(params[:reason])
         return_ok
       end
 
