@@ -109,12 +109,17 @@ module Api
 
       # GET /mytasks
       def user_tasks
-        render json: @user.tasks.collect{|t| t.id.to_s}, status: :ok
+        render json: @user.tasks.collect{|t| t.id}, status: :ok
       end
 
       # GET /tasks_engaging
       def tasks_engaging
         render json: @user.tasks_engaging || [], status: :ok
+      end
+
+      # GET /tasks_history
+      def tasks_history
+        render json: @user.tasks_history || [], status: :ok
       end
 
       private
