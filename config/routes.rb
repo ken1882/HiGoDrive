@@ -34,7 +34,7 @@ Rails.application.routes.draw do
       
       get '/mytasks', to: 'users#user_tasks'
       get '/tasks_engaging', to: 'users#tasks_engaging'
-      get '/tasks_history', to: 'users#tasks_histpry'
+      get '/tasks_history', to: 'users#tasks_history'
       get '/next_task', to: 'tasks#next_task'
 
       post '/task/accept', to: 'tasks#accept'
