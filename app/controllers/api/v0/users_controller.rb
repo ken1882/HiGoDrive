@@ -102,7 +102,6 @@ module Api
       end
 
       # POST /resetpassword
-      # test
       def reset_password
         @user.reset_password(user_reset_fields)
         return_ok
