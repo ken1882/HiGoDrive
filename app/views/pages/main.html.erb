@@ -281,6 +281,7 @@
   }
 
   function online() {
+    isOnline = true;
     document.getElementById('offlineState').style.display = "none";
     document.getElementById('onlineState').style.display = "block";
     document.getElementById('statusSwitch').checked = true;
@@ -293,6 +294,7 @@
   }
 
   function offline() {
+    isOnline = false;
     document.getElementById('offlineState').style.display = "block";
     document.getElementById('onlineState').style.display = "none";
     document.getElementById('statusSwitch').checked = false;
@@ -345,6 +347,7 @@
         "http://localhost:3000/api/v0/tasks",
         dest_data,
         function (re) {console.log(re); },
+        function (x) { console.log(x.status); }
     );
     console.log("errand start!");
     return false;
@@ -384,5 +387,8 @@
       minDate: new Date(),
       defaultDate: new Date()
     });
+    if (isOnline) {
+      online();
+    }
   });
 </script>
