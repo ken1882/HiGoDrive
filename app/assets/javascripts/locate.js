@@ -10,27 +10,27 @@ var geoFirst = true;
 var task;
 var isaccept = false;
 var timesetInterval;
+var isOnline = false;
+var taskProcessing = false;
 var taskid = {
   nowid: 0,
   nextid: 0
 };
 var request;
 
-
 var dest = {
-  passengerlng: "",
-  passengerlat: "",
-  lng: "",
-  lat: "",
-  placeName: "",
-  distance: "",
-  duration: "",
-  fare: "",
-  helmet: "",
-  raincoat: "",
-  datetimepicker: ""
-}
-
+  passengerlng: undefined,
+  passengerlat: undefined,
+  lng: undefined,
+  lat: undefined,
+  placeName: undefined,
+  distance: undefined,
+  duration: undefined,
+  fare: undefined,
+  helmet: undefined,
+  raincoat: undefined,
+  datetimepicker: undefined
+};
 
 function CenterControl(controlDiv, map) {
 
@@ -133,7 +133,7 @@ function getCurrentUserId() {
   var current_user_id = undefined;
   $.ajax({
     type: "POST",
-    url: "http://localhost:3000/api/v0/currentuser",
+    url: "/api/v0/currentuser",
     dataType: "json",
     data: { authenticity_token: $('meta[name=csrf-token]')[0].content },
     success: function on_succ(result) {
@@ -312,13 +312,11 @@ function cancelDest() {
   map.setZoom(zoom)
 }
 
-
-// TODO: API
 function taskrunning() { //if driver accept task call back
-  var driverid = 'driver01' // api get driver id
+  var driverid = '0' // api get driver id
   $.ajax({
     type: "GET",
-    url: "http://localhost:3000/api/v0/tasks/" + task_id,
+    url: "/api/v0/tasks/" + taskid.nowid,
     dataType: "json",
     data: null,
     success: function on_succ(result) {
@@ -330,6 +328,7 @@ function taskrunning() { //if driver accept task call back
     },
     async: false
   });
+  console.log("driver_id", driverid);
 
   document.getElementById("driverid").innerHTML = "乘客：" + driverid;
   document.getElementById("destinationTask").innerHTML = dest.placeName
@@ -344,84 +343,59 @@ function taskrunning() { //if driver accept task call back
 
 function taskStatus() { // api block get driver finish task status
   var status = getTask(taskid.nowid).status;
-  // TODO: what does this do?
-  if (!status) {
-    console.log('wait for finish')
+  // TODO: status definition has changed
+  if (status == 1) {
+    console.log('waiting for engaging');
     return setTimeout('taskStatus()', 5000); // block stock
-  } else {
-    taskFinish();
+  } else if (status == 2) {
+    console.log('waiting for finishing');
+    return setTimeout('taskStatus()', 5000); // block stock
+  } else if (status == 3) {
+    console.log('task done');
   }
 }
 
 function taskFinish() { //if task done
+  $.ajax({
+    type: "POST",
+    url: "/api/v0/task/engage",
+    dataType: "json",
+    data: {
+      authenticity_token: $('meta[name=csrf-token]')[0].content,
+      id: taskid.nowid
+    },
+    success: function on_succ(result) {
+      console.log(result);
+    },
+    error: function (xhr, ajaxOptions, thrownError) {
+      console.log("unexpected error: ", thrownError);
+    },
+    async: false
+  });
+  $.ajax({
+    type: "POST",
+    url: "/api/v0/task/finish",
+    dataType: "json",
+    data: {
+      authenticity_token: $('meta[name=csrf-token]')[0].content,
+      id: taskid.nowid
+    },
+    success: function on_succ(result) {
+      console.log(result);
+    },
+    error: function (xhr, ajaxOptions, thrownError) {
+      console.log("unexpected error: ", thrownError);
+    },
+    async: false
+  });
   location.reload();
 }
-
-
-//test api function
-function fakeGetTaskStatusApi() {
-  return false;
-}
-
-//driver on line
-
-// var fakeTaskNext = { "task_id": "111", "next_id": "112" };
-// var fakeTaskNext2 = { "task_id": "112", "next_id": "-1" };
-// var fakeTaskDest111 = {
-//   dest: {
-//     passengerlng: "121.78009159",
-//     passengerlat: "25.1510101",
-//     lng: "121.5658191",
-//     lat: "25.0353647",
-//     placeName: "place a",
-//     distance: {
-//       text: "33.8 公里",
-//       value: 33822,
-//     },
-//     duration: {
-//       text: "39 分鐘",
-//       value: 2362,
-//     },
-//     fare: "574",
-//     helmet: "true",
-//     raincoat: "true",
-//     datetimepicker: "12/09/2019 7:36 PM"
-//   },
-//   username: "user1",
-//   status: "0"
-
-// }
-// var fakeTaskDest112 = {
-//   dest: {
-//     passengerlng: "121.6176128",
-//     passengerlat: "25.0486784",
-//     lng: "121.5658191",
-//     lat: "25.0353647",
-//     placeName: "place b",
-//     distance: {
-//       text: "9.7 公里",
-//       value: 9691,
-//     },
-//     duration: {
-//       text: "15 分鐘",
-//       value: 895,
-//     },
-//     fare: "574",
-//     helmet: "true",
-//     raincoat: "true",
-//     datetimepicker: "12/09/2019 8:36 PM"
-//   },
-//   username: "user2",
-//   status: "0"
-// }
-
-// above is fake data
 
 function getUserInfo(uid) {
   var user_info = undefined;
   $.ajax({
     type: "GET",
-    url: "http://localhost:3000/api/v0/users/" + uid,
+    url: "/api/v0/users/" + uid,
     dataType: "json",
     data: null,
     success: function on_succ(result) {
@@ -439,7 +413,7 @@ function getTaskid(task_id) {
   var taskinfo = undefined;
   $.ajax({
     type: "GET",
-    url: "http://localhost:3000/api/v0/next_task",
+    url: "/api/v0/next_task",
     dataType: "json",
     data: {id: task_id},
     success: function on_succ(result) {
@@ -462,7 +436,7 @@ function getTask(task_id_) {
   };
   $.ajax({
     type: "GET",
-    url: "http://localhost:3000/api/v0/tasks/" + task_id_,
+    url: "/api/v0/tasks/" + task_id_,
     dataType: "json",
     data: null,
     success: function on_succ(result) {
@@ -480,18 +454,16 @@ function getTask(task_id_) {
   return task_;
 }
 
-// TODO: API
 //driver on line
 function onlineTask() {
-  // while (taskid.nowid < 8)  ++taskid.nowid;  // FIXME: test only
-
-  var taskinfo = getTaskid(taskid.nowid); // first time give 0
+  var taskinfo = getTaskid(taskid.nextid); // first time give 0
 
   console.log("taskinfo", taskinfo);
 
   taskid.nowid = taskinfo.task_id;
   taskid.nextid = taskinfo.next_id;
 
+  // TODO
   if (false) {
     console.log("no task available");
     return setTimeout('onlineTask()', 5000); // fail request or no task
@@ -504,8 +476,8 @@ function onlineTask() {
 
   request = getTask(taskid.nowid);
   if (!request.valid) {
-    taskid.nowid = '0';
-    taskid.nextid = '0';
+    taskid.nowid = 0;
+    taskid.nextid = 0;
     console.log("getTask error");
     //setTimeout('onlineTask()', 5000);
     return setTimeout('onlineTask()', 5000);  // fail request or no task
@@ -533,7 +505,7 @@ function onReceiveTask(dest) {
 
   window.setTimeout(function () { directionDrive(dest.lat, dest.lng, dest.passengerlat, dest.passengerlng) }, 300)
 
-  var sec = 15;
+  var sec = 30;
   var secHtml = document.getElementById("sec");
   isaccept = false;
   clearInterval(timesetInterval);
@@ -578,27 +550,24 @@ function directionDrive(destlat, destlng, passengerlat, passengerlng) {
   });
 }
 
-// TODO: API
 //check api /api/v0/task status task_id = taskid.nowid
 function acceptTask() {
   var task_ = getTask(taskid.nowid);
   var status = task_.status;
   console.log("task status", status);
   if (status == 0) {
-    isaccept = true;
     console.log("taskid.nowid", taskid.nowid) //set api status = 1; give driver id
-    var data_ = {
-      authenticity_token: $('meta[name=csrf-token]')[0].content,
-      id: getCurrentUserId()
-    };
-    // FIXME: always failed
     $.ajax({
       type: "POST",
-      url: "http://localhost:3000/api/v0/task/accept",
+      url: "/api/v0/task/accept",
       dataType: "json",
-      data: data_,
+      data: {
+        authenticity_token: $('meta[name=csrf-token]')[0].content,
+        id: taskid.nowid
+      },
       success: function on_succ(result) {
         console.log(result);
+        isaccept = true;
         map.controls[google.maps.ControlPosition.LEFT_BOTTOM].push(document.getElementById('errand'));
         // console.log("task accept");
 
@@ -610,6 +579,7 @@ function acceptTask() {
         document.getElementById("distance").innerHTML = request.dest.distance.text
         document.getElementById("fare").innerHTML = request.dest.fare + '元'
         var ps = document.getElementById("psText").innerHTML // web get driver ps text
+        taskrunning();
         // TODO: update ps to database
       },
       error: function (xhr, ajaxOptions, thrownError) {
@@ -627,17 +597,15 @@ function acceptTask() {
 
 function rejectTask(reason) {
   //api reject 婉拒
-  var data_ = {
-    authenticity_token: $('meta[name=csrf-token]')[0].content,
-    id: getCurrentUserId(),
-    reason: reason
-  };
-  // FIXME: always failed
   $.ajax({
     type: "POST",
-    url: "http://localhost:3000/api/v0/task/reject",
+    url: "/api/v0/task/reject",
     dataType: "json",
-    data: data_,
+    data: {
+      authenticity_token: $('meta[name=csrf-token]')[0].content,
+      id: taskid.nowid,
+      reason: reason
+    },
     success: function on_succ(result) {
       console.log(result);
     },
@@ -648,10 +616,8 @@ function rejectTask(reason) {
     async: false
   });
 
-  taskid.nowid = taskid.nextid; //switch to next task
-  taskid.nextid = 0;
-
-  console.log("taskid after reject:", taskid);
+  // taskid.nowid = taskid.nextid; //switch to next task
+  // taskid.nextid = 0;
 
   //set user view
   directionsDisplay.set('directions', null);
@@ -664,7 +630,9 @@ function initDriver() {
   var onlineState = document.getElementById("onlineState");
   var offlineState = document.getElementById("offlineState");
   task = document.getElementById("task");
-  offlineState.style.display = 'block';
+  if (!isOnline) {
+    offlineState.style.display = 'block';
+  }
   map.controls[google.maps.ControlPosition.TOP_RIGHT].push(onlineState);
   map.controls[google.maps.ControlPosition.BOTTOM_CENTER].push(offlineState);
   map.controls[google.maps.ControlPosition.LEFT_BOTTOM].push(task);

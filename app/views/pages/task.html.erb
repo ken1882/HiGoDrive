@@ -12,116 +12,6 @@
     <h4 class="text-center my-3">訂單紀錄</h4>
     <hr>
     <div class="accordion" id="accordion">
-<%
-=begin
-      <!--樣式模板>>-->
-
-      <!-- finished -->
-      <div class="card">
-        <div class="card-header px-0" id="headingOne">
-          <button class="btn btn-block" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false"
-            aria-controls="collapseOne">
-            <div class="row">
-              <div class="col-4 px-0">
-                <p class="mb-0"><img class="user_task" src="/assets/user-circle-regular.svg" type="image/svg+xml"
-                    alt="user"></p>
-                <p name="user_id" class="mb-0">12345</p>
-              </div>
-              <div class="col-6 px-0">
-                <p name="dist" class="text-primary">目的地：基隆火車站</p>
-                <p name="route" class="text-primary mb-0">時間：2019/12/3 18:00</p>
-              </div>
-              <div class="col-2 px-0">
-                <p class="text-success tag">已完成</p>
-                <i class="fas fa-sort-down fa-lg"></i>
-              </div>
-            </div>
-          </button>
-        </div>
-        <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
-          <div class="card-body">
-            <form action="/task">
-              <div class="score p-2">
-                <div id="score" class="target"></div>
-                <div id="star" style="display: none;"></div>
-              </div>
-              <div class="form-group">
-                <textarea class="form-control" id="scoreTextarea" name="scoreTextarea" rows="2"
-                  placeholder="評價敘述"></textarea>
-              </div>
-              <div class="form-row">
-                <div class="col-6">
-                  <a href="/report"><button type="button" class="btn btn-success btn-block p-2">我要申訴</button></a>
-                </div>
-                <div class="col-6">
-                  <button type="submit" class="btn btn-success btn-block p-2">送出評價</button>
-                </div>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
-
-      <!-- scheduled -->
-      <div class="card">
-        <div class="card-header px-0" id="headingTwo">
-          <button class="btn btn-block" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false"
-            aria-controls="collapseTwo">
-            <div class="row">
-              <div class="col-4 px-0">
-                <p class="mb-0"><img class="user_task" src="/assets/user-circle-regular.svg" type="image/svg+xml"
-                    alt="user"></p>
-                <p name="user_id" class="mb-0">48763</p>
-              </div>
-              <div class="col-6 px-0">
-                <p name="dist" class="text-primary">目的地：海大體育館</p>
-                <p name="route" class="text-primary mb-0">時間：2019/12/3 20:00</p>
-              </div>
-              <div class="col-2 px-0">
-                <p class="text-primary tag">已預約 22:00</p>
-                <i class="fas fa-sort-down fa-lg"></i>
-              </div>
-            </div>
-          </button>
-        </div>
-        <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
-          <div class="card-body">
-            <span>差事尚未進行</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- canceled -->
-      <div class="card">
-        <div class="card-header px-0" id="headingThree">
-          <button class="btn btn-block" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false"
-            aria-controls="collapseThree">
-            <div class="row">
-              <div class="col-4 px-0">
-                <p class="mb-0"><img class="user_task" src="/assets/user-circle-regular.svg" type="image/svg+xml"
-                    alt="user">
-                </p>
-                <p name="user_id" class="mb-0">48763</p>
-              </div>
-              <div class="col-6 px-0">
-                <p name="dist" class="text-primary">目的地：基隆火車站</p>
-                <p name="route" class="text-primary mb-0">時間：2019/12/3 18:00</p>
-              </div>
-              <div class="col-2 px-0">
-                <p class="text-danger tag">已拒絕</p>
-                <i class="fas fa-sort-down fa-lg"></i>
-              </div>
-            </div>
-          </button>
-        </div>
-        <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
-          <div class="card-body">
-            <span>拒絕原因：######</span>
-          </div>
-        </div>
-      </div>
-      <!--<<樣式模板-->
-=end %>
     </div>
     <div id="important-temp-block" style="display: none;"></div>
   </div>
@@ -202,13 +92,13 @@ function renderTaskToPage(task) {
 
   var msg = "";
 
-  if (status == 0) {         // waiting
+  if (status == 0) {
     msg = '      <span>狀態：尚無司機接單</span>';
-  } else if (status == 1) {  // accepted
+  } else if (status == 1) {
     msg = '      <span>狀態：已被司機接單</span>';
-  } else if (status == 2) {  // processing
+  } else if (status == 2) {
     msg = '      <span>狀態：送客中</span>';
-  } else if (status == 3) {  // finished
+  } else if (status == 3) {
     msg = '' +
         '      <form action="task.html">' +
         '        <div class="score p-2">' +
@@ -283,10 +173,17 @@ function renderTaskToPage(task) {
   });
 }
 
+function isAccordionEmpty() {
+  return $(".noTask").length != 0 || !$("#accordion").text().trim();
+}
+
 function getTaskList(task_list) {
   console.log("task list", task_list);
+  console.log(isAccordionEmpty());
   if (task_list && task_list.length) {
-    $("#accordion").html("");
+    if (isAccordionEmpty()) {
+      $("#accordion").html("");
+    }
     task_list = task_list.reverse();
     task_list.forEach(function(task_id) {
       $("#important-temp-block").html(task_id);
@@ -300,7 +197,7 @@ function getTaskList(task_list) {
           }
       );
     });
-  } else {
+  } else if (isAccordionEmpty()) {
     $("#accordion").html('' +
         '<div class="noTask">' +
         '  <h5 class="text-center alert alert-danger">沒有訂單紀錄</h5>' +
@@ -309,19 +206,19 @@ function getTaskList(task_list) {
 }
 
 $(document).ready(function() {
-  Util.ajax(
+  Util.syncAjax(
       "GET",
       "/api/v0/mytasks",
       null,
       getTaskList,
-      function(re) { console.log("unexpected error"); }
+      function(re) { console.log("unexpected error"); },
   );
-  Util.ajax(
+  Util.syncAjax(
       "GET",
       "/api/v0/tasks_history",
       null,
       getTaskList,
-      function(re) { console.log("unexpected error"); }
+      function(re) { console.log("unexpected error"); },
   );
 });
 </script>
