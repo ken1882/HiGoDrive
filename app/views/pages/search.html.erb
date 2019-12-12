@@ -1,0 +1,127 @@
+<% provide :page_title, "Search" %>
+
+<!--上導覽列-->
+<nav class="navbar navbar-expand fixed-top navbar-dark bg-primary flex-column bd-navbar p-1">
+  <span class="navbar-brand m-0 h1">HiGoDrive</span>
+  <!--<a class="navbar-brand mx-2" href="#">HiGoDrive</a>-->
+</nav>
+
+<!--內容-->
+<main>
+  <div class="container">
+    <div class="my-2">
+      <form id="search-user">
+        <input class="form-control my-1 col-10" type="search" placeholder="我想要找" aria-label="搜尋其他使用者" id="search"
+          name="username" required>
+        <button class="btn btn-outline-success my-1 col-2" type="submit"><i class="fas fa-search"></i></button>
+      </div>
+    </form>
+    <hr>
+
+    <div class="userList">
+    </div>
+
+  </div>
+</main>
+
+<!--下導覽列-->
+<nav class="navbar navbar-expand fixed-bottom navbar-dark bg-primary bd-navbar py-0">
+  <div class="row navbar-nav m-auto p-auto">
+    <div class="col-3">
+      <a class="nav-item nav-link pt-2 pb-0" href="/home">
+        <p class="text-center my-0"><i class="fas fa-home fa-lg"></i></p>
+        <p class="text-center my-0">Home</p>
+      </a>
+    </div>
+    <div class="col-3">
+      <a class="nav-item nav-link pt-2 pb-0" href="/search">
+        <p class="text-center my-0"><i class="fas fa-search fa-lg"></i></p>
+        <p class="text-center my-0">Search</p>
+      </a>
+    </div>
+    <div class="col-3">
+      <a class="nav-item nav-link pt-2 pb-0" href="/task">
+        <p class="text-center my-0"><i class="fas fa-tasks fa-lg"></i></p>
+        <p class="text-center my-0">Task</p>
+      </a>
+    </div>
+    <div class="col-3">
+      <a class="nav-item nav-link pt-2 pb-0" href="/user">
+        <p class="text-center my-0"><i class="fas fa-user fa-lg"></i></p>
+        <p class="text-center my-0">User</p>
+      </a>
+    </div>
+  </div>
+</nav>
+
+<script>
+  function listUserInfo(result) {
+    var name = result.username;
+    if (result.realname) {
+      name = name + " (" + result.realname + ")"
+    }
+    var email = result.email;
+    var phone = result.phone;
+    var bio = result.bio;
+    if (!bio) {
+      bio = "";
+    }
+    $(".userList").html('' +
+      '<div class="card mb-3 mx-auto" style="max-width: 540px;">' +
+      '  <div class="row no-gutters">' +
+      '    <div class="col-4">' +
+      '      <img id="user" src="/assets/user-circle-regular.svg" type="image/svg+xml" class="card-img" alt="user">' +
+      '    </div>' +
+      '    <div class="col-8">' +
+      '      <div class="card-body">' +
+      '        <h5 class="card-title">用戶名稱：' + name + '</h5>' +
+      '        <p class="card-text">電子信箱：' + email + '</p>' +
+      '        <p class="card-text">手機號碼：' + phone + '</p>' +
+      '        <p class="card-text">個人資訊：' + bio + '</p>' +
+      '        <p class="card-text text-primary">' +
+      // '          <small class="text-muted">18:00~19:00已被預約</small>' +
+      '        </p>' +
+      '      </div>' +
+      '    </div>' +
+      '  </div>' +
+      '</div>');
+  }
+
+  function userFound(result) {
+    var id = result.uid;
+    Util.ajax(
+        "GET",
+        "/api/v0/users/" + id,
+        null,
+        listUserInfo,
+        function (xhr, ajaxOptions, thrownError) {
+          console.log("unexpected error: ", thrownError);
+        }
+    );
+  }
+
+  function userNotFound(xhr, ajaxOptions, thrownError) {
+    if (xhr.status == 404) {
+      $(".userList").html('' +
+        '<div class="notFound">' +
+        '  <h3 class="text-center alert alert-danger">很抱歉！找不到該使用者</h3>' +
+        '</div>');
+    } else {
+      console.log("unexpected error", thrownError);
+    }
+  }
+
+  $("#search-user").submit(function() {
+    $(".userList").html("");
+    var username = $("input[name='username']")[0].value;
+    if (username) {
+      Util.ajax(
+          "GET",
+          "/api/v0/users/search/" + username,
+          null,
+          userFound,
+          userNotFound);
+    }
+    return false;
+  });
+</script>

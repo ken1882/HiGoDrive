@@ -2,38 +2,54 @@ module Api
   module V0
     class UsersController < ApplicationController
       include UsersHelper
-      
-      before_action :set_user, only: [:show, :edit, :update, :login,
-        :setpos, :getpos, :forgot_password, :reset_password]
+
+      before_action :set_user, only: [:show, :getpos, :forgot_password,
+        :reset_password, :peak]
+      before_action :set_current_user, only: [:update, :setpos,
+        :user_tasks, :tasks_engaging, :tasks_history]
       # ----------
       before_action :validate_init_params, only: [:create]
       before_action :validate_update_params, only: [:update]
       before_action :validate_forgotpwd_params, only: [:forgot_password]
       before_action :validate_resetpwd_params, only: [:reset_password]
 
+      BioMaxLen = 2000
+
       # GET /users
       # GET /users.json
       def index
         render json: {size: User.count}, status: :ok
       end
-    
+
       # GET /users/1
       # GET /users/1.json
       def show
         render json: @user.public_json_info, status: :ok
       end
-      
+
+      # GET /users/search/:username
+      def peak
+        render json: {uid: @user.id.to_s}, status: :ok
+      end
+
       # POST /checkusername
       def checkusername
         _username = user_init_params[:username] || ''
-        return unprocessable_entity unless _username.length.between?(3, 20)
+        return bad_request unless _username.length.between?(3, 20)
         render json: {'message': User.username_exist?(_username)}
+      end
+
+      # POST /checkphone
+      def checkphone
+        number = Util.format_phone_number(params[:phone]) || ''
+        return bad_request unless number.match(User::PhoneRegex)
+        render json: {'message': User.phone_exist?(number)}
       end
 
       # POST /checkemail
       def checkemail
         _email = user_init_params[:email] || ''
-        return unprocessable_entity unless _email.length.between?(3, 255)
+        return bad_request unless _email.length.between?(3, 255)
         render json: {'message': User.email_exist?(_email)}
       end
 
@@ -43,7 +59,7 @@ module Api
         @user = User.new(user_init_params)
         respond_to do |format|
           if @user.save
-            format.html { redirect_to user_url, notice: 'User was successfully created.' }
+            format.html { redirect_to '/', notice: 'User was successfully created.' }
             format.json { render json: {message: 'created'}, status: :created}
           else
             format.html { unprocessable_entity }
@@ -51,14 +67,14 @@ module Api
           end
         end
       end
-    
+
       # PATCH/PUT /users/1
       # PATCH/PUT /users/1.json
       def update
         @user.update(user_update_fields)
-        return_ok
+        redirect_to '/user'
       end
-    
+
       # DELETE /users/1
       # DELETE /users/1.json
       def destroy
@@ -73,7 +89,7 @@ module Api
         @user.set_pos(lat, lng)
         return_ok
       end
-      
+
       # GET /user/getpos
       def getpos
         render json: @user.get_pos, status: :ok
@@ -91,40 +107,59 @@ module Api
         return_ok
       end
 
+      # GET /mytasks
+      def user_tasks
+        render json: @user.tasks.collect{|t| t.id}, status: :ok
+      end
+
+      # GET /tasks_engaging
+      def tasks_engaging
+        render json: @user.tasks_engaging || [], status: :ok
+      end
+
+      # GET /tasks_engaging
+      def tasks_history
+        render json: @user.tasks_history || [], status: :ok
+      end
+
       private
       # Use callbacks to share common setup or constraints between actions.
       def set_user
-        @user = current_user || User.wide_query(user_find_params.compact.first)
+        @user = User.wide_query(user_find_params.compact.first)
         not_found if @user.nil?
+      end
+
+      def set_current_user
+        @user = current_user
+        unauthorized if @user.nil?
       end
 
       def validate_init_params
         return bad_request unless register_param_ok?(user_init_params)
-        return unprocessable_entity unless Util.email_deliverable?(user_init_params[:email])
-        return_ok
+        return forbidden unless Util.email_deliverable?(user_init_params[:email])
+        return unprocessable_entity unless driver_licensed?
+        return true
       end
 
       def validate_update_params
-        _params = user_update_params
         return unauthorized if @user.nil?
-        return unsupported_media_type unless avatar_url_ok?(_params[:avatar_url])
-        return unprocessable_entity unless password_change_ok?(_params)
+        return unsupported_media_type unless avatar_url_ok?(params[:avatar_url])
+        return unprocessable_entity unless password_change_ok?(params)
+        return forbidden if (params[:bio] || '').length > BioMaxLen
         return true
       end
 
       def validate_resetpwd_params
-        _params = user_reset_params
         return bad_request if logged_in?
-        return unauthorized if _params[:token] != @user.password_reset_token
+        return unauthorized if params[:token] != @user.password_reset_token
         return unprocessable_entity unless password_reset_ok?(_params)
         return true
       end
 
       def validate_forgotpwd_params
-        _params = user_find_params
         return bad_request if logged_in?
-        return unauthorized if @user.username != _params[:username]
-        return unauthorized if @user.email != _params[:email]
+        return unauthorized if @user.username != params[:username]
+        return unauthorized if @user.email != params[:email]
         return true
       end
 
@@ -153,10 +188,13 @@ module Api
       end
 
       def register_param_ok?(params)
-        return false if User.exist?(params)
-        return false if (params[:password] || '').length < 6
-        return false unless params[:username].match(/^[[:alnum:]]*$/)
+        return false if UserInitParms.any?{|k| params[k].nil?}
         return true
+      end
+
+      def driver_licensed?
+        return true unless RoleManager.match?(params[:roles].to_i, :driver)
+        return @user.licensed?
       end
 
       def coordinates_ok?(lat, lng)
@@ -166,7 +204,7 @@ module Api
       end
 
       def user_url
-        "/user/#{@user.username}"
+        "/home"
       end
 
     end # class

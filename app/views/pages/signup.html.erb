@@ -1,0 +1,73 @@
+<% provide :page_title, "Sign Up" %>
+
+<div class="container">
+
+  <div class="mt-4 mb-0 p-2">
+    <a href="/" class="list-group-item-action">
+      <h2 class="text-center">HiGoDrive</h2>
+    </a>
+    <img id="motor" class="rounded mx-auto d-block" src="/assets/motorcycle-solid.svg" type="image/svg+xml" />
+    <hr>
+  </div>
+
+  <%= form_tag '/api/v0/users' do %>
+    <div class="form-group">
+      <label for="username">帳號</label>
+      <input type="text" class="form-control" id="username" name="username" required>
+    </div>
+    <div class="form-group">
+      <label for="password">密碼</label>
+      <input type="password" class="form-control" id="password" name="password" required>
+    </div>
+    <div class="form-group">
+      <label for="password_confirmation">請再次輸入密碼</label>
+      <input type="password" class="form-control" id="password_confirmation" name="password_confirmation" required>
+    </div>
+    <div class="form-group">
+      <label for="realname">真實姓名</label>
+      <input type="text" class="form-control" id="realname" name="realname" required>
+    </div>
+    <div class="form-group">
+      <label for="phone">手機號碼</label>
+      <input type="tel" class="form-control" id="phone" name="phone" required>
+    </div>
+    <div class="form-group">
+      <label for="email">電子信箱</label>
+      <input type="email" class="form-control" id="email" name="email" required>
+    </div>
+    <br>
+    <div class="form-row">
+      <div class="col-6">
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="radio" name="roles" id="passenger" value="1" checked>
+          <label class="form-check-label" for="passenger">成為乘客</label>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="radio" name="roles" id="driver" value="2">
+          <label class="form-check-label" for="driver">成為司機</label>
+        </div>
+      </div>
+    </div>
+    <br>
+    <!--
+    <div class="form-group form-check">
+      <input type="checkbox" class="form-check-input" id="rememberMe" name="rememberMe" required>
+      <label class="form-check-label" for="rememberMe">我同意 <a href="#">使用條款</a> 及 <a href="#">隱私權政策</a></label>
+    </div>
+    -->
+    <br>
+    <br>
+    <div class="px-5 py-3">
+      <button type="submit" class="btn btn-success btn-lg btn-block">註冊</button>
+    </div>
+  <% end %>
+
+  <div class="row">
+    <div class="col-12 mt-5 mb-2">
+      <span class="float-left">&copyHiGoDrive 2019</span>
+      <a class="float-right" href="mailto:higodrive@sevice.mail.com">聯絡我們</a>
+    </div>
+  </div>
+</div>

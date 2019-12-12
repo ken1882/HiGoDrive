@@ -1,0 +1,395 @@
+<% provide :page_title, "Home" %>
+
+<!--上導覽列-->
+<nav class="navbar navbar-expand fixed-top navbar-dark bg-primary flex-column bd-navbar p-1">
+  <span class="navbar-brand m-0 h1">HiGoDrive</span>
+  <!--<a class="navbar-brand mx-2" href="#">HiGoDrive</a>-->
+</nav>
+
+<!--內容-->
+<main>
+  <div class="container">
+    <div id="locSearch" style="display: none;">
+      <input id="search" class="form-control my-2" type="text" name="search" placeholder="我想要去">
+    </div>
+
+    <div id="onlineState" class="onlineState" style="display: none;">
+      <div class="custom-control custom-switch">
+        <input type="checkbox" class="custom-control-input" id="statusSwitch" onclick="offline()">
+        <label class="custom-control-label" for="statusSwitch">上線狀態</label>
+      </div>
+    </div>
+
+    <div id="map"></div>
+
+    <div id="order" class="order" style="display: none;">
+      <div class="form-row">
+        <div class="col-12 px-1">
+          <span id="farePassenger"></span>
+        </div>
+        <div class="col-6 px-1">
+          <span id="distancePassenger"></span>
+        </div>
+        <div class="col-6 px-1">
+          <span id="timePassenger"></span>
+        </div>
+      </div>
+      <form action="javascript:void(0);">
+        <div class="form-row">
+          <div class="col px-1">
+            <label>自備配件:</label>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="checkbox" name="helmetPassenger" id="helmetPassenger">
+              <label class="form-check-label" for="helmet">安全帽</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="checkbox" name="raincoatPassenger" id="raincoatPassenger">
+              <label class="form-check-label" for="raincoat">雨衣</label>
+            </div>
+          </div>
+        </div>
+        <div class="form-group" id="datetimepickerDiv" style="display: none;">
+          <div class="form-row">
+            <div class="col-4">
+              <label class="form-check-label" for="datetimepicker">預約時間:</label>
+            </div>
+            <div class="col-8">
+              <div class="input-group date" id="datetimepicker" data-target-input="nearest">
+                <input type="text" class="form-control datetimepicker-input" id="resvtime" name="resvtime" data-toggle="datetimepicker" data-target="#datetimepicker" value="" />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="orderDriver">預約司機</label>
+          <input type="text" class="form-control" id="orderDriver" name="orderDriver">
+        </div>
+        <div class="row">
+          <div class="col px-2">
+            <button type="button" name="button" class="btn btn-success btn-block" onclick="cancelDest()">取消行程</button>
+          </div>
+          <div class="col px-2">
+            <button type="button" class="btn btn-success btn-block" onclick="resv(this)">預約行程</button>
+          </div>
+          <div class="col px-2">
+            <button type="submit" class="btn btn-success btn-block" onclick="errandPassenger()">開始行程</button>
+          </div>
+        </div>
+      </form>
+
+    </div>
+
+    <div id="offlineState" class="offlineState" style="display: none;">
+      <div class="px-3">
+        <p class="text-center"><button type="button" class="btn btn-lg btn-success" onclick="online()">上線</button>
+        </p>
+      </div>
+    </div>
+
+    <div id="task" class="task" style="display: none;">
+      <div class="row">
+        <div class="col-8 offset-1">
+          <span>服務時效：</span>
+          <span id="taskType">###</span>
+        </div>
+        <div class="col-3">
+          <span id="sec"></span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-10 offset-1">
+          <span>乘客目的地：</span>
+          <span id="distDriver">###</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-10  offset-1">
+          <span>路程：</span>
+          <span id="distanceDriver">###</span>
+        </div>
+      </div>
+      <div id="option" class="option">
+        <div class="row">
+          <div class="col-6">
+            <!--acceptTask()-->
+            <button type="button" class="btn btn-success btn-block" onclick="errandDriver()">接受</button>
+          </div>
+          <div class="col-6">
+            <!--rejectTask()-->
+            <button type="button" class="btn btn-danger btn-block" onclick="reject()">拒絕</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="reject" class="reject">
+        <form action="javascript:void(0);">
+          <div class="form-row mb-1">
+            <div class="col">
+              <button type="button" class="btn btn-info btn-block" onclick="tooFar()">太遠了</button>
+            </div>
+            <div class="col">
+              <button type="button" class="btn btn-info btn-block" onclick="tooBusy()">沒空接單</button>
+            </div>
+            <!--
+            <div class="col">
+              <button type="button" class="btn btn-info btn-block">！</button>
+            </div>
+            -->
+          </div>
+          <div class="form-row">
+            <div class="col-10">
+              <textarea class="form-control" id="rejectText" name="rejectText" placeholder="拒絕原因" rows="1"></textarea>
+            </div>
+            <div class="col-2">
+              <button type="submit" class="btn btn-sucess" onclick="rejectTaskbtn()"><i class="fas fa-paper-plane"></i></button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div id="errand" class="errand" style="display: none;">
+      <div class="row">
+        <div class="col-4">
+          <p class="text-center"><img class="user_img" src="/assets/user-circle-regular.svg" alt="user_img"></p>
+          <p class="text-center" id="userid">user_id</p>
+        </div>
+        <div class="col-6">
+          <p><span>目的地:</span><span id="destination">###</span></p>
+          <p><span>距離:</span><span id="distance">###</span></p>
+          <p><span>費用:</span><span id="fare">###</span></p>
+        </div>
+        <div class="col-2">
+          <!--打開report.html需傳入差事id-->
+          <a href="/report" target="_blank"><i class=" fas fa-exclamation-triangle fa-2x py-2"></i></a>
+          <br>
+          <a id="googleMap" href="" target="_blank"><i class="fas fa-map-marked-alt fa-2x py-2"></i></a>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <p><span>備註：</span><span id="psText">###</span></p>
+        </div>
+      </div>
+      <form action="javascript:void(0);">
+        <div class="form-row">
+          <div class="col-8">
+            <textarea class="form-control" id="errand_text_send" name="errand_text_send" placeholder="輸入備註" rows="1"></textarea>
+          </div>
+          <div class="col-4">
+            <button type="submit" class="btn btn-success btn-block py-2"><small>送出備註 </small><i class="fas fa-paper-plane"></i></button>
+          </div>
+        </div>
+      </form>
+      <br>
+      <div class="px-2">
+        <button type="button" class=" btn btn-success btn-block" onclick="finish()"><small>完成訂單</small></button>
+      </div>
+    </div>
+
+    <div id="resvtask" class="resvtask" style="display: none;">
+
+      <div id="taskLoading" class="align-items-center">
+        <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
+        <strong>訂單已發送請等待司機...</strong>
+      </div>
+
+      <div id="taskGoing" class="" style="display: none;">
+        <div class="row">
+          <div class="col-4">
+            <p class="text-center"><img class="user_img" src="/assets/user-circle-regular.svg" alt="driver_img"></p>
+            <p class="text-center" id="driverid">driver_id</p>
+          </div>
+          <div class="col-6">
+            <p><span>目的地:</span><span id="destinationTask">###</span></p>
+            <p><span>距離:</span><span id="distanceTask">###</span></p>
+            <p><span>費用:</span><span id="fareTask">###</span></p>
+          </div>
+          <div class="col-2">
+            <!--打開report.html需傳入差事id-->
+            <a href="/report" target="_blank"><i class=" fas fa-exclamation-triangle fa-2x py-2"></i></a>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <p><span>備註：</span><span id="psText">###</span></p>
+          </div>
+        </div>
+        <form action="javascript:void(0);">
+          <div class="form-row">
+            <div class="col-8">
+              <textarea class="form-control" id="errand_text_send" name="errand_text_send" placeholder="輸入備註" rows="1"></textarea>
+            </div>
+            <div class="col-4">
+              <button type="submit" class="btn btn-success btn-block py-2"><small>送出備註 </small><i class="fas fa-paper-plane"></i></button>
+            </div>
+          </div>
+        </form>
+      </div>
+
+    </div>
+
+  </div>
+
+
+</main>
+
+<!--下導覽列-->
+<nav class="navbar navbar-expand fixed-bottom navbar-dark bg-primary bd-navbar py-0">
+  <div class="row navbar-nav m-auto p-auto">
+    <div class="col-3">
+      <a class="nav-item nav-link pt-2 pb-0" href="/home">
+        <p class="text-center my-0"><i class="fas fa-home fa-lg"></i></p>
+        <p class="text-center my-0">Home</p>
+      </a>
+    </div>
+    <div class="col-3">
+      <a class="nav-item nav-link pt-2 pb-0" href="/search">
+        <p class="text-center my-0"><i class="fas fa-search fa-lg"></i></p>
+        <p class="text-center my-0">Search</p>
+      </a>
+    </div>
+    <div class="col-3">
+      <a class="nav-item nav-link pt-2 pb-0" href="/task">
+        <p class="text-center my-0"><i class="fas fa-tasks fa-lg"></i></p>
+        <p class="text-center my-0">Task</p>
+      </a>
+    </div>
+    <div class="col-3">
+      <a class="nav-item nav-link pt-2 pb-0" href="/user">
+        <p class="text-center my-0"><i class="fas fa-user fa-lg"></i></p>
+        <p class="text-center my-0">User</p>
+      </a>
+    </div>
+  </div>
+</nav>
+
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBpBgVKm6TqmDB0b3w-y3VoP3Oo-jWPWGY&libraries=places&callback=initMap"></script>
+
+<script type="text/javascript">
+  function resv(item) {
+    document.getElementById('datetimepickerDiv').style.display = "flex";
+    console.log(document.getElementById('resvtime').value);
+    if (item.innerHTML == "預約行程") {
+      item.innerHTML = "取消預約";
+    } else {
+      item.innerHTML = "預約行程";
+      $('#datetimepicker').datetimepicker('clear');
+      $('#datetimepicker').datetimepicker('date', new Date());
+      document.getElementById('datetimepickerDiv').style.display = "none";
+    }
+  }
+
+  function online() {
+    isOnline = true;
+    document.getElementById('offlineState').style.display = "none";
+    document.getElementById('onlineState').style.display = "block";
+    document.getElementById('statusSwitch').checked = true;
+    //document.getElementById('task').style.display = "block";
+    //before task coming
+    //document.getElementById('option').style.display = "block";
+    document.getElementById('reject').style.display = "none";
+    console.log("online")
+    setTimeout('onlineTask()', 500);
+  }
+
+  function offline() {
+    isOnline = false;
+    document.getElementById('offlineState').style.display = "block";
+    document.getElementById('onlineState').style.display = "none";
+    document.getElementById('statusSwitch').checked = false;
+    document.getElementById('task').style.display = "none";
+    offlineTask();
+    location.reload();
+  }
+
+  //after task coming
+  function reject() {
+    document.getElementById('option').style.display = "none";
+    document.getElementById('reject').style.display = "block";
+    document.getElementById("sec").innerHTML = '';
+    clearInterval(timesetInterval);
+  }
+
+  function rejectTaskbtn() {
+    console.log(document.getElementById('rejectText').value);
+    rejectTask(document.getElementById('rejectText').value);
+    document.getElementById('option').style.display = "block";
+    document.getElementById('reject').style.display = "none";
+    console.log("reject btn click")
+    setTimeout('onlineTask()', 500);
+    return false;
+  }
+
+  function errandDriver() {
+    document.getElementById('task').style.display = "none";
+    document.getElementById('errand').style.display = "block";
+    console.log("errand start!");
+    acceptTask();
+  }
+
+  function errandPassenger() {
+    document.getElementById('order').style.display = "none";
+    document.getElementById('locSearch').style.display = "none";
+    document.getElementById('resvtask').style.display = "block";
+    dest.helmet = document.getElementById('helmetPassenger').checked;
+    dest.raincoat = document.getElementById('raincoatPassenger').checked;
+    dest.datetimepicker = document.getElementById('resvtime').value;
+    map.controls[google.maps.ControlPosition.LEFT_BOTTOM].push(document.getElementById('resvtask'));
+    var dest_json = JSON.stringify(dest);
+    var dest_data = {
+      dest: dest_json,
+      depart_time: parseInt(Date.parse(dest.datetimepicker) / 1000),
+      equipments: (dest.helmet ? 1 : 0) + (dest.raincoat ? 2 : 0),
+    };
+    Util.ajax(
+        "POST",
+        "/api/v0/tasks",
+        dest_data,
+        function (re) {console.log(re); },
+        function (x) { console.log(x.status); }
+    );
+    console.log("errand start!");
+    return false;
+  }
+
+  function driverReceive() {
+    document.getElementById('taskLoading').style.display = "none";
+    document.getElementById('taskGoing').style.display = "block";
+  }
+
+  function tooFar() {
+    document.getElementById('rejectText').value = "太遠了！";
+  }
+
+  function tooBusy() {
+    document.getElementById('rejectText').value = "沒空接單！";
+  }
+
+  function finish() {
+    document.getElementById('errand').style.display = "none";
+    console.log("task finish!!");
+    directionsDisplay.set('directions', null);
+    map.setCenter({
+      lat: lat,
+      lng: lng
+    });
+    map.setZoom(zoom);
+
+    taskFinish();
+    //onlineTask();
+    //需傳id給伺服器使差事狀態完成
+  }
+</script>
+
+<script type="text/javascript">
+  $(document).ready(function() {
+    $('#datetimepicker').datetimepicker({
+      minDate: new Date(),
+      defaultDate: new Date()
+    });
+    if (isDriver && isOnline) {
+      online();
+    }
+  });
+</script>

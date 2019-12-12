@@ -2,30 +2,44 @@ class User
   include Mongoid::Document
   include Mongoid::Timestamps
   include ActiveModel::SecurePassword
+  has_many :tasks, dependent: :destroy
 
+  UsernameRegex = /\A[[:alnum:]]*\z/
   EmailRegex = /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i
+  PhoneRegex = /\+([0-9]{3})-([0-9]+)-([0-9]{8})/
 
   attr_accessor :remember_token
 
   field :roles, type: Integer
   field :username, type: String
+  field :realname, type: String
   field :email, type: String
+  field :phone, type: String
   field :password_digest, type: String
   field :nickname, type: String
-  field :last_login_time, type: Time
+  field :last_login_time, type: DateTime
   field :remember_digest, type: String
   field :avatar, type: String
   field :lat, type: Float
   field :lng, type: Float
   field :password_reset_token, type: String
+  field :bio, type: String
+  field :tasks_engaging, type: Array
+  field :tasks_history, type: Array
 
-  validates :username, presence: true, length: {in: 3..32}, uniqueness: true
-  validates :email, presence: true, format: {with: EmailRegex}, length: {in: 3..256}, 
-                    uniqueness: { case_sensitive: false }
+  validates :roles, numericality: { only_integer: true }
+  validates :username, presence: true, length: {in: 6..32}, 
+    uniqueness: true, format: {with: UsernameRegex}
+  
+  validates :email, presence: true, format: {with: EmailRegex}, 
+    length: {in: 3..256}, uniqueness: { case_sensitive: false }
+
+  validates :realname, presence: true
+  validates :phone, presence: true, uniqueness: true, 
+    format: {with: PhoneRegex}
 
   has_secure_password
   validates :password_digest, presence: true, length: {in: 6..256}
-  
 
   def self.username_exist?(uname)
     self.where({'username' => uname}).count != 0
@@ -35,8 +49,13 @@ class User
     self.where({'email' => email}).count != 0
   end
 
+  def self.phone_exist?(phone)
+    self.where({'phone' => phone}).count != 0
+  end
+
   def self.exist?(params)
-    return username_exist?(params[:username]) || email_exist?(params[:email])
+    return username_exist?(params[:username]) || 
+      email_exist?(params[:email]) || phone_exist?(params[:phone])
   end
 
   def self.register_param_ok?(params)
@@ -56,17 +75,35 @@ class User
 
   def self.new_token; SecureRandom.urlsafe_base64; end
 
-  def initialize(*args, &block)
+  def initialize(_params)
+    _params[:phone] = Util.format_phone_number(_params[:phone])
     super
-    init_roles
   end
-  
+
   def init_roles
-    @attributes['roles'] = RoleManager.get_role_bitset(:standard)
+    bt = (@attributes['roles'] || 0) | RoleManager.get_role_bitset(:passenger)
+    update_attribute :roles, bt
   end
 
   def set_roles(*roles, **kwargs)
-    @attributes['roles'] = RoleManager.get_role_bitset(roles)
+    bitset = 0
+    roles.each do |role|
+      bt = RoleManager.get_bitset(role) if role.is_a?(Symbol)
+      bt = Integer(role) rescue 0
+      bitset |= bt
+    end
+    @attributes['roles'] |= bitset
+    save if kwargs[:save]
+  end
+
+  def remove_roles(*roles, **kwargs)
+    bitset = 0xffff
+    roles.each do |role|
+      bt = RoleManager.get_bitset(role) if role.is_a?(Symbol)
+      bt = Integer(role) rescue 0
+      bitset &= ~bt
+    end
+    @attributes['roles'] &= bitset
     save if kwargs[:save]
   end
 
@@ -79,7 +116,11 @@ class User
       'id'       => id.to_s,
       'username' => username,
       'nickname' => nickname,
-      'last_login_time' => last_login_time,
+      'realname' => realname,
+      'phone'    => phone,
+      'email'    => email,
+      'roles'    => roles,
+      'bio'      => bio,
     }
   end
 
@@ -124,5 +165,27 @@ class User
   def reset_password(_params)
     self.update(_params)
     update_attribute :password_reset_token, nil
+  end
+
+  def update_login_time
+    update_attribute :last_login_time, Time.mongoize(Time.now)
+  end
+
+  def licensed?
+    return RoleManager.match?(roles, :driver)
+  end
+
+  def mutex 
+    return @mutex if @mutex
+    @mutex = Mutex.new
+  end
+  
+  def engage_task(tid)
+    self.add_to_set(tasks_engaging: tid)
+  end
+
+  def resolve_task(tid)
+    self.pull(tasks_engaging: tid)
+    self.add_to_set(tasks_history: tid)
   end
 end

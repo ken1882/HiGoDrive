@@ -1,0 +1,93 @@
+main {
+  position: fixed;
+  overflow: auto;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+  top: 48px;
+  bottom: 64px;
+  width: 100%;
+}
+
+#map {
+  position: relative;
+  height: 70vh;
+  width: 100%;
+}
+
+#motor {
+  width: 25vw;
+}
+
+#user {
+  height: 25vh;
+}
+
+#search {
+  width: 100%;
+}
+
+.user_task {
+  width: 5vw;
+}
+
+.user_img {
+  width: 8vw;
+}
+
+.accordion {
+  font-size: 1em;
+}
+
+.tag {
+  font-size: 0.5em;
+}
+
+#order {
+  border: 1px solid black;
+  display: flex;
+  width: 100%;
+  font-size: 14px;
+  border-radius: 10px;
+  padding: 10px;
+  background-color: white;
+  /*z-index: 99999;*/
+}
+
+#task {
+  border: 1px solid black;
+  display: flex;
+  width: 100%;
+  font-size: 14px;
+  border-radius: 10px;
+  padding: 10px;
+  background-color: white;
+  /*z-index: 99999;*/
+}
+
+#errand {
+  border: 1px solid black;
+  display: flex;
+  width: 100%;
+  font-size: 14px;
+  border-radius: 10px;
+  padding: 10px;
+  background-color: white;
+  /*z-index: 99999;*/
+}
+
+#resvtask {
+  border: 1px solid black;
+  /*display: flex;*/
+  width: 100%;
+  /*font-size: 14px;*/
+  border-radius: 10px;
+  padding: 10px;
+  background-color: white;
+  /*z-index: 99999;*/
+}
+
+#offlineState button{
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+}

@@ -1,0 +1,25 @@
+<% provide :page_title, "Edit User Bio" %>
+
+<div class="container">
+
+  <a href="/user" class="list-group-item-action">
+    <div class="mt-4 mb-0 p-2">
+      <h2 class="text-center">HiGoDrive</h2>
+      <img id="motor" class="rounded mx-auto d-block" src="/assets/motorcycle-solid.svg" type="image/svg+xml" />
+      <hr>
+    </div>
+  </a>
+
+  <%= form_tag("/api/v0/users/#{current_user.id}", method: 'PATCH') do %>
+    <div class="form-group">
+      <label for="bio">個人資訊</label>
+      <textarea class="form-control" id="bio" name="bio" rows="5" required><%= current_user.bio %></textarea>
+    </div>
+    <br>
+    <br>
+    <div class="px-5 py-3">
+      <button type="submit" class="btn btn-success btn-lg btn-block">確認更改</button>
+    </div>
+  <% end %>
+
+</div>

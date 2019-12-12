@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="zh-TW" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>HiGoDrive</title>
+
+  <!--Let browser know website is optimized for mobile-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!--[if lt IE 9]>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js">
+    </script>
+    <![endif]-->
+
+  <!--CSS-->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+    integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+  <link rel="stylesheet" href="css/style.css">
+
+  <!--JS-->
+  <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+    integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+    integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+    crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+    integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+    crossorigin="anonymous"></script>
+
+  <!--ICON-->
+  <script src="https://kit.fontawesome.com/9b78fa3fff.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+
+  <div class="container">
+    <div class="m-4 p-2">
+      <h2 class="text-center">HiGoDrive</h2>
+      <br>
+      <img id="motor" class="rounded mx-auto d-block" src="/assets/motorcycle-solid.svg" type="image/svg+xml" />
+      <hr>
+    </div>
+
+    <div class="accordion" id="accordion">
+      <!--樣式模板>>-->
+      <div class="card">
+        <div class="card-header" id="headingOne">
+          <button class="btn btn-block" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false"
+            aria-controls="collapseOne">
+            <div class="row">
+              <div class="col-5">
+                <span name="id" class="text-primary text-left">用戶：12345</span>
+              </div>
+              <div class="col-5">
+                <span name="type" class="text-warning">申訴處理</span>
+              </div>
+              <div class="col-2">
+                <i class="fas fa-sort-down fa-lg"></i>
+              </div>
+            </div>
+          </button>
+        </div>
+        <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+          <div class="card-body">
+            <span>訂單簡介</span>
+            <ul>
+              <li>目的地：</li>
+              <li>路程：</li>
+              <li>費用：</li>
+            </ul>
+            <p><span>申訴者ID：</span><a href="#">123456</a></p>
+            <p><span>被申訴ID：</span><a href="#">48763</a></p>
+            <p id="report_content">申訴說明：垃圾司機</p>
+            <br>
+            <button type="button" class="btn btn-success btn-block">申訴處理完成</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header" id="headingTwo">
+          <button class="btn btn-block" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false"
+            aria-controls="collapseTwo">
+            <div class="row">
+              <div class="col-5">
+                <span name="id" class="text-primary text-left">用戶：58586</span>
+              </div>
+              <div class="col-5">
+                <span name="type" class="text-warning">司機資格審核</span>
+              </div>
+              <div class="col-2">
+                <i class="fas fa-sort-down fa-lg"></i>
+              </div>
+            </div>
+          </button>
+        </div>
+        <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+          <div class="card-body">
+            <p>
+              駕照正面照片
+              <img src="#" alt="駕照正面照片">
+            </p>
+            <p>
+              行照正片照片
+              <img src="#" alt="行照正片照片">
+            </p>
+            <p>
+              車身照片
+              <img src="#" alt="車身照片">
+            </p>
+            <p>車牌：</p>
+            <p>車型：</p>
+            <br>
+            <div class="row">
+              <div class="col">
+                <button type="button" class="btn btn-danger btn-block">不通過</button>
+              </div>
+              <div class="col">
+                <button type="button" class="btn btn-success btn-block">通過</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--<<樣式模板-->
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    $('.collapse').collapse()
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,248 @@
+<% provide :page_title, "Task" %>
+
+<!--上導覽列-->
+<nav class="navbar navbar-expand fixed-top navbar-dark bg-primary flex-column bd-navbar p-1">
+  <span class="navbar-brand m-0 h1">HiGoDrive</span>
+  <!--<a class="navbar-brand mx-2" href="#">HiGoDrive</a>-->
+</nav>
+
+<!--內容-->
+<main>
+  <div class="container">
+    <h4 class="text-center my-3">訂單紀錄</h4>
+    <hr>
+    <div class="accordion" id="accordion">
+    </div>
+    <div id="important-temp-block" style="display: none;"></div>
+  </div>
+
+</main>
+
+<!--下導覽列-->
+<nav class="navbar navbar-expand fixed-bottom navbar-dark bg-primary bd-navbar py-0">
+  <div class="row navbar-nav m-auto p-auto">
+    <div class="col-3">
+      <a class="nav-item nav-link pt-2 pb-0" href="/home">
+        <p class="text-center my-0"><i class="fas fa-home fa-lg"></i></p>
+        <p class="text-center my-0">Home</p>
+      </a>
+    </div>
+    <div class="col-3">
+      <a class="nav-item nav-link pt-2 pb-0" href="/search">
+        <p class="text-center my-0"><i class="fas fa-search fa-lg"></i></p>
+        <p class="text-center my-0">Search</p>
+      </a>
+    </div>
+    <div class="col-3">
+      <a class="nav-item nav-link pt-2 pb-0" href="/task">
+        <p class="text-center my-0"><i class="fas fa-tasks fa-lg"></i></p>
+        <p class="text-center my-0">Task</p>
+      </a>
+    </div>
+    <div class="col-3">
+      <a class="nav-item nav-link pt-2 pb-0" href="/user">
+        <p class="text-center my-0"><i class="fas fa-user fa-lg"></i></p>
+        <p class="text-center my-0">User</p>
+      </a>
+    </div>
+  </div>
+</nav>
+
+<script>
+function getUsername(user_id) {
+  Util.syncAjax(
+      "GET",
+      "/api/v0/users/" + user_id,
+      null,
+      function (result) {
+        $("#important-temp-block").html(result.username);
+      },
+      function (xhr, ajaxOptions, thrownError) {
+        console.log("unexpected error: ", thrownError);
+      }
+  );
+  var username = $("#important-temp-block").text();
+  return username;
+}
+
+function renderTaskToPage(task) {
+  var id = $("#important-temp-block").text();
+
+  // var dest_json = JSON.parse(task.dest);
+  // var dest = dest_json.placeName;
+
+  var dest = undefined;
+  try {
+    var dest_json = JSON.parse(task.dest);
+    dest = dest_json.placeName;
+  } catch (e) {
+    dest = task.dest;
+  }
+  // TODO: author_name or driver_name
+  var author_name = getUsername(task.author_id);
+  var depart_time = new Date(task.depart_time * 1000).toLocaleString();
+  var status = task.status;
+  var status_msg = {
+      0: "等待中",
+      1: "已接受",
+      2: "接客中",
+      3: "已完成",
+      4: "已取消"
+  }[status];
+
+  var msg = "";
+
+  if (status == 0) {
+    msg = '      <span>狀態：尚無司機接單</span>';
+  } else if (status == 1) {
+    msg = '      <span>狀態：已被司機接單</span>';
+  } else if (status == 2) {
+    msg = '      <span>狀態：送客中</span>';
+  } else if (status == 3) {
+    msg = '' +
+        '      <form action="task.html">' +
+        '        <div class="score p-2">' +
+        '          <div id="score" class="target"></div>' +
+        '          <div id="star" style="display: none;"></div>' +
+        '        </div>' +
+        '        <div class="form-group">' +
+        '          <textarea class="form-control" id="scoreTextarea" name="scoreTextarea" rows="2"' +
+        '            placeholder="評價敘述"></textarea>' +
+        '        </div>' +
+        '        <div class="form-row">' +
+        '          <div class="col-6">' +
+        '            <a href="report.html"><button type="button" class="btn btn-success btn-block p-2">我要申訴</button></a>' +
+        '          </div>' +
+        '          <div class="col-6">' +
+        '            <button type="submit" class="btn btn-success btn-block p-2">送出評價</button>' +
+        '          </div>' +
+        '        </div>' +
+        '      </form>';
+  } else if (status == 4) {  // cancelled
+    msg = '      <span>取消原因：已過期</span>';
+  }
+
+  $("#accordion").append('' +
+      '<div class="card">' +
+      '  <div class="card-header px-0" id="heading-' + id + '">' +
+      '    <button class="btn btn-block" data-toggle="collapse" data-target="#collapse-' + id + '" aria-expanded="false"' +
+      '      aria-controls="collapse-' + id + '">' +
+      '      <div class="row">' +
+      '        <div class="col-4 px-0">' +
+      '          <p class="mb-0"><img class="user_task" src="/assets/user-circle-regular.svg" type="image/svg+xml"' +
+      '              alt="user">' +
+      '          </p>' +
+      '          <p name="user_id" class="mb-0">' + author_name + '</p>' +
+      '        </div>' +
+      '        <div class="col-6 px-0">' +
+      '          <p name="dist" class="text-primary">目的地：' + dest + '</p>' +
+      '          <p name="route" class="text-primary mb-0">時間：' + depart_time + '</p>' +
+      '        </div>' +
+      '        <div class="col-2 px-0">' +
+      '          <p class="text-danger tag" id="task-status">' + status_msg + '</p>' +
+      '          <i class="fas fa-sort-down fa-lg"></i>' +
+      '        </div>' +
+      '      </div>' +
+      '    </button>' +
+      '  </div>' +
+      '  <div id="collapse-' + id + '" class="collapse" aria-labelledby="heading-' + id + '" data-parent="#accordion">' +
+      '    <div class="card-body">' +
+      msg +
+      '    </div>' +
+      '  </div>' +
+      '</div>');
+
+  $("#task-status").attr("class", { 0: "text-primary tag",
+                                    1: "text-primary tag",
+                                    2: "text-primary tag",
+                                    3: "text-success tag",
+                                    4: "text-danger tag" }[status]);
+  $("#task-status").attr("id", "task-" + id + "-status");
+  $("#important-temp-block").html("");
+  $('.score').raty({
+    number: 5,
+    targetType: 'score',
+    path: 'assets',
+    hints: ['非常差', '差', '普通', '好', '非常好'],
+    size: 24,
+    starHalf: 'star-half.png',
+    starOff: 'star-off.png',
+    starOn: 'star-on.png',
+    target: '#star',
+    cancel: false,
+  });
+}
+
+function isAccordionEmpty() {
+  return $(".noTask").length != 0 || !$("#accordion").text().trim();
+}
+
+function getTaskList(task_list) {
+  console.log("task list", task_list);
+  if (task_list && task_list.length) {
+    if (isAccordionEmpty()) {
+      $("#accordion").html("");
+    }
+    task_list.forEach(function(task_id) {
+      window.task_list.push(task_id);
+      // $("#important-temp-block").html(task_id);
+      // Util.syncAjax(
+      //     "GET",
+      //     "/api/v0/tasks/" + task_id,
+      //     null,
+      //     renderTaskToPage,
+      //     function (xhr, ajaxOptions, thrownError) {
+      //       console.log("unexpected error: ", thrownError);
+      //     }
+      // );
+    });
+  } else if (isAccordionEmpty()) {
+    $("#accordion").html('' +
+        '<div class="noTask">' +
+        '  <h5 class="text-center alert alert-danger">沒有訂單紀錄</h5>' +
+        '</div>');
+  }
+}
+
+$(document).ready(function() {
+  window.task_list = [];
+  Util.syncAjax(
+      "GET",
+      "/api/v0/mytasks",
+      null,
+      getTaskList,
+      function(re) { console.log("unexpected error"); },
+  );
+  Util.syncAjax(
+      "GET",
+      "/api/v0/tasks_history",
+      null,
+      getTaskList,
+      function(re) { console.log("unexpected error"); },
+  );
+  Util.syncAjax(
+      "GET",
+      "/api/v0/tasks_engaging",
+      null,
+      getTaskList,
+      function(re) { console.log("unexpected error"); },
+  );
+  if (window.task_list.length) {
+    window.task_list.sort((a, b) => { return b - a; });
+    window.task_list.forEach(function(task_id) {
+      $("#important-temp-block").html(task_id);
+      Util.syncAjax(
+          "GET",
+          "/api/v0/tasks/" + task_id,
+          null,
+          renderTaskToPage,
+          function (xhr, ajaxOptions, thrownError) {
+            console.log("unexpected error: ", thrownError);
+          }
+      );
+    });
+  } else {
+
+  }
+});
+</script>
