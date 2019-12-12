@@ -6,7 +6,7 @@ module Api
       before_action :set_user, only: [:show, :getpos, :forgot_password,
         :reset_password, :peak]
       before_action :set_current_user, only: [:update, :setpos,
-        :user_tasks, :tasks_engaging]
+        :user_tasks, :tasks_engaging, :tasks_history]
       # ----------
       before_action :validate_init_params, only: [:create]
       before_action :validate_update_params, only: [:update]
@@ -117,7 +117,7 @@ module Api
         render json: @user.tasks_engaging || [], status: :ok
       end
 
-      # GET /tasks_history
+      # GET /tasks_engaging
       def tasks_history
         render json: @user.tasks_history || [], status: :ok
       end
