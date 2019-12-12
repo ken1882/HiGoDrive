@@ -180,27 +180,9 @@ function isAccordionEmpty() {
 function getTaskList(task_list) {
   console.log("task list", task_list);
   if (task_list && task_list.length) {
-    if (isAccordionEmpty()) {
-      $("#accordion").html("");
-    }
     task_list.forEach(function(task_id) {
       window.task_list.push(task_id);
-      // $("#important-temp-block").html(task_id);
-      // Util.syncAjax(
-      //     "GET",
-      //     "/api/v0/tasks/" + task_id,
-      //     null,
-      //     renderTaskToPage,
-      //     function (xhr, ajaxOptions, thrownError) {
-      //       console.log("unexpected error: ", thrownError);
-      //     }
-      // );
     });
-  } else if (isAccordionEmpty()) {
-    $("#accordion").html('' +
-        '<div class="noTask">' +
-        '  <h5 class="text-center alert alert-danger">沒有訂單紀錄</h5>' +
-        '</div>');
   }
 }
 
@@ -242,7 +224,10 @@ $(document).ready(function() {
       );
     });
   } else {
-
+    $("#accordion").html('' +
+        '<div class="noTask">' +
+        '  <h5 class="text-center alert alert-danger">沒有訂單紀錄</h5>' +
+        '</div>');
   }
 });
 </script>
