@@ -25,6 +25,7 @@ class User
   field :password_reset_token, type: String
   field :bio, type: String
   field :tasks_engaging, type: Array
+  field :tasks_history, type: Array
 
   validates :roles, numericality: { only_integer: true }
   validates :username, presence: true, length: {in: 6..32}, 
@@ -185,5 +186,6 @@ class User
 
   def resolve_task(tid)
     self.pull(tasks_engaging: tid)
+    self.add_to_set(tasks_history: tid)
   end
 end

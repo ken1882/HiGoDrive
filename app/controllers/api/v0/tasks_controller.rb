@@ -15,8 +15,11 @@ module Api
       before_action :pick_mutex, only: [:accept]
 
       RejectReasonLimit = 100
-
+      
+      # Task picking mutex
       @@mutex   = Mutex.new
+
+      # Task process mutex
       @@mutexes = 5.times.collect do
         mu = Mutex.new
         class << mu; attr_accessor :target; end
