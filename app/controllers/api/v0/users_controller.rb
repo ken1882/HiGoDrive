@@ -191,7 +191,7 @@ module Api
         return false if UserInitParms.any?{|k| params[k].nil?}
         return true
       end
-      # 幹
+      
       def driver_licensed?
         return true unless RoleManager.match?(params[:roles].to_i, :driver)
         return @user.licensed?
