@@ -17,6 +17,7 @@ var taskid = {
   nextid: 0
 };
 var request;
+window.rejected_tasks = [];
 
 var dest = {
   passengerlng: undefined,
@@ -206,8 +207,6 @@ function direction(destlat, destlng) {
   });
 }
 
-
-
 function setPsssengerDirectionInfo() {
   info.style.display = "inline"
 
@@ -215,7 +214,6 @@ function setPsssengerDirectionInfo() {
   infoTime.innerHTML = "時間:" + dest.duration.text;
   infoFare.innerHTML = "車費:" + dest.fare + "元"
 }
-
 
 function setAutoComplete() {
   var input = document.getElementById('search')
@@ -280,7 +278,6 @@ function setAutoComplete() {
 
     //document.getElementById('map').style.height = "50vh";
   });
-
 }
 
 function initPassengerInfo() {
@@ -457,20 +454,12 @@ function getTask(task_id_) {
 //driver on line
 function onlineTask() {
   var taskinfo = getTaskid(taskid.nextid); // first time give 0
-
   console.log("taskinfo", taskinfo);
-
   taskid.nowid = taskinfo.task_id;
   taskid.nextid = taskinfo.next_id;
 
-  // TODO
-  if (false) {
+  if (window.rejected_tasks.indexOf(taskid.nowid) != -1 || taskid.nowid == 0) {
     console.log("no task available");
-    return setTimeout('onlineTask()', 5000); // fail request or no task
-  }
-
-  if (taskid.nowid == 0) {
-    console.log("getTaskid error");
     return setTimeout('onlineTask()', 5000); // fail request or no task
   }
 
@@ -616,8 +605,7 @@ function rejectTask(reason) {
     async: false
   });
 
-  // taskid.nowid = taskid.nextid; //switch to next task
-  // taskid.nextid = 0;
+  window.rejected_tasks.push(taskid.nowid);
 
   //set user view
   directionsDisplay.set('directions', null);
@@ -636,4 +624,6 @@ function initDriver() {
   map.controls[google.maps.ControlPosition.TOP_RIGHT].push(onlineState);
   map.controls[google.maps.ControlPosition.BOTTOM_CENTER].push(offlineState);
   map.controls[google.maps.ControlPosition.LEFT_BOTTOM].push(task);
+  taskid = {nowid: 0, nextid: 0};
+  window.rejected_tasks = [];
 }

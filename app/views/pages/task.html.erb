@@ -179,23 +179,22 @@ function isAccordionEmpty() {
 
 function getTaskList(task_list) {
   console.log("task list", task_list);
-  console.log(isAccordionEmpty());
   if (task_list && task_list.length) {
     if (isAccordionEmpty()) {
       $("#accordion").html("");
     }
-    task_list = task_list.reverse();
     task_list.forEach(function(task_id) {
-      $("#important-temp-block").html(task_id);
-      Util.syncAjax(
-          "GET",
-          "/api/v0/tasks/" + task_id,
-          null,
-          renderTaskToPage,
-          function (xhr, ajaxOptions, thrownError) {
-            console.log("unexpected error: ", thrownError);
-          }
-      );
+      window.task_list.push(task_id);
+      // $("#important-temp-block").html(task_id);
+      // Util.syncAjax(
+      //     "GET",
+      //     "/api/v0/tasks/" + task_id,
+      //     null,
+      //     renderTaskToPage,
+      //     function (xhr, ajaxOptions, thrownError) {
+      //       console.log("unexpected error: ", thrownError);
+      //     }
+      // );
     });
   } else if (isAccordionEmpty()) {
     $("#accordion").html('' +
@@ -206,6 +205,7 @@ function getTaskList(task_list) {
 }
 
 $(document).ready(function() {
+  window.task_list = [];
   Util.syncAjax(
       "GET",
       "/api/v0/mytasks",
@@ -220,5 +220,29 @@ $(document).ready(function() {
       getTaskList,
       function(re) { console.log("unexpected error"); },
   );
+  Util.syncAjax(
+      "GET",
+      "/api/v0/tasks_engaging",
+      null,
+      getTaskList,
+      function(re) { console.log("unexpected error"); },
+  );
+  if (window.task_list.length) {
+    window.task_list.sort((a, b) => { return b - a; });
+    window.task_list.forEach(function(task_id) {
+      $("#important-temp-block").html(task_id);
+      Util.syncAjax(
+          "GET",
+          "/api/v0/tasks/" + task_id,
+          null,
+          renderTaskToPage,
+          function (xhr, ajaxOptions, thrownError) {
+            console.log("unexpected error: ", thrownError);
+          }
+      );
+    });
+  } else {
+
+  }
 });
 </script>
