@@ -91,7 +91,7 @@
     var id = result.uid;
     Util.ajax(
         "GET",
-        "http://localhost:3000/api/v0/users/" + id,
+        "/api/v0/users/" + id,
         null,
         listUserInfo,
         function (xhr, ajaxOptions, thrownError) {
@@ -117,7 +117,7 @@
     if (username) {
       Util.ajax(
           "GET",
-          "http://localhost:3000/api/v0/users/search/" + username,
+          "/api/v0/users/search/" + username,
           null,
           userFound,
           userNotFound);

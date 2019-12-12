@@ -162,7 +162,7 @@
 function getUsername(user_id) {
   Util.syncAjax(
       "GET",
-      "http://localhost:3000/api/v0/users/" + user_id,
+      "/api/v0/users/" + user_id,
       null,
       function (result) {
         $("#important-temp-block").html(result.username);
@@ -292,7 +292,7 @@ function getTaskList(task_list) {
       $("#important-temp-block").html(task_id);
       Util.syncAjax(
           "GET",
-          "http://localhost:3000/api/v0/tasks/" + task_id,
+          "/api/v0/tasks/" + task_id,
           null,
           renderTaskToPage,
           function (xhr, ajaxOptions, thrownError) {
@@ -311,7 +311,14 @@ function getTaskList(task_list) {
 $(document).ready(function() {
   Util.ajax(
       "GET",
-      "http://localhost:3000/api/v0/mytasks",
+      "/api/v0/mytasks",
+      null,
+      getTaskList,
+      function(re) { console.log("unexpected error"); }
+  );
+  Util.ajax(
+      "GET",
+      "/api/v0/tasks_history",
       null,
       getTaskList,
       function(re) { console.log("unexpected error"); }

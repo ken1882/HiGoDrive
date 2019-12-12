@@ -344,7 +344,7 @@
     };
     Util.ajax(
         "POST",
-        "http://localhost:3000/api/v0/tasks",
+        "/api/v0/tasks",
         dest_data,
         function (re) {console.log(re); },
         function (x) { console.log(x.status); }
