@@ -41,7 +41,7 @@ module GuaneiArk
     config.after_initialize do 
       puts "#{SPLIT_LINE}Pre-init"
       Task.setup
-      # Rails.application.eager_load!
+      Rails.application.eager_load! if Rails.production?
       Mongoid.raise_not_found_error = false
       puts "Rail server started! (#{Rails.env})\n#{SPLIT_LINE}"
     end
