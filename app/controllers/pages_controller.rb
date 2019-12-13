@@ -1,8 +1,12 @@
 class PagesController < ApplicationController
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 =======
 
 >>>>>>> Stashed changes
+=======
+  
+>>>>>>> fix asset location
   def index
     return home if logged_in?
     render 'welcome'
@@ -67,4 +71,10 @@ class PagesController < ApplicationController
     return login unless logged_in?
     render 'editUserBio'
   end
+
+  # def assets
+  #   respond_to do |format|
+  #     format.png
+  #   end
+  # end
 end

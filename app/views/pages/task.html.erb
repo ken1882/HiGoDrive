@@ -101,7 +101,7 @@ function renderTaskToPage(taskId) {
       '      aria-controls="collapse-' + taskId + '">' +
       '      <div class="row">' +
       '        <div class="col-4 px-0">' +
-      '          <p class="mb-0"><img class="user_task" src="/assets/user-circle-regular.svg" type="image/svg+xml"' +
+      '          <p class="mb-0"><img class="user_task" src=<%= image_url 'user-circle-regular.svg' %> type="image/svg+xml"' +
       '              alt="user">' +
       '          </p>' +
       '          <p name="user_id" class="mb-0">' + author_name + '</p>' +
