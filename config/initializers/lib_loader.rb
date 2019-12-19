@@ -11,7 +11,7 @@ require_libs = proc do |files|
   last_load_cnt = files.size
   queued_files = []
   files.each do |f|
-    print "Requre #{f}..."
+    print "Require #{f}..."
     begin
       require f
     rescue NameError, NoMethodError => err
