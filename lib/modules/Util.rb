@@ -1,7 +1,7 @@
 module Util
   module_function
   def email_deliverable?(email)
-    true || JSON.load(open("https://api.trumail.io/v2/lookups/json?email=#{email}"))['deliverable']
+    JSON.load(open("https://api.trumail.io/v2/lookups/json?email=#{email}"))['deliverable']
   end
 
   def format_phone_number(number)

@@ -6,7 +6,7 @@ ruby '2.5.3'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.2.3'
 # Use Puma as the app server
-gem 'puma', '~> 3.11'
+# gem 'puma', '~> 3.11'
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 5.0'
 # Use Uglifier as compressor for JavaScript assets
@@ -26,7 +26,6 @@ gem 'jbuilder', '~> 2.5'
 # Use ActiveModel has_secure_password
 gem 'bcrypt', '~> 3.1.7'
 
-gem 'rack-cors'
 gem 'mongoid', git: 'https://github.com/mongodb/mongoid.git'
 
 # Use Capistrano for deployment
@@ -58,3 +57,11 @@ end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
+
+# Update gems to secure versions
+gem "nokogiri", ">= 1.10.4"
+gem "rubyzip", ">= 1.3.0"
+gem "puma", ">= 3.12.2"
+gem "rack", ">= 2.0.8"
+gem "rack-cors", ">= 1.0.4"
+gem "loofah", ">= 2.3.1"
