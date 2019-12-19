@@ -34,9 +34,6 @@ module GuaneiArk
     # Disable precompile in order to run on heroku
     config.assets.initialize_on_precompile = false
     config.assets.compile = true
-    
-    # Enforce https in production
-    config.force_ssl = true if Rails.production?
 
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration can go into files in config/initializers
