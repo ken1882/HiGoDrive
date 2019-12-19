@@ -19,7 +19,7 @@ class User
   field :nickname, type: String
   field :last_login_time, type: DateTime
   field :remember_digest, type: String
-  field :avatar, type: String
+  field :avatar_url, type: String
   field :lat, type: Float
   field :lng, type: Float
   field :password_reset_token, type: String
@@ -113,14 +113,15 @@ class User
 
   def public_json_info
     {
-      'id'       => id.to_s,
-      'username' => username,
-      'nickname' => nickname,
-      'realname' => realname,
-      'phone'    => phone,
-      'email'    => email,
-      'roles'    => roles,
-      'bio'      => bio,
+      'id'         => id.to_s,
+      'username'   => username,
+      'nickname'   => nickname,
+      'realname'   => realname,
+      'phone'      => phone,
+      'email'      => email,
+      'roles'      => roles,
+      'bio'        => bio,
+      'avatar_url' => avatar_url,
     }
   end
 
