@@ -12,6 +12,7 @@ class ApplicationController < ActionController::Base
   def not_found(*args); return_httpcode(404, *args); end
   def not_acceptable(*args); return_httpcode(406, *args); end
   def conflict(*args); return_httpcode(409, *args); end
+  def gone(*args); return_httpcode(410, *args); end
   def limit_excessed(*args); return_httpcode(420, *args); end
   def unsupported_media_type(*args); return_httpcode(415, *args); end
   def unprocessable_entity(*args); return_httpcode(422, *args); end

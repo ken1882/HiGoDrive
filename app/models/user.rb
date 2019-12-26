@@ -26,6 +26,7 @@ class User
   field :bio, type: String
   field :tasks_engaging, type: Array
   field :tasks_history, type: Array
+  field :forgot_timestamp, type: DateTime
 
   validates :roles, numericality: { only_integer: true }
   validates :username, presence: true, length: {in: 6..32}, 
@@ -159,7 +160,10 @@ class User
 
   def generate_reset_token(auth_token)
     token = SecurityManager.sha256(auth_token + self.email + Time.now.to_s)
-    update_attribute :password_reset_token, token
+    self.update(
+      :password_reset_token => token,
+      :forgot_timestamp     => Time.mongoize(Time.now)
+    )
     token
   end
 
