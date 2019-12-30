@@ -8,7 +8,6 @@ module Mailer
   }
   module_function
   
-  # TODO
   def password_reset_url(domain)
     "#{domain}/account-recovery/reset"
   end

@@ -42,6 +42,9 @@ Rails.application.routes.draw do
       post '/task/reject', to: 'tasks#reject'
       post '/task/finish', to: 'tasks#finish'
       post '/task/report', to: 'tasks#report'
+
+      match '/tasks/:id/reviews', to: 'reviews#index', via: [:get]
+      match '/tasks/:id/reviews', to: 'reviews#create', via: [:post]
     end
   end
   

@@ -1,8 +1,10 @@
-var logger = console;
-
-class PushNotification{
+class NotificationManager{
   constructor(){
     throw "This is a static class"
+  }
+
+  static initialize(){
+    $(document).ready(this.ready);
   }
 
   static isSupported(){
@@ -23,18 +25,18 @@ class PushNotification{
   }
   
   static ready() {
-    this.setup(this.logSubscription);
+    NotificationManager.setup(NotificationManager.logSubscription);
   }
   
   static setup(onSubscribed) {
-    logger.log('Setting up push subscription');
+    console.log('Setting up push subscription');
   
     if (!window.PushManager) {
-      logger.warn('Push messaging is not supported in your browser');
+      console.warn('Push messaging is not supported in your browser');
     }
   
-    if (!ServiceWorkerRegistration.prototype.showNotification) {
-      logger.warn('Notifications are not supported in your browser');
+    if (!this.isSupported()) {
+      console.warn('Notifications are not supported in your browser');
       return;
     }
   
@@ -42,13 +44,13 @@ class PushNotification{
       Notification.requestPermission(function (permission) {
         // If the user accepts, let's create a notification
         if (permission === "granted") {
-          logger.log('Permission to receive notifications granted!');
+          console.log('Permission to receive notifications granted!');
           this.subscribe(onSubscribed);
         }
       });
       return;
     } else {
-      logger.log('Permission to receive notifications granted!');
+      console.log('Permission to receive notifications granted!');
       this.subscribe(onSubscribed);
     }
   }
@@ -58,7 +60,7 @@ class PushNotification{
     .then((serviceWorkerRegistration) => {
       return serviceWorkerRegistration.pushManager.getSubscription()
       .catch((error) => {
-        logger.warn('Error during getSubscription()', error);
+        console.warn('Error during getSubscription()', error);
       });
     });
   }
@@ -69,40 +71,40 @@ class PushNotification{
       pushManager.getSubscription()
       .then((subscription) => {
         if (subscription) {
-          refreshSubscription(pushManager, subscription, onSubscribed);
+          NotificationManager.refreshSubscription(pushManager, subscription, onSubscribed);
         } else {
-          this.pushManagerSubscribe(pushManager, onSubscribed);
+          NotificationManager.pushManagerSubscribe(pushManager, onSubscribed);
         }
       })
     });
   }
 
-  static refreshSubscription(pushManager, subscription, onSubscribed) {
-    logger.log('Refreshing subscription');
+  static refreshSubscription(pushManager, subscription) {
+    console.log('Refreshing subscription');
     return subscription.unsubscribe().then((bool) => {
       this.pushManagerSubscribe(pushManager);
     });
   }
   
   static pushManagerSubscribe(pushManager, onSubscribed) {
-    logger.log('Subscribing started...');
+    console.log('Subscribing started...');
   
     pushManager.subscribe({
       userVisibleOnly: true,
       applicationServerKey: window.publicKey
     })
     .then(onSubscribed)
-    .then(() => { logger.log('Subcribing finished: success!')})
+    .then(() => { console.log('Subcribing finished: success!')})
     .catch((e) => {
       if (Notification.permission === 'denied') {
-        logger.warn('Permission to send notifications denied');
+        console.warn('Permission to send notifications denied');
       } else {
-        logger.error('Unable to subscribe to push', e);
+        console.error('Unable to subscribe to push', e);
       }
     });
   }
 
   static logSubscription(subscription) {
-    logger.log("Current subscription", subscription.toJSON());
+    console.log("Current subscription", subscription.toJSON());
   }
 }

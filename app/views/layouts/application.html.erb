@@ -9,6 +9,7 @@
     <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
     <%= javascript_tag "Util.initialize()"%>
+    <%= javascript_tag "NotificationManager.initialize()" %>
     <script type="text/javascript">
       window.publicKey = new Uint8Array(
         <%= SecurityManager.public_vapid_key_bytes %>

@@ -15,4 +15,8 @@ module SecurityManager
   def public_vapid_key_bytes
     Base64.urlsafe_decode64(VAPID_PUBLIC_KEY).bytes
   end
+
+  def md5(input)
+    ::Digest::MD5.hexdigest input
+  end
 end
