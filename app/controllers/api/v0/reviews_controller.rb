@@ -16,13 +16,13 @@ module Api
 
       # GET /tasks/:task_id/reviews/1
       def show
-        return_wip
+        render json: @review.json_info, status: :ok
       end
 
       # POST /reviews
       # POST /reviews.json
       def create
-        _params = review_init_param
+        _params = review_init_params
         _params[:id] = SecurityManager.md5("#{@user.id}_#{@task.id}")
         _params[:score] = _params[:score].to_i
         _params[:author_id] = @user.id
@@ -50,7 +50,7 @@ module Api
     
       def set_task
         return @review.task if @review
-        @task = Task.find params[:id].to_i
+        @task = Task.find params[:task_id].to_i
       end
 
       def set_user

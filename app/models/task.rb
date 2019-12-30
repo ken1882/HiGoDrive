@@ -4,6 +4,7 @@ class Task
   
   belongs_to :user
   has_many :reviews
+  has_many :reports
 
   field :dest, type: String
   field :depart_time, type: DateTime

@@ -2,11 +2,11 @@ module ReviewsHelper
   include ApplicationHelper
   private
   CommentLimit = 2000
-  ReviewInitParam = [:id, :score, :comment]
-
+  ReviewInitParam = [:id, :task_id, :score, :comment]
+  
   # Use callbacks to share common setup or constraints between actions.
 
-  def review_init_param
+  def review_init_params
     filter_params ReviewInitParam
   end
 end
