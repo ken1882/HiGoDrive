@@ -304,7 +304,7 @@ function taskrunning() { //if driver accept task call back
   document.getElementById("distanceTask").innerHTML = dest.distance.text
   document.getElementById("fareTask").innerHTML = dest.fare + '元'
 
-  var ps = document.getElementById("psText").innerHTML // web get driver ps text
+  var ps = document.getElementById("psText_driver").innerHTML // web get driver ps text
   driverReceive();
   taskStatus()
 
@@ -533,7 +533,7 @@ function acceptTask() {
   document.getElementById("destination").innerHTML = request.dest.placeName
   document.getElementById("distance").innerHTML = request.dest.distance.text
   document.getElementById("fare").innerHTML = request.dest.fare + '元'
-  var ps = document.getElementById("psText").innerHTML // web get driver ps text
+  var ps = document.getElementById("psText_driver").innerHTML // web get driver ps text
 }
 
 
