@@ -5,7 +5,7 @@ var relocateTimer, relocateTime = 10000, postLocationTimer, postTime = 8000;
 var durationFareDegree = 0.1
 var distanceFareDegree = 0.01
 var infoFare, infoDistance, infoTime;
-var isDriver = false; //change passenger mode or driver mode
+var isDriver = true; //change passenger mode or driver mode
 var geoFirst = true;
 var task;
 var isaccept = false;
