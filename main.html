@@ -233,7 +233,12 @@
         </form>
         <br>
         <div class="px-2">
-          <button type="button" class=" btn btn-success btn-block" onclick="finish()"><small>完成訂單</small></button>
+          <button type="button" id="carryPassenger" class="btn btn-success btn-block"
+            onclick="carryPassenger()"><small>開始訂單</small></button>
+        </div>
+        <div class="px-2">
+          <button type="button" id="finish" class="btn btn-success btn-block"
+            onclick="finish()"><small>完成訂單</small></button>
         </div>
       </div>
 
@@ -392,6 +397,7 @@
     function errandDriver() {
       document.getElementById('task').style.display = "none";
       document.getElementById('errand').style.display = "block";
+      document.getElementById('finish').style.display = "none";
       console.log("errand start!");
       acceptTask();
     }
@@ -428,9 +434,23 @@
       document.getElementById('rejectText').value = "沒空接單！";
     }
 
+    //司機接到乘客後點選開始訂單會使用此 function
+    //會關閉開始訂單按鈕 並顯示玩稱訂單按鈕
+    function carryPassenger() {
+      if (!(window.confirm("請確認已接到乘客 再點選此按鈕!!"))) {
+        return false;
+      }
+      document.getElementById('carryPassenger').style.display = "none";
+      document.getElementById('finish').style.display = "block";
+    }
+
     //司機點選完成訂單後會使用此 function
     //會把訂單進行顯示畫面關閉 並清除地圖
     function finish() {
+      if (!(window.confirm("請確認已抵達目的地 再點選此按鈕!!"))) {
+        return false;
+      }
+      window.alert("訂單完成!!");
       document.getElementById('errand').style.display = "none";
       console.log("task finish!!");
       directionsDisplay.set('directions', null);
