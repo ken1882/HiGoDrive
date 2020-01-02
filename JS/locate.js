@@ -31,7 +31,7 @@ var dest = {
   datetimepicker: ""
 }
 
-
+//地圖樣式
 function CenterControl(controlDiv, map) {
 
   // Set CSS for the control border.
@@ -69,6 +69,7 @@ function CenterControl(controlDiv, map) {
 
 }
 
+//定位標點
 function setLocationMarker(x, y) {
   if (marker) {
     marker.setMap(null)
@@ -88,6 +89,8 @@ function setLocationMarker(x, y) {
   });
   //console.log(map.getZoom())
 }
+
+//畫面右側定位按鈕
 function setIcon() {
   //seticon
   var centerControlDiv = document.createElement('div');
@@ -96,6 +99,7 @@ function setIcon() {
   map.controls[google.maps.ControlPosition.RIGHT_CENTER].push(centerControlDiv);
 }
 
+//定位功能 function
 function geoloaction(isFirst) {
   var geosuccess = function (position) {
     var pos = {
@@ -161,7 +165,6 @@ function initMap() {
 
 }
 
-
 function direction(destlat, destlng) {
   var request = {
     origin: { lat: lat, lng: lng },
@@ -187,8 +190,7 @@ function direction(destlat, destlng) {
   });
 }
 
-
-
+//設定乘客導航資訊 function
 function setPsssengerDirectionInfo() {
   info.style.display = "inline"
 
@@ -276,9 +278,7 @@ function initPassengerInfo() {
 
 function initPassenger() {
   initPassengerInfo();
-
   setAutoComplete();
-
 }
 
 function cancelDest() {
