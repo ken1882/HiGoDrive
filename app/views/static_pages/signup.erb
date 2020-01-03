@@ -10,7 +10,7 @@
 
   function submit(){
     Util.postAjax({
-      url: "/api/v0/users",
+      url: "http://localhost:3000/api/v0/users",
       data: {
         username: document.getElementsByName("username")[0].value,
         email: document.getElementsByName("email")[0].value,
@@ -28,13 +28,13 @@
       email: document.getElementsByName("email")[0].value,
     };
     Util.postAjax({
-      url: "/api/v0/checkusername",
+      url: "http://localhost:3000/api/v0/checkusername",
       data: dat,
       success: draw_result,
       error: draw_result,
     });
     Util.postAjax({
-      url: "/api/v0/checkemail",
+      url: "http://localhost:3000/api/v0/checkemail",
       data: dat,
       success: draw_result,
       error: draw_result,

@@ -12,6 +12,8 @@ module UsersHelper
   UserResetFields  = [:password, :password_confirmation]
   SupportedAvatarFormat = [:png, :jpg, :jpeg, :bmp, :webp]
 
+  ForgotDuration   = 60 * 30
+
   def user_init_params
     filter_params UserInitParms
   end

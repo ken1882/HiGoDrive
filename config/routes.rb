@@ -1,6 +1,7 @@
 CurrentVersion = 'v0'
 Rails.application.routes.draw do
 
+  resources :reports
   # home page
   root 'pages#index'
   get '/index', to: 'pages#index'
@@ -23,9 +24,7 @@ Rails.application.routes.draw do
   get '/account-recovery', to: 'pages#passwordForget'
   get '/account-recovery/reset', to: 'pages#passwordReset'
 
-  match '/users' => "api/#{CurrentVersion}/users#show", via: [:get]
-  # match '/user'  => "api/#{CurrentVersion}/users#show", via: [:get]
-
+  match '/login'  =>"api/#{CurrentVersion}/session#new",     via: [:get]
   match '/login'  => "api/#{CurrentVersion}/session#create", via: [:post]
   match '/logout' =>"api/#{CurrentVersion}/session#destroy", via: [:delete, :get]
 
@@ -60,6 +59,14 @@ Rails.application.routes.draw do
       post '/task/reject', to: 'tasks#reject'
       post '/task/finish', to: 'tasks#finish'
       post '/task/report', to: 'tasks#report'
+
+      match '/tasks/:task_id/reviews/:id', to: 'reviews#show', via: [:get]
+      match '/tasks/:task_id/reviews', to: 'reviews#index', via: [:get]
+      match '/tasks/:task_id/reviews', to: 'reviews#create', via: [:post]
+
+      match '/tasks/:task_id/reports/:id', to: 'reports#show', via: [:get]
+      match '/tasks/:task_id/reports', to: 'reports#index', via: [:get]
+      match '/tasks/:task_id/reports', to: 'reports#create', via: [:post]
     end
   end
 

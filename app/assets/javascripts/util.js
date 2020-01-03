@@ -34,8 +34,6 @@ class Util{
    * @param {String} _type Request type (GET/POST...)
    * @param {String} _url Target location
    * @param {Object} _data Request arguments
-   * @param {Function} on_succ Callback on success
-   * @param {Function} on_error Callback on error
    */
   static ajax(_type, _url, _data, on_succ, on_error=null){
     _type = _type.toUpperCase();

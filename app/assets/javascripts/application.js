@@ -14,4 +14,6 @@
 //= require turbolinks
 //= require jquery-3.4.1.min
 //= require util
+//= require notification-manager
 //= require_tree .
+//= require serviceworker-companion

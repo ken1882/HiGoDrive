@@ -4,6 +4,7 @@ class Task
 
   belongs_to :user
   has_many :reviews
+  has_many :reports
 
   field :dest, type: String
   field :depart_time, type: DateTime
@@ -55,7 +56,6 @@ class Task
       author_id: author_id.to_s,
       dest: dest,
       depart_time: depart_time.to_i,
-      driver_id: driver_id.to_s,
       equipments: equipments,
       status: status
     }

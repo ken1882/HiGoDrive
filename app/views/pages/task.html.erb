@@ -13,8 +13,55 @@
     <hr>
     <div class="accordion" id="accordion">
     </div>
-  </div>
+    <div style="display: none;">
 
+      <div class="card" id="template-card-finished" style="display: none;">
+          <div class="card-header px-0" id="headingOne">
+            <button id="collapse-btn" class="btn btn-block" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false"
+              aria-controls="collapseOne">
+              <div class="row">
+                <div class="col-4 px-0">
+                  <p class="mb-0"><img class="user_task" src="/assets/user-circle-regular.svg" type="image/svg+xml"
+                      alt="user"></p>
+                  <p name="user_id" class="mb-0">12345</p>
+                </div>
+                <div class="col-6 px-0">
+                  <p name="dist" class="text-primary">目的地：基隆火車站</p>
+                  <p name="route" class="text-primary mb-0">時間：2019/12/3 18:00</p>
+                </div>
+                <div class="col-2 px-0">
+                  <p name="status" class="text-success tag">已完成</p>
+                  <i class="fas fa-sort-down fa-lg"></i>
+                </div>
+              </div>
+            </button>
+          </div>
+          <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+            <div class="card-body">
+              <form action="/api/v0/tasks/id/reviews" class="review-form" method="POST">
+                <div class="score p-2">
+                  <div id="score" class="target"></div>
+                  <div class="star" style="display: none;"></div>
+                </div>
+                <div class="form-group">
+                  <textarea class="form-control" id="scoreTextarea" name="comment" rows="2"
+                    placeholder="評價敘述"></textarea>
+                </div>
+                <div class="form-row">
+                  <div class="col-6">
+                    <a href="report.html"><button type="button" class="btn btn-success btn-block p-2">我要申訴</button></a>
+                  </div>
+                  <div class="col-6">
+                    <button type="submit" class="btn btn-success btn-block p-2">送出評價</button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </main>
 
 <!--下導覽列-->
@@ -52,96 +99,67 @@
 function renderTaskToPage(taskId) {
   let task = getTask(taskId);
   let placeName = task.dest.placeName;
-  let depart_time = task.dest.datetimepicker;
+  let departTime = task.dest.datetimepicker;
   // TODO: author_name or driver_name
-  var author_name = getUserInfo(task.author_id).username;
-  var driver_name = getUserInfo(task.driver_id).username;
-  var status = task.status;
-  var status_msg = {
-      0: "等待中",
-      1: "已接受",
-      2: "接客中",
-      3: "已完成",
-      4: "已取消"
+  let authorName = getUserInfo(task.author_id).username;
+  let driverName = task.driver_id ? getUserInfo(task.driver_id).username : "N/A";
+  let status = task.status;
+  let [statusMsg, statusClass] = {
+      0: ["等待中", "text-primary tag"],
+      1: ["已接受", "text-primary tag"],
+      2: ["接客中", "text-primary tag"],
+      3: ["已完成", "text-success tag"],
+      4: ["已取消", "text-danger tag"]
   }[status];
 
-  var msg = {
-    0: '      <span>狀態：尚無司機接單</span>',
+  let card = $("#template-card-finished").clone();
+  card.removeAttr("id");
+  card.removeAttr("style");
 
-    1: '      <span>狀態：已被司機接單</span>',
+  let [header, collapse] =
+      (([a, b]) => { return [$(a), $(b)]; })(card.children());
+  header.attr("id", "heading-" + taskId);
+  collapse.attr("id", "collapse-" + taskId);
+  collapse.attr("aria-labelledby", header.attr("id"));
 
-    2: '      <span>狀態：送客中</span>',
+  let collpaseBtn = header.find("#collapse-btn");
+  collpaseBtn.removeAttr("id");
+  collpaseBtn.attr("data-target", "#" + collapse.attr("id"));
+  collpaseBtn.attr("aria-controls", collapse.attr("id"));
 
-    3: '      <form action="task.html">' +
-       '        <div class="score p-2">' +
-       '          <div id="score" class="target"></div>' +
-       '          <div id="star" style="display: none;"></div>' +
-       '        </div>' +
-       '        <div class="form-group">' +
-       '          <textarea class="form-control" id="scoreTextarea" name="scoreTextarea" rows="2"' +
-       '            placeholder="評價敘述"></textarea>' +
-       '        </div>' +
-       '        <div class="form-row">' +
-       '          <div class="col-6">' +
-       '            <a href="report.html"><button type="button" class="btn btn-success btn-block p-2">我要申訴</button></a>' +
-       '          </div>' +
-       '          <div class="col-6">' +
-       '            <button type="submit" class="btn btn-success btn-block p-2">送出評價</button>' +
-       '          </div>' +
-       '        </div>' +
-       '      </form>',
+  header.find("p[name='user_id']").html(authorName);
+  header.find("p[name='dist']").html(placeName);
+  header.find("p[name='route']").html(departTime);
+  header.find("p[name='status']").html(statusMsg);
+  header.find("p[name='status']").attr("class", statusClass);
 
-    4: '      <span>取消原因：已過期</span>'
-  }[status];
+  collapse.find("#score").attr("id", "score-" + taskId);
+  collapse.find("#scoreTextarea").attr("id", "comment-" + taskId);
 
-  $("#accordion").append('' +
-      '<div class="card">' +
-      '  <div class="card-header px-0" id="heading-' + taskId + '">' +
-      '    <button class="btn btn-block" data-toggle="collapse" data-target="#collapse-' + taskId + '" aria-expanded="false"' +
-      '      aria-controls="collapse-' + taskId + '">' +
-      '      <div class="row">' +
-      '        <div class="col-4 px-0">' +
-      '          <p class="mb-0"><img class="user_task" src=<%= image_url 'user-circle-regular.svg' %> type="image/svg+xml"' +
-      '              alt="user">' +
-      '          </p>' +
-      '          <p name="user_id" class="mb-0">' + author_name + '</p>' +
-      '        </div>' +
-      '        <div class="col-6 px-0">' +
-      '          <p name="dist" class="text-primary">目的地：' + placeName + '</p>' +
-      '          <p name="route" class="text-primary mb-0">時間：' + depart_time + '</p>' +
-      '        </div>' +
-      '        <div class="col-2 px-0">' +
-      '          <p class="text-danger tag" id="task-status">' + status_msg + '</p>' +
-      '          <i class="fas fa-sort-down fa-lg"></i>' +
-      '        </div>' +
-      '      </div>' +
-      '    </button>' +
-      '  </div>' +
-      '  <div id="collapse-' + taskId + '" class="collapse" aria-labelledby="heading-' + taskId + '" data-parent="#accordion">' +
-      '    <div class="card-body">' +
-      msg +
-      '    </div>' +
-      '  </div>' +
-      '</div>');
+  let cardBody = collapse.find(".card-body");
+  if (status == 3) {
+    let reviews = getTaskReview(taskId);
+    if (reviews.length && reviews[0].author_id == getCurrentUser()) {
+      let [score, comment] = [reviews[0].score, reviews[0].comment];
+      cardBody.html('<span>評價：' + score + '星 (' + comment + ')</span>')
+    } else if (reviews.length == 2 && reviews[1].author_id == getCurrentUser()) {
+      let [score, comment] = [reviews[1].score, reviews[1].comment];
+      cardBody.html('<span>評價：' + score + '星 (' + comment + ')</span>')
+    } else {
+      let reviewForm = cardBody.find(".review-form");
+      reviewForm.attr("action", reviewForm.attr("action").replace("id", taskId));
+      reviewForm.append('<%= hidden_field_tag :authenticity_token, form_authenticity_token %>');
+    }
+  } else {
+    cardBody.html({
+        0: '<span>狀態：尚無司機接單</span>',
+        1: '<span>狀態：已被司機接單</span>',
+        2: '<span>狀態：送客中</span>',
+        4: '<span>取消原因：已過期</span>'
+    }[status]);
+  }
 
-  $("#task-status").attr("class", { 0: "text-primary tag",
-                                    1: "text-primary tag",
-                                    2: "text-primary tag",
-                                    3: "text-success tag",
-                                    4: "text-danger tag" }[status]);
-  $("#task-status").attr("id", "task-" + taskId + "-status");
-  $('.score').raty({
-    number: 5,
-    targetType: 'score',
-    path: 'assets',
-    hints: ['非常差', '差', '普通', '好', '非常好'],
-    size: 24,
-    starHalf: 'star-half.png',
-    starOff: 'star-off.png',
-    starOn: 'star-on.png',
-    target: '#star',
-    cancel: false,
-  });
+  $("#accordion").append(card);
 }
 
 $(document).ready(function() {
@@ -150,11 +168,29 @@ $(document).ready(function() {
     myTasks.forEach(taskId => {
       renderTaskToPage(taskId);
     });
+    $('.score').raty({
+      number: 5,
+      targetType: 'score',
+      path: 'assets',
+      hints: ['非常差', '差', '普通', '好', '非常好'],
+      size: 24,
+      starHalf: 'star-half.png',
+      starOff: 'star-off.png',
+      starOn: 'star-on.png',
+      target: '.star',
+      cancel: false,
+    });
   } else {
     $("#accordion").html('' +
         '<div class="noTask">' +
         '  <h5 class="text-center alert alert-danger">沒有訂單紀錄</h5>' +
         '</div>');
   }
+  $(".review-form").toArray().forEach(form => {
+    $(form).submit(function() {
+      console.log($(this).find("input[name='score']").val());
+      return !!$(this).find("input[name='score']").val();
+    });
+  });
 });
 </script>

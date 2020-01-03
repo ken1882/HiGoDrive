@@ -30,7 +30,7 @@
               <p class="card-text">電子信箱：<span id="search-result-email"></span></p>
               <p class="card-text">手機號碼：<span id="search-result-phone"></span></p>
               <p class="card-text">個人資訊：<span id="search-result-bio"></span></p>
-              <p class="card-text text-primary">
+              <p class="card-text text-primary" style="display: none;">
                 <small class="text-muted">18:00~19:00已被預約</small>
               </p>
             </div>
@@ -76,68 +76,11 @@
 </nav>
 
 <script>
-<<<<<<< HEAD
   function listUserInfo(user) {
     $("#search-result-name").html(user.username + " (" + user.realname + ")");
     $("#search-result-email").html(user.email);
     $("#search-result-phone").html(user.phone);
     $("#search-result-bio").html(user.bio ? user.bio : "");
-=======
-  function listUserInfo(result) {
-    var name = result.username;
-    if (result.realname) {
-      name = name + " (" + result.realname + ")"
-    }
-    var email = result.email;
-    var phone = result.phone;
-    var bio = result.bio;
-    if (!bio) {
-      bio = "";
-    }
-    $(".userList").html('' +
-      '<div class="card mb-3 mx-auto" style="max-width: 540px;">' +
-      '  <div class="row no-gutters">' +
-      '    <div class="col-4">' +
-      '      <img id="user" >' +
-      '    </div>' +
-      '    <div class="col-8">' +
-      '      <div class="card-body">' +
-      '        <h5 class="card-title">用戶名稱：' + name + '</h5>' +
-      '        <p class="card-text">電子信箱：' + email + '</p>' +
-      '        <p class="card-text">手機號碼：' + phone + '</p>' +
-      '        <p class="card-text">個人資訊：' + bio + '</p>' +
-      '        <p class="card-text text-primary">' +
-      // '          <small class="text-muted">18:00~19:00已被預約</small>' +
-      '        </p>' +
-      '      </div>' +
-      '    </div>' +
-      '  </div>' +
-      '</div>');
-  }
-
-  function userFound(result) {
-    var id = result.uid;
-    Util.ajax(
-        "GET",
-        "/api/v0/users/" + id,
-        null,
-        listUserInfo,
-        function (xhr, ajaxOptions, thrownError) {
-          console.log("unexpected error: ", thrownError);
-        }
-    );
-  }
-
-  function userNotFound(xhr, ajaxOptions, thrownError) {
-    if (xhr.status == 404) {
-      $(".userList").html('' +
-        '<div class="notFound">' +
-        '  <h3 class="text-center alert alert-danger">很抱歉！找不到該使用者</h3>' +
-        '</div>');
-    } else {
-      console.log("unexpected error", thrownError);
-    }
->>>>>>> fix asset location
   }
 
   $("#search-user").submit(function() {
