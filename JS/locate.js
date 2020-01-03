@@ -266,6 +266,7 @@ function setAutoComplete() {
 
 }
 
+
 function initPassengerInfo() {
   info = document.getElementById("order")
   infoFare = document.getElementById("farePassenger")
@@ -338,6 +339,7 @@ function fakeGetTaskStatusApi() {
 
 //driver on line
 
+//below are fake datas
 var fakeTaskNext = { "task_id": "111", "next_id": "112" };
 var fakeTaskNext2 = { "task_id": "112", "next_id": "-1" };
 var fakeTaskDest111 = {
@@ -387,8 +389,7 @@ var fakeTaskDest112 = {
   username: "user2",
   status: "0"
 }
-
-// above is fake data
+// above are fake datas
 
 function getTaskid(task_id) {
   if (task_id == '0') { // GET "/api/v0/task/next?task_id = 0"
@@ -512,6 +513,7 @@ function directionDrive(destlat, destlng, passengerlat, passengerlng) {
 }
 
 //check api /api/v0/task status task_id = taskid.nowid
+//司機接受差事
 function acceptTask() {
 
   var status = '0'; //check api status again
@@ -536,7 +538,7 @@ function acceptTask() {
   var ps = document.getElementById("psText_driver").innerHTML // web get driver ps text
 }
 
-
+//司機拒絕訂單 且送出原因後 會使用此 function
 function rejectTask(reason) {
   //api reject 婉拒
   taskid.nowid = taskid.nextid; //switch to next task
