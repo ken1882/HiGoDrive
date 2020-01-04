@@ -56,6 +56,7 @@ class Task
       author_id: author_id.to_s,
       dest: dest,
       depart_time: depart_time.to_i,
+      driver_id: driver_id.to_s,
       equipments: equipments,
       status: status
     }
