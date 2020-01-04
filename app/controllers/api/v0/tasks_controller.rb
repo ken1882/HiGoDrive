@@ -45,7 +45,7 @@ module Api
         respond_to do |format|
           if @task.save
             format.html { redirect_to '/home', notice: 'Task was successfully created.' }
-            format.json { render json: {message: 'created'}, status: :created}
+            format.json { render json: {message: 'created', id: @task.id}, status: :created}
           else
             format.html { unprocessable_entity }
             format.json { render json: @task.errors, status: :unprocessable_entity }
@@ -144,7 +144,7 @@ module Api
       def validate_init_params
         _time = params[:depart_time].to_i || 0
         curt  = Time.now.to_i
-        return bad_request unless params[:dest].length.between?(1,25600)
+        return bad_request unless params[:dest].length.between?(1, 25600)
         return bad_request unless _time.between?(curt - 180, curt + 60 * 60 * 24 * 100)
         return true
       end
