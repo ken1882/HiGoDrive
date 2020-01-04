@@ -146,6 +146,7 @@ function renderTaskToPage(taskId) {
     });
     if (review) {
       cardBody.html('<span>評價：' + review.score + '星 (' + review.comment + ')</span>');
+      header.find("p[name='status']").html("已評價");
     } else {
       let reviewForm = cardBody.find(".review-form");
       reviewForm.attr("action", reviewForm.attr("action").replace("id", taskId));
@@ -166,9 +167,7 @@ function renderTaskToPage(taskId) {
 $(document).ready(function() {
   let myTasks = getMyTasks();
   if (myTasks && myTasks.length) {
-    myTasks.forEach(taskId => {
-      renderTaskToPage(taskId);
-    });
+    myTasks.slice(0, 8).forEach(taskId => { renderTaskToPage(taskId); });
     $('.score').raty({
       number: 5,
       targetType: 'score',
@@ -189,7 +188,6 @@ $(document).ready(function() {
   }
   $(".review-form").toArray().forEach(form => {
     $(form).submit(function() {
-      console.log($(this).find("input[name='score']").val());
       return !!$(this).find("input[name='score']").val();
     });
   });
