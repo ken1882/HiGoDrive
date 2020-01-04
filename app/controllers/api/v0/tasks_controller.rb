@@ -45,7 +45,7 @@ module Api
         respond_to do |format|
           if @task.save
             format.html { redirect_to '/home', notice: 'Task was successfully created.' }
-            format.json { render json: {message: 'created'}, status: :created}
+            format.json { render json: {message: 'created', id: @task.id}, status: :created}
           else
             format.html { unprocessable_entity }
             format.json { render json: @task.errors, status: :unprocessable_entity }
