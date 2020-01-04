@@ -153,7 +153,7 @@ function getNextTask(taskId) {
   $.ajax({
     method: "GET",
     url: "/api/v0/next_task",
-    data: null,
+    data: { id: taskId },
     dataType: "json",
     success: function (result) {
       nextTask = result;
@@ -190,24 +190,26 @@ function getTask(taskId) {
 }
 
 function createTask(dest, departTime, equipments) {
+  let taskId = 0;
   $.ajax({
     method: "POST",
     url: "/api/v0/tasks",
     data: {
       authenticity_token: Util.AuthToken,
       dest: JSON.stringify(dest),
-      departTime: departTime,
+      depart_time: departTime,
       equipments: equipments
     },
     dataType: "json",
     success: function (result) {
-      console.log(result);
+      taskId = result.id;
     },
     error: function(xhr) {
       console.log("An error occured:", xhr.status, xhr.statusText);
     },
-    async: true
+    async: false
   });
+  return taskId;
 }
 
 function cancelTask(taskId) {
@@ -284,7 +286,9 @@ function finishTask(taskId) {
   });
 }
 
-function acceptTask(taskId) {
+function acceptTask(taskId,
+                    successCallback = undefined,
+                    errorCallback = undefined) {
   $.ajax({
     method: "POST",
     url: "/api/v0/task/accept",
@@ -294,10 +298,16 @@ function acceptTask(taskId) {
     },
     dataType: "json",
     success: function (result) {
+      if (typeof successCallback == "function") {
+        successCallback();
+      }
       console.log(result);
     },
     error: function(xhr) {
       console.log("An error occured:", xhr.status, xhr.statusText);
+      if (typeof errorCallback == "function") {
+        errorCallback();
+      }
     },
     async: true
   });
@@ -309,7 +319,8 @@ function rejectTask(taskId, reason) {
     url: "/api/v0/task/reject",
     data: {
       authenticity_token: Util.AuthToken,
-      id: taskId
+      id: taskId,
+      reason: reason
     },
     dataType: "json",
     success: function (result) {
@@ -367,7 +378,7 @@ function createTaskReview(taskId, score, comment) {
     url: "/api/v0/tasks/" + taskId + "/reviews",
     data: {
       authenticity_token: Util.AuthToken,
-      // id: taskId,  // pass?
+      id: taskId,
       score: score,
       comment: comment
     },
@@ -387,7 +398,7 @@ function getTaskReview(taskId) {
   $.ajax({
     method: "GET",
     url: "/api/v0/tasks/" + taskId + "/reviews",
-    data: null,
+    data: { id: taskId },
     dataType: "json",
     success: function (result) {
       review = result;

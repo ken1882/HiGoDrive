@@ -70,6 +70,7 @@ function CenterControl(controlDiv, map) {
 
 }
 
+//定位標點
 function setLocationMarker(x, y) {
   if (marker) {
     marker.setMap(null)
@@ -89,6 +90,8 @@ function setLocationMarker(x, y) {
   });
   //console.log(map.getZoom())
 }
+
+//畫面右側定位按鈕
 function setIcon() {
   //seticon
   var centerControlDiv = document.createElement('div');
@@ -97,6 +100,7 @@ function setIcon() {
   map.controls[google.maps.ControlPosition.RIGHT_CENTER].push(centerControlDiv);
 }
 
+//定位功能 function
 function geoloaction(isFirst) {
   var geosuccess = function (position) {
     var pos = {
@@ -130,24 +134,6 @@ function geoloaction(isFirst) {
   }
 }
 
-function getCurrentUserId() {
-  var current_user_id = undefined;
-  $.ajax({
-    type: "POST",
-    url: "/api/v0/currentuser",
-    dataType: "json",
-    data: { authenticity_token: $('meta[name=csrf-token]')[0].content },
-    success: function on_succ(result) {
-      current_user_id = result.uid;
-    },
-    error: function (xhr, ajaxOptions, thrownError) {
-      console.log("unexpected error: ", thrownError);
-    },
-    async: false
-  });
-  return current_user_id;
-}
-
 function initMap() {
   //initial Map
   map = new google.maps.Map(document.getElementById('map'), {
@@ -166,7 +152,7 @@ function initMap() {
   directionsDisplay = new google.maps.DirectionsRenderer();
   directionsDisplay.setMap(map)
 
-  var current_user = getUserInfo(getCurrentUserId());
+  var current_user = getUserInfo(getCurrentUser());
 
   if (current_user.roles == 1) {
     isDriver = false;
@@ -180,7 +166,6 @@ function initMap() {
   geoloaction(geoFirst)
   relocateTimer = window.setInterval(function () { geoloaction(geoFirst); }, relocateTime);
 }
-
 
 function direction(destlat, destlng) {
   var request = {
@@ -207,6 +192,7 @@ function direction(destlat, destlng) {
   });
 }
 
+//設定乘客導航資訊 function
 function setPsssengerDirectionInfo() {
   info.style.display = "inline"
 
@@ -292,9 +278,7 @@ function initPassengerInfo() {
 
 function initPassenger() {
   initPassengerInfo();
-
   setAutoComplete();
-
 }
 
 function cancelDest() {
@@ -310,34 +294,19 @@ function cancelDest() {
 }
 
 function taskrunning() { //if driver accept task call back
-  var driverid = '0' // api get driver id
-  $.ajax({
-    type: "GET",
-    url: "/api/v0/tasks/" + taskid.nowid,
-    dataType: "json",
-    data: null,
-    success: function on_succ(result) {
-      console.log(result);
-      driverid = result.driver_id;
-    },
-    error: function (xhr, ajaxOptions, thrownError) {
-      console.log("unexpected error: ", thrownError);
-    },
-    async: false
-  });
-  console.log("driver_id", driverid);
+  var driverid = getTask(taskid.nowid).driver_id;
 
   document.getElementById("driverid").innerHTML = "乘客：" + driverid;
   document.getElementById("destinationTask").innerHTML = dest.placeName
   document.getElementById("distanceTask").innerHTML = dest.distance.text
   document.getElementById("fareTask").innerHTML = dest.fare + '元'
 
-  var ps = document.getElementById("psText").innerHTML // web get driver ps text
+  var ps = document.getElementById("psText_driver").innerHTML // web get driver ps text
   driverReceive();
   taskStatus()
-
 }
 
+/*
 function taskStatus() { // api block get driver finish task status
   var status = getTask(taskid.nowid).status;
   // TODO: status definition has changed
@@ -351,112 +320,36 @@ function taskStatus() { // api block get driver finish task status
     console.log('task done');
   }
 }
+*/
+
+function taskStatus() {
+  console.log(taskid.nowid);
+  var status = getTask(taskid.nowid).status;
+  if (status == 0) {
+    console.log('waiting for accepting');
+    setTimeout(taskStatus, 5000);
+  } else if (status == 1) {
+    console.log('waiting for engaging');
+    setTimeout(taskStatus, 5000);
+    return status;
+  } else if (status == 2) {
+    console.log('waiting for finishing');
+    setTimeout(taskStatus, 5000);
+    return status;
+  } else if (status == 3) {
+    console.log('task done');
+  }
+  return status;
+}
 
 function taskFinish() { //if task done
-  $.ajax({
-    type: "POST",
-    url: "/api/v0/task/engage",
-    dataType: "json",
-    data: {
-      authenticity_token: $('meta[name=csrf-token]')[0].content,
-      id: taskid.nowid
-    },
-    success: function on_succ(result) {
-      console.log(result);
-    },
-    error: function (xhr, ajaxOptions, thrownError) {
-      console.log("unexpected error: ", thrownError);
-    },
-    async: false
-  });
-  $.ajax({
-    type: "POST",
-    url: "/api/v0/task/finish",
-    dataType: "json",
-    data: {
-      authenticity_token: $('meta[name=csrf-token]')[0].content,
-      id: taskid.nowid
-    },
-    success: function on_succ(result) {
-      console.log(result);
-    },
-    error: function (xhr, ajaxOptions, thrownError) {
-      console.log("unexpected error: ", thrownError);
-    },
-    async: false
-  });
+  finishTask(taskid.nowid);
   location.reload();
 }
 
-function getUserInfo(uid) {
-  var user_info = undefined;
-  $.ajax({
-    type: "GET",
-    url: "/api/v0/users/" + uid,
-    dataType: "json",
-    data: null,
-    success: function on_succ(result) {
-      user_info = result;
-    },
-    error: function (xhr, ajaxOptions, thrownError) {
-      console.log("unexpected error: ", thrownError);
-    },
-    async: false
-  });
-  return user_info;
-}
-
-function getTaskid(task_id) {
-  var taskinfo = undefined;
-  $.ajax({
-    type: "GET",
-    url: "/api/v0/next_task",
-    dataType: "json",
-    data: {id: task_id},
-    success: function on_succ(result) {
-      taskinfo = result;
-    },
-    error: function (xhr, ajaxOptions, thrownError) {
-      console.log("unexpected error: ", thrownError);
-    },
-    async: false
-  });
-  return taskinfo;
-}
-
-/*
-function getTask(task_id_) {
-  var task_ = {
-    valid: false,
-    dest: undefined,
-    username: undefined,
-    status: undefined
-  };
-  $.ajax({
-    type: "GET",
-    url: "/api/v0/tasks/" + task_id_,
-    dataType: "json",
-    data: null,
-    success: function on_succ(result) {
-      task_.valid = true;
-      task_.dest = JSON.parse(result.dest);
-      task_.username = getUserInfo(result.author_id).username;
-      task_.status = result.status;
-    },
-    error: function (xhr, ajaxOptions, thrownError) {
-      console.log("unexpected error: ", thrownError);
-    },
-    async: false
-  });
-  console.log("task_", task_);
-  return task_;
-}
-*/
-
 //driver on line
 function onlineTask() {
-  var taskinfo = getTaskid(taskid.nextid); // first time give 0
-  console.log("taskinfo", taskinfo);
+  var taskinfo = getNextTask(taskid.nextid); // first time give 0
   taskid.nowid = taskinfo.task_id;
   taskid.nextid = taskinfo.next_id;
 
@@ -466,7 +359,7 @@ function onlineTask() {
   }
 
   request = getTask(taskid.nowid);
-  if (!request.valid) {
+  if (!request) {
     taskid.nowid = 0;
     taskid.nextid = 0;
     console.log("getTask error");
@@ -507,7 +400,7 @@ function onReceiveTask(dest) {
     else {
       clearInterval(timesetInterval);
       if (isaccept == false) {
-        rejectTask("time out");
+        rejectTask_("time out");
         console.log("auto reject")
         return setTimeout('onlineTask()', 1000); // fail request or no task
       }
@@ -542,71 +435,46 @@ function directionDrive(destlat, destlng, passengerlat, passengerlng) {
 }
 
 //check api /api/v0/task status task_id = taskid.nowid
-function acceptTask() {
+//司機接受差事
+function acceptTask_() {  // TODO: rename
   var task_ = getTask(taskid.nowid);
   var status = task_.status;
   console.log("task status", status);
   if (status == 0) {
     console.log("taskid.nowid", taskid.nowid) //set api status = 1; give driver id
-    $.ajax({
-      type: "POST",
-      url: "/api/v0/task/accept",
-      dataType: "json",
-      data: {
-        authenticity_token: $('meta[name=csrf-token]')[0].content,
-        id: taskid.nowid
-      },
-      success: function on_succ(result) {
-        console.log(result);
-        isaccept = true;
-        map.controls[google.maps.ControlPosition.LEFT_BOTTOM].push(document.getElementById('errand'));
-        // console.log("task accept");
+    let successCallback = function() {
+      isaccept = true;
+      map.controls[google.maps.ControlPosition.LEFT_BOTTOM].push(document.getElementById('errand'));
+      // console.log("task accept");
 
-        // open map  on mobile  app
-        document.getElementById("googleMap").href = "https://www.google.com/maps/dir/" + lat + ',' + lng + '/' + dest.passengerlat + ',' + dest.passengerlng + '/' + dest.lat + ',' + dest.lng;
-
-        document.getElementById("userid").innerHTML = "乘客：" + request.username
-        document.getElementById("destination").innerHTML = request.dest.placeName
-        document.getElementById("distance").innerHTML = request.dest.distance.text
-        document.getElementById("fare").innerHTML = request.dest.fare + '元'
-        var ps = document.getElementById("psText").innerHTML // web get driver ps text
-        taskrunning();
-        // TODO: update ps to database
-      },
-      error: function (xhr, ajaxOptions, thrownError) {
-        console.log("unexpected error: ", thrownError);
-        rejectTask("task is accepted by other driver");
-      },
-      async: false
-    });
+      // open map  on mobile  app
+      document.getElementById("googleMap").href = "https://www.google.com/maps/dir/" + lat + ',' + lng + '/' + dest.passengerlat + ',' + dest.passengerlng + '/' + dest.lat + ',' + dest.lng;
+      console.log(request);
+      let authorUsername = getUserInfo(request.author_id).username;
+      document.getElementById("userid").innerHTML = "乘客：" + authorUsername;
+      document.getElementById("destination").innerHTML = request.dest.placeName
+      document.getElementById("distance").innerHTML = request.dest.distance.text
+      document.getElementById("fare").innerHTML = request.dest.fare + '元'
+      var ps = document.getElementById("psText_driver").innerHTML // web get driver ps text
+      taskrunning();
+      // TODO: update ps to database
+    };
+    let errorCallback = function() {
+      rejectTask_("task is accepted by other driver");
+    };
+    acceptTask(taskid.nowid, successCallback, errorCallback);
   } else {
-    rejectTask("task is accepted by other driver");
+    rejectTask_("task is accepted by other driver");
     return;
   }
 }
 
-
-function rejectTask(reason) {
-  //api reject 婉拒
-  $.ajax({
-    type: "POST",
-    url: "/api/v0/task/reject",
-    dataType: "json",
-    data: {
-      authenticity_token: $('meta[name=csrf-token]')[0].content,
-      id: taskid.nowid,
-      reason: reason
-    },
-    success: function on_succ(result) {
-      console.log(result);
-    },
-    error: function (xhr, ajaxOptions, thrownError) {
-      console.log(xhr, ajaxOptions, thrownError);
-      console.log("unexpected error: ", thrownError);
-    },
-    async: false
-  });
-
+//司機拒絕訂單 且送出原因後 會使用此 function
+function rejectTask_(reason) {  // TODO: rename
+  if (reason.length == 0) {
+    reason = "empty reason";
+  }
+  rejectTask(taskid.nowid, reason);
   window.rejected_tasks.push(taskid.nowid);
 
   //set user view
@@ -620,7 +488,7 @@ function initDriver() {
   var onlineState = document.getElementById("onlineState");
   var offlineState = document.getElementById("offlineState");
   task = document.getElementById("task");
-  if (!isOnline) {
+  if (!isOnline && offlineState) {
     offlineState.style.display = 'block';
   }
   map.controls[google.maps.ControlPosition.TOP_RIGHT].push(onlineState);

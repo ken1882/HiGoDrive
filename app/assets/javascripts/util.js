@@ -51,29 +51,6 @@ class Util{
     });
   }
 
-  /**
-   * Emit an ajax request (synchronous)
-   * @param {String} _type Request type (GET/POST...)
-   * @param {String} _url Target location
-   * @param {Object} _data Request arguments
-   */
-  static syncAjax(_type, _url, _data, on_succ, on_error=null){
-    _type = _type.toUpperCase();
-    _data = _data || {};
-    if(_type != "GET"){
-      _data["authenticity_token"] = this.AuthToken;
-    }
-    $.ajax({
-      type: _type,
-      url: _url,
-      dataType: "json",
-      data: _data,
-      success: on_succ,
-      error: on_error,
-      async: false
-    });
-  }
-
   /**----------------------------------------------------------------------------
    * > Request user to reload
    */
