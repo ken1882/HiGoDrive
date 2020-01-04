@@ -16,4 +16,6 @@
 //= require util
 //= require notification-manager
 //= require_tree .
+//= require pushlistener
+//= require serviceworker
 //= require serviceworker-companion

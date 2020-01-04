@@ -1,7 +1,6 @@
 CurrentVersion = 'v0'
 Rails.application.routes.draw do
-  
-  resources :reports
+
   # home page
   root 'static_pages#home'
   get '/index', to: 'static_pages#home'
@@ -19,6 +18,7 @@ Rails.application.routes.draw do
       resources :users
       resources :tasks
       resources :reviews
+      resources :reports
 
       post '/checkusername', to: 'users#checkusername'
       post '/checkemail', to: 'users#checkemail'
@@ -51,6 +51,9 @@ Rails.application.routes.draw do
       match '/tasks/:task_id/reports/:id', to: 'reports#show', via: [:get]
       match '/tasks/:task_id/reports', to: 'reports#index', via: [:get]
       match '/tasks/:task_id/reports', to: 'reports#create', via: [:post]
+
+      post '/push_notification', to:'push_notifications#create'
+
     end
   end
   

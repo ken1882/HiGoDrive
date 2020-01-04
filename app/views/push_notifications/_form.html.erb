@@ -1,0 +1,17 @@
+<%= form_with(model: push_notification, local: true) do |form| %>
+  <% if push_notification.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(push_notification.errors.count, "error") %> prohibited this push_notification from being saved:</h2>
+
+      <ul>
+      <% push_notification.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>
