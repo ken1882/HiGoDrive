@@ -101,8 +101,10 @@ function renderTaskToPage(taskId) {
   let placeName = task.dest.placeName;
   let departTime = task.dest.datetimepicker;
   // TODO: author_name or driver_name
+  let currentUsername = getUserInfo(getCurrentUser()).username;
   let authorName = getUserInfo(task.author_id).username;
   let driverName = task.driver_id ? getUserInfo(task.driver_id).username : "N/A";
+  let isPassenger = authorName == currentUsername;
   let status = task.status;
   let [statusMsg, statusClass] = {
       0: ["等待中", "text-primary tag"],
@@ -127,7 +129,7 @@ function renderTaskToPage(taskId) {
   collpaseBtn.attr("data-target", "#" + collapse.attr("id"));
   collpaseBtn.attr("aria-controls", collapse.attr("id"));
 
-  header.find("p[name='user_id']").html(authorName);
+  header.find("p[name='user_id']").html(isPassenger ? driverName : authorName);
   header.find("p[name='dist']").html(placeName);
   header.find("p[name='route']").html(departTime);
   header.find("p[name='status']").html(statusMsg);
@@ -138,17 +140,16 @@ function renderTaskToPage(taskId) {
 
   let cardBody = collapse.find(".card-body");
   if (status == 3) {
-    let reviews = getTaskReview(taskId);
-    if (reviews.length && reviews[0].author_id == getCurrentUser()) {
-      let [score, comment] = [reviews[0].score, reviews[0].comment];
-      cardBody.html('<span>評價：' + score + '星 (' + comment + ')</span>')
-    } else if (reviews.length == 2 && reviews[1].author_id == getCurrentUser()) {
-      let [score, comment] = [reviews[1].score, reviews[1].comment];
-      cardBody.html('<span>評價：' + score + '星 (' + comment + ')</span>')
+    let review = undefined;
+    getTaskReview(taskId).forEach(r => {
+      if (r.author_id == getCurrentUser()) { review = r; }
+    });
+    if (review) {
+      cardBody.html('<span>評價：' + review.score + '星 (' + review.comment + ')</span>');
     } else {
       let reviewForm = cardBody.find(".review-form");
       reviewForm.attr("action", reviewForm.attr("action").replace("id", taskId));
-      reviewForm.append('<%= hidden_field_tag :authenticity_token, form_authenticity_token %>');
+      reviewForm.append('<input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">');
     }
   } else {
     cardBody.html({
