@@ -144,7 +144,7 @@ module Api
       def validate_init_params
         _time = params[:depart_time].to_i || 0
         curt  = Time.now.to_i
-        return bad_request unless params[:dest].length.between?(1,256)
+        return bad_request unless params[:dest].length.between?(1,25600)
         return bad_request unless _time.between?(curt - 180, curt + 60 * 60 * 24 * 100)
         return true
       end
