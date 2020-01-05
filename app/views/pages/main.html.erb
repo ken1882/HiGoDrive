@@ -380,10 +380,10 @@
       taskid.nowid = taskId;
       console.log("errand start!");
       // FIXME
-      if (taskStatus()) {
+      waitUntilAccept(function() {
         console.log("driverReceive()");
         driverReceive();
-      }
+      });
     } else {
       // createTask failed
     }
@@ -395,6 +395,7 @@
   function driverReceive() {
     document.getElementById('taskLoading').style.display = "none";
     document.getElementById('taskGoing').style.display = "block";
+    taskrunning();
   }
 
   //司機點選拒絕原因按鈕 “太遠了” 會使用此 function 把值自動填入 input
