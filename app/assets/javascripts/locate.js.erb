@@ -34,7 +34,6 @@ var dest = {
 };
 
 function CenterControl(controlDiv, map) {
-
   // Set CSS for the control border.
   var controlUI = document.createElement('div');
   controlUI.style.backgroundColor = '#fff';
@@ -57,9 +56,7 @@ function CenterControl(controlDiv, map) {
   // controlText.style.paddingLeft = '5px';
   //controlText.style.paddingRight = '5px';
 
-  //controlText.innerHTML = "<img src='/assets/my_location.svg' weight='30px' height='30px'>";
-
-  controlText.innerHTML = "<img src='/assets/my_location.svg' weight='30px' height='30px'>";
+  controlText.innerHTML = "<img src=<%= image_url 'my_location.svg' %> weight='30px' height='30px'>";
   controlUI.appendChild(controlText);
 
   // Setup the click event listeners: simply set the map to Chicago.
@@ -67,7 +64,6 @@ function CenterControl(controlDiv, map) {
     map.setCenter({ lat: lat, lng: lng });
     map.setZoom(zoom)
   });
-
 }
 
 //定位標點
@@ -340,8 +336,7 @@ function waitUntilAccept(callback) {
 
 function taskFinish() { //if task done
   finishTask(taskid.nowid);
-  window.location.href = '/home';
-  location.reload();
+  window.location.href = '/';
 }
 
 //driver on line
