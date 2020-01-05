@@ -39,11 +39,13 @@
           <div class="col px-1">
             <label>自備配件:</label>
             <div class="form-check form-check-inline">
-              <input class="form-check-input" type="checkbox" name="helmetPassenger" id="helmetPassenger">
+              <input class="form-check-input" type="checkbox" name="helmetPassenger" id="helmetPassenger"
+                  value="helmet">
               <label class="form-check-label" for="helmet">安全帽</label>
             </div>
             <div class="form-check form-check-inline">
-              <input class="form-check-input" type="checkbox" name="raincoatPassenger" id="raincoatPassenger">
+              <input class="form-check-input" type="checkbox" name="raincoatPassenger" id="raincoatPassenger"
+                  value="raincoat">
               <label class="form-check-label" for="raincoat">雨衣</label>
             </div>
           </div>
@@ -55,7 +57,8 @@
             </div>
             <div class="col-8">
               <div class="input-group date" id="datetimepicker" data-target-input="nearest">
-                <input type="text" class="form-control datetimepicker-input" id="resvtime" name="resvtime" data-toggle="datetimepicker" data-target="#datetimepicker" value="" />
+                <input type="text" class="form-control datetimepicker-input" id="resvtime" name="resvtime"
+                  data-toggle="datetimepicker" data-target="#datetimepicker" value="" />
               </div>
             </div>
           </div>
@@ -141,7 +144,8 @@
               <textarea class="form-control" id="rejectText" name="rejectText" placeholder="拒絕原因" rows="1"></textarea>
             </div>
             <div class="col-2">
-              <button type="submit" class="btn btn-sucess" onclick="rejectTaskbtn()"><i class="fas fa-paper-plane"></i></button>
+              <button type="submit" class="btn btn-sucess" onclick="rejectTaskbtn()"><i
+                  class="fas fa-paper-plane"></i></button>
             </div>
           </div>
         </form>
@@ -168,24 +172,31 @@
       </div>
       <div class="row">
         <div class="col">
-          <p><span>備註：</span><span id="psText">###</span></p>
+          <p><span>備註：</span><span id="psText_driver">###</span></p>
         </div>
       </div>
       <form action="javascript:void(0);">
         <div class="form-row">
           <div class="col-8">
-            <textarea class="form-control" id="errand_text_send" name="errand_text_send" placeholder="輸入備註" rows="1"></textarea>
+            <textarea class="form-control" id="errand_text_send_driver" name="errand_text_send" placeholder="輸入備註"
+              rows="1"></textarea>
           </div>
           <div class="col-4">
-            <button type="submit" class="btn btn-success btn-block py-2"><small>送出備註 </small><i class="fas fa-paper-plane"></i></button>
+            <button type="submit" class="btn btn-success btn-block py-2"><small>送出備註 </small><i
+                class="fas fa-paper-plane"></i></button>
           </div>
         </div>
       </form>
       <br>
       <div class="px-2">
-        <button type="button" class=" btn btn-success btn-block" onclick="finish()"><small>完成訂單</small></button>
+          <button type="button" id="carryPassenger" class="btn btn-success btn-block"
+            onclick="carryPassenger()"><small>開始訂單</small></button>
+        </div>
+        <div class="px-2">
+          <button type="button" id="finish" class="btn btn-success btn-block"
+            onclick="finish()"><small>完成訂單</small></button>
+        </div>
       </div>
-    </div>
 
     <div id="resvtask" class="resvtask" style="display: none;">
 
@@ -212,16 +223,18 @@
         </div>
         <div class="row">
           <div class="col">
-            <p><span>備註：</span><span id="psText">###</span></p>
+            <p><span>備註：</span><span id="psText_passenger">###</span></p>
           </div>
         </div>
         <form action="javascript:void(0);">
           <div class="form-row">
             <div class="col-8">
-              <textarea class="form-control" id="errand_text_send" name="errand_text_send" placeholder="輸入備註" rows="1"></textarea>
+              <textarea class="form-control" id="errand_text_send_passenger" name="errand_text_send"
+                  placeholder="輸入備註" rows="1"></textarea>
             </div>
             <div class="col-4">
-              <button type="submit" class="btn btn-success btn-block py-2"><small>送出備註 </small><i class="fas fa-paper-plane"></i></button>
+              <button type="submit" class="btn btn-success btn-block py-2"><small>送出備註 </small><i
+                  class="fas fa-paper-plane"></i></button>
             </div>
           </div>
         </form>
@@ -264,9 +277,13 @@
   </div>
 </nav>
 
-<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBpBgVKm6TqmDB0b3w-y3VoP3Oo-jWPWGY&libraries=places&callback=initMap"></script>
+<!-- <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBpBgVKm6TqmDB0b3w-y3VoP3Oo-jWPWGY&libraries=places&callback=initMap"></script> -->
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBpBgVKm6TqmDB0b3w-y3VoP3Oo-jWPWGY&libraries=places&callback=initMap"></script>
 
 <script type="text/javascript">
+  //訂單建立階段按下預約行程會使用此 function
+  //會把調整時間的選項顯示出來並把選項文字改成取消預約
+  //如果按下取消預約 則會把 datepicker 的內容清除 並取消顯示
   function resv(item) {
     document.getElementById('datetimepickerDiv').style.display = "flex";
     console.log(document.getElementById('resvtime').value);
@@ -280,6 +297,10 @@
     }
   }
 
+  //司機首次打開後點選上線按鈕會使用此 function
+  //首先會把離線區塊取消顯示
+  //接者會把上線區塊以及上線狀態switch打開 並先不顯示拒絕區塊
+  //然後再去進入詢問訂單的function
   function online() {
     isOnline = true;
     document.getElementById('offlineState').style.display = "none";
@@ -293,6 +314,10 @@
     setTimeout('onlineTask()', 500);
   }
 
+  //司機要下線點選切換上線狀態會使用此 function
+  //首先會顯示離線區塊 並把所有上線區塊資訊取消顯示
+  //然後再去進入關閉詢問訂單的function
+  //提示使用者即將下線 接者重新讀取畫面
   function offline() {
     isOnline = false;
     document.getElementById('offlineState').style.display = "block";
@@ -300,10 +325,13 @@
     document.getElementById('statusSwitch').checked = false;
     document.getElementById('task').style.display = "none";
     offlineTask();
+    window.alert("你即將下線!!");
     location.reload();
   }
 
   //after task coming
+  //接受到訂單之後 如果司機選擇拒絕差事會使用此function
+  //會關閉顯示訂單資訊 並顯示拒絕畫面 同時清空訂單顯示計時
   function reject() {
     document.getElementById('option').style.display = "none";
     document.getElementById('reject').style.display = "block";
@@ -311,9 +339,11 @@
     clearInterval(timesetInterval);
   }
 
+  //司機確定拒絕原因之後 點選按鈕送出拒絕原因會進入此function
+  //首先會把拒絕原因送出 接者會關閉顯示拒絕畫面 並重新繼續詢問新訂單
   function rejectTaskbtn() {
     console.log(document.getElementById('rejectText').value);
-    rejectTask(document.getElementById('rejectText').value);
+    rejectTask_(document.getElementById('rejectText').value);
     document.getElementById('option').style.display = "block";
     document.getElementById('reject').style.display = "none";
     console.log("reject btn click")
@@ -321,52 +351,81 @@
     return false;
   }
 
+  //接到訂單之後 如果司機選擇接受差事會進入此 function
+  //會關閉顯示訂單資訊 並打開差事進行畫面
+  //接者呼叫訂單接受 function
   function errandDriver() {
     document.getElementById('task').style.display = "none";
     document.getElementById('errand').style.display = "block";
+    document.getElementById('finish').style.display = "none";
     console.log("errand start!");
-    acceptTask();
+    acceptTask_();
   }
 
+  //乘客確認訂單資訊後 點選開始行程會進入此 function
+  //會關閉訂單資訊畫面 並把配件資訊及位置傳出
   function errandPassenger() {
     document.getElementById('order').style.display = "none";
     document.getElementById('locSearch').style.display = "none";
     document.getElementById('resvtask').style.display = "block";
-    dest.helmet = document.getElementById('helmetPassenger').checked;
-    dest.raincoat = document.getElementById('raincoatPassenger').checked;
+    dest.helmet = $('#helmetPassenger').prop('checked');
+    dest.raincoat = $('#raincoatPassenger').prop('checked');
     dest.datetimepicker = document.getElementById('resvtime').value;
     map.controls[google.maps.ControlPosition.LEFT_BOTTOM].push(document.getElementById('resvtask'));
-    var dest_json = JSON.stringify(dest);
-    var dest_data = {
-      dest: dest_json,
-      depart_time: parseInt(Date.parse(dest.datetimepicker) / 1000),
-      equipments: (dest.helmet ? 1 : 0) + (dest.raincoat ? 2 : 0),
-    };
-    Util.ajax(
-        "POST",
-        "/api/v0/tasks",
-        dest_data,
-        function (re) {console.log(re); },
-        function (x) { console.log(x.status); }
-    );
-    console.log("errand start!");
+    let depart_time = parseInt(Date.parse(dest.datetimepicker) / 1000);
+    let equipments = (dest.helmet ? 1 : 0) + (dest.raincoat ? 2 : 0);
+    let taskId = createTask(dest, depart_time, equipments);
+
+    if (taskId) {
+      taskid.nowid = taskId;
+      console.log("errand start!");
+      // FIXME
+      waitUntilAccept(function() {
+        console.log("driverReceive()");
+        driverReceive();
+      });
+    } else {
+      // createTask failed
+    }
     return false;
   }
 
+  //當有司機接受到此乘客訂單的時候會進入此 function
+  //會把等待司機的畫面取消 並顯示訂單進行畫面
   function driverReceive() {
     document.getElementById('taskLoading').style.display = "none";
     document.getElementById('taskGoing').style.display = "block";
+    taskrunning();
   }
 
+  //司機點選拒絕原因按鈕 “太遠了” 會使用此 function 把值自動填入 input
   function tooFar() {
     document.getElementById('rejectText').value = "太遠了！";
   }
 
+  //司機點選拒絕原因按鈕 "沒空接單！" 會使用此 function 把值自動填入 input
   function tooBusy() {
     document.getElementById('rejectText').value = "沒空接單！";
   }
 
+  //司機接到乘客後點選開始訂單會使用此 function
+  //會關閉開始訂單按鈕 並顯示玩稱訂單按鈕
+  function carryPassenger() {
+    if (!(window.confirm("確認已接到乘客"))) {
+      return false;
+    }
+    engageTask(taskid.nowid);
+    document.getElementById('carryPassenger').style.display = "none";
+    document.getElementById('finish').style.display = "block";
+  }
+
+//司機點選完成訂單後會使用此 function
+  //會把訂單進行顯示畫面關閉 並清除地圖
   function finish() {
+    if (!(window.confirm("確認已抵達目的地並完成訂單"))) {
+      return false;
+    }
+    window.alert("訂單完成!!");
     document.getElementById('errand').style.display = "none";
     console.log("task finish!!");
     directionsDisplay.set('directions', null);
@@ -375,7 +434,6 @@
       lng: lng
     });
     map.setZoom(zoom);
-
     taskFinish();
     //onlineTask();
     //需傳id給伺服器使差事狀態完成

@@ -1,0 +1,57 @@
+<% provide :page_title, "Report" %>
+
+<div class="container">
+
+  <a href="/task" class="list-group-item-action">
+    <div class="mt-4 mb-0 p-2">
+      <h2 class="text-center">HiGoDrive</h2>
+      <img id="motor" class="rounded mx-auto d-block" src=<%= image_url 'motorcycle-solid.svg' %> type="image/svg+xml" />
+      <hr>
+    </div>
+  </a>
+
+  <form id="report-form" action="">
+    <div class="form-group">
+      <input type="text" name="id" id="taskid" hidden>
+    </div>
+    <div class="form-group">
+      <label for="comment">申訴說明</label>
+      <textarea class="form-control" id="comment" name="comment" rows="5" required></textarea>
+    </div>
+    <br>
+    <br>
+    <div class="px-5 py-3">
+      <button type="submit" class="btn btn-success btn-lg btn-block">送出申訴</button>
+    </div>
+  </form>
+
+</div>
+
+<script>
+  function getQueryVariable(variable) {
+    let query = window.location.search.substring(1);
+    let vars = query.split('&');
+    for (let i = 0; i < vars.length; i++) {
+        let pair = vars[i].split('=');
+        if (decodeURIComponent(pair[0]) == variable) {
+            return decodeURIComponent(pair[1]);
+        }
+    }
+    console.log('Query variable %s not found', variable);
+    return undefined;
+  }
+
+  let taskId = parseInt(getQueryVariable("id"));
+  if (!taskId || !getMyTasks().includes(taskId)) {
+    window.location.href = "/task";
+  }
+
+  $("#report-form").submit(function() {
+    let comment = $("#comment").val();
+    if (comment.length) {
+      reportTask(taskId, comment);
+      window.location.href = "/task";
+    }
+    return false;
+  });
+</script>

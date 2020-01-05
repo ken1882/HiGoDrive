@@ -38,6 +38,9 @@ class PagesController < ApplicationController
     render 'task'
   end
 
+  def report
+  end
+
   def userInfo
     flash.now[:danger] = 'Please log in first' unless logged_in?
     return login unless logged_in?

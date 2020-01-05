@@ -26,16 +26,17 @@ class User
   field :bio, type: String
   field :tasks_engaging, type: Array
   field :tasks_history, type: Array
+  field :forgot_timestamp, type: DateTime
 
   validates :roles, numericality: { only_integer: true }
-  validates :username, presence: true, length: {in: 6..32}, 
+  validates :username, presence: true, length: {in: 6..32},
     uniqueness: true, format: {with: UsernameRegex}
-  
-  validates :email, presence: true, format: {with: EmailRegex}, 
+
+  validates :email, presence: true, format: {with: EmailRegex},
     length: {in: 3..256}, uniqueness: { case_sensitive: false }
 
   validates :realname, presence: true
-  validates :phone, presence: true, uniqueness: true, 
+  validates :phone, presence: true, uniqueness: true,
     format: {with: PhoneRegex}
 
   has_secure_password
@@ -54,7 +55,7 @@ class User
   end
 
   def self.exist?(params)
-    return username_exist?(params[:username]) || 
+    return username_exist?(params[:username]) ||
       email_exist?(params[:email]) || phone_exist?(params[:phone])
   end
 
@@ -159,7 +160,10 @@ class User
 
   def generate_reset_token(auth_token)
     token = SecurityManager.sha256(auth_token + self.email + Time.now.to_s)
-    update_attribute :password_reset_token, token
+    self.update(
+      :password_reset_token => token,
+      :forgot_timestamp     => Time.mongoize(Time.now)
+    )
     token
   end
 
@@ -176,11 +180,11 @@ class User
     return RoleManager.match?(roles, :driver)
   end
 
-  def mutex 
+  def mutex
     return @mutex if @mutex
     @mutex = Mutex.new
   end
-  
+
   def engage_task(tid)
     self.add_to_set(tasks_engaging: tid)
   end

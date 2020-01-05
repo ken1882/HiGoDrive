@@ -39,7 +39,7 @@ module GuaneiArk
     # Application configuration can go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded after loading
     # the framework and any gems in your application.
-    config.after_initialize do 
+    config.after_initialize do
       puts "#{SPLIT_LINE}Pre-init"
       Task.setup
       Rails.application.eager_load! if Rails.production?

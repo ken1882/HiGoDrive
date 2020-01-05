@@ -19,7 +19,7 @@
           <div class="col-8">
             <div class="card-body">
               <h5 class="card-title">用戶名稱：<%= current_user.username %></h5>
-              <p class="card-text">用戶類型：<%= {1 => "Passenger", 2 => "Driver", 3 => "Passenger & Driver"}[current_user.roles] %></p>
+              <p class="card-text">用戶類型：<%= h = {1 => "Passenger", 2 => "Driver"}; h.default = "Passenger & Driver"; h[current_user.roles] %></p>
               <p class="card-text">電子信箱：<%= current_user.email %></p>
               <p class="card-text">手機號碼：<%= current_user.phone %></p>
               <p class="card-text">個人資訊：<%= current_user.bio %></p>
@@ -78,3 +78,12 @@
     </div>
   </div>
 </nav>
+
+<script>
+  function getGravatar(email, size) {
+  }
+
+  $(document).ready(function() {
+    let gravatarUrl = getGravatar('<%= puts current_user.email %>', 180);
+  });
+</script>

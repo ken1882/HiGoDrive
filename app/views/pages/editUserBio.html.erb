@@ -10,7 +10,7 @@
     </div>
   </a>
 
-  <%= form_tag("/api/v0/users/#{current_user.id}", method: 'PATCH') do %>
+  <%= form_tag("/api/v0/users/#{current_user.id}", method: 'PUT') do %>
     <div class="form-group">
       <label for="bio">個人資訊</label>
       <textarea class="form-control" id="bio" name="bio" rows="5" required><%= current_user.bio %></textarea>

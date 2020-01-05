@@ -1,60 +1,81 @@
-class ReviewsController < ApplicationController
-  before_action :set_review, only: [:show, :edit, :update, :destroy]
+module Api
+  module V0
+    class ReviewsController < ApplicationController
+      include ReviewsHelper
 
-  # GET /reviews
-  # GET /reviews.json
-  def index
-    render json: {size: Task.count}, status: :ok
-  end
+      before_action :validate_login, except: [:index]
+      before_action :set_review, only: [:show, :edit, :update, :destroy]
+      before_action :set_task, only: [:index, :create]
+      before_action :set_user, except: [:index]
+      before_action :validate_task
 
-  # GET /reviews/1
-  # GET /reviews/1.json
-  def show
-    return_wip
-  end
+      # GET /tasks/:task_id/reviews
+      def index
+        render json: @task.reviews.collect{|r| r.json_info}, status: :ok
+      end
 
-  # POST /reviews
-  # POST /reviews.json
-  def create
-    return return_wip
-    @review = Review.new(review_params)
+      # GET /tasks/:task_id/reviews/1
+      def show
+        render json: @review.json_info, status: :ok
+      end
 
-    respond_to do |format|
-      if @review.save
-        format.html { redirect_to @review, notice: 'Review was successfully created.' }
-        format.json { render :show, status: :created, location: @review }
-      else
-        format.html { render :new }
-        format.json { render json: @review.errors, status: :unprocessable_entity }
+      # POST /reviews
+      # POST /reviews.json
+      def create
+        _params = review_init_params
+        _params[:id] = SecurityManager.md5("#{@user.id}_#{@task.id}")
+        _params[:score] = _params[:score].to_i
+        _params[:author_id] = @user.id
+
+        begin
+          @review = @task.reviews.create(_params)
+        rescue Mongo::Error::OperationFailure
+          return bad_request("duplicated")
+        end
+
+        respond_to do |format|
+          if @review.save
+            format.html { redirect_to '/task' }
+          else
+            return unprocessable_entity
+          end
+        end
+      end
+
+      private
+
+      def set_review
+        @review = Review.find(params[:id])
+      end
+
+      def set_task
+        return @review.task if @review
+        @task = Task.find params[:task_id].to_i
+      end
+
+      def set_user
+        @user = current_user
+      end
+
+      def validate_login
+        return unauthorized unless logged_in?
+        return true
+      end
+
+      def validate_init_params
+        _params = review_init_params
+        _params[:comment] ||= ''
+        _params[:score] = (_params[:score].to_i rescue 0)
+        return limit_excessed if _params[:comment].length > CommentLimit
+        return bad_request unless _params[:score].between?(1,5)
+        return true
+      end
+
+      def validate_task
+        return not_found unless @task
+        return unprocessable_entity unless @task.closed?
+        return true
       end
     end
-  end
-
-  # PATCH/PUT /reviews/1
-  # PATCH/PUT /reviews/1.json
-  def update
-    return_wip
-  end
-
-  # DELETE /reviews/1
-  # DELETE /reviews/1.json
-  def destroy
-    return return_wip
-    @review.destroy
-    respond_to do |format|
-      format.html { redirect_to reviews_url, notice: 'Review was successfully destroyed.' }
-      format.json { head :no_content }
-    end
-  end
-
-  private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_review
-      @review = Review.find(params[:id])
-    end
-
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def review_params
-      params.fetch(:review, {})
-    end
+  end # Api::V0
 end

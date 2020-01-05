@@ -9,8 +9,12 @@ Rails.application.routes.draw do
   get '/login', to: 'pages#login'
 
   get '/home', to: 'pages#home'
+
   get '/search', to: 'pages#search'
+
   get '/task', to: 'pages#task'
+  get '/report', to: 'pages#report'
+
   get '/user', to: 'pages#userInfo'
   get '/user/edit/bio', to: 'pages#editUserBio'
   get '/user/edit/account', to: 'pages#editAccount'
@@ -19,9 +23,7 @@ Rails.application.routes.draw do
   get '/account-recovery', to: 'pages#passwordForget'
   get '/account-recovery/reset', to: 'pages#passwordReset'
 
-  match '/users' => "api/#{CurrentVersion}/users#show", via: [:get]
-  # match '/user'  => "api/#{CurrentVersion}/users#show", via: [:get]
-
+  match '/login'  =>"api/#{CurrentVersion}/session#new",     via: [:get]
   match '/login'  => "api/#{CurrentVersion}/session#create", via: [:post]
   match '/logout' =>"api/#{CurrentVersion}/session#destroy", via: [:delete, :get]
 
@@ -32,6 +34,7 @@ Rails.application.routes.draw do
       resources :users
       resources :tasks
       resources :reviews
+      resources :reports
 
       post '/checkusername', to: 'users#checkusername'
       post '/checkemail', to: 'users#checkemail'
@@ -56,6 +59,17 @@ Rails.application.routes.draw do
       post '/task/reject', to: 'tasks#reject'
       post '/task/finish', to: 'tasks#finish'
       post '/task/report', to: 'tasks#report'
+
+      match '/tasks/:task_id/reviews/:id', to: 'reviews#show', via: [:get]
+      match '/tasks/:task_id/reviews', to: 'reviews#index', via: [:get]
+      match '/tasks/:task_id/reviews', to: 'reviews#create', via: [:post]
+
+      match '/tasks/:task_id/reports/:id', to: 'reports#show', via: [:get]
+      match '/tasks/:task_id/reports', to: 'reports#index', via: [:get]
+      match '/tasks/:task_id/reports', to: 'reports#create', via: [:post]
+
+      post '/push_notification', to:'push_notifications#create'
+
     end
   end
 

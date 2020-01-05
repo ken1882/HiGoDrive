@@ -10,7 +10,7 @@
     <hr>
   </div>
 
-  <%= form_tag("/api/v0/users/#{current_user.id}", method: 'PATCH') do %>
+  <%= form_tag("/api/v0/users/#{current_user.id}", method: 'PUT') do %>
     <div class="form-group">
       <label for="name">真實姓名</label>
       <input type="text" class="form-control" id="name" name="name" value="<%= current_user.realname %>" readonly>

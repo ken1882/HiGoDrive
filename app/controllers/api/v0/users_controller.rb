@@ -98,6 +98,7 @@ module Api
       # POST /forgotpassword
       def forgot_password
         token = @user.generate_reset_token(params["authenticity_token"])
+        Mailer.send(request.domain, @user.email, @user.username, token)
         return_ok
       end
 
@@ -150,7 +151,10 @@ module Api
       end
 
       def validate_resetpwd_params
+        tme = @user.fotgot_timestamp || 0
         return bad_request if logged_in?
+        return unprocessable_entity if tme == 0
+        return gone if Time.now - tme > ForgotDuration
         return unauthorized if params[:token] != @user.password_reset_token
         return unprocessable_entity unless password_reset_ok?(_params)
         return true
@@ -158,6 +162,7 @@ module Api
 
       def validate_forgotpwd_params
         return bad_request if logged_in?
+        return gone if Time.now - (@user.forgot_timestamp || 0) < ForgotDuration
         return unauthorized if @user.username != params[:username]
         return unauthorized if @user.email != params[:email]
         return true
