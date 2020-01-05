@@ -193,7 +193,7 @@ function direction(destlat, destlng) {
 }
 
 //設定乘客導航資訊 function
-function setPsssengerDirectionInfo() {
+function setPassengerDirectionInfo() {
   info.style.display = "inline"
 
   infoDistance.innerHTML = "距離:" + dest.distance.text;
@@ -259,7 +259,7 @@ function setAutoComplete() {
     }, 300)
 
     window.setTimeout(function () {
-      setPsssengerDirectionInfo();
+      setPassengerDirectionInfo();
     }, 500)
 
     //document.getElementById('map').style.height = "50vh";
@@ -294,56 +294,53 @@ function cancelDest() {
 }
 
 function taskrunning() { //if driver accept task call back
-  var driverid = getTask(taskid.nowid).driver_id;
+  var task = getTask(taskid.nowid);
+  var driverId = task.driver_id;
+  var driverUsername = driverId ? getUserInfo(driverId).username : "DRIVER";
+  dest = task.dest;
 
-  document.getElementById("driverid").innerHTML = "乘客：" + driverid;
+  document.getElementById("driverid").innerHTML = "司機：" + driverUsername;
   document.getElementById("destinationTask").innerHTML = dest.placeName
   document.getElementById("distanceTask").innerHTML = dest.distance.text
   document.getElementById("fareTask").innerHTML = dest.fare + '元'
 
   var ps = document.getElementById("psText_driver").innerHTML // web get driver ps text
-  driverReceive();
-  taskStatus()
+  // driverReceive();
+  taskStatus();
 }
-
-/*
-function taskStatus() { // api block get driver finish task status
-  var status = getTask(taskid.nowid).status;
-  // TODO: status definition has changed
-  if (status == 1) {
-    console.log('waiting for engaging');
-    return setTimeout('taskStatus()', 5000); // block stock
-  } else if (status == 2) {
-    console.log('waiting for finishing');
-    return setTimeout('taskStatus()', 5000); // block stock
-  } else if (status == 3) {
-    console.log('task done');
-  }
-}
-*/
 
 function taskStatus() {
   console.log(taskid.nowid);
   var status = getTask(taskid.nowid).status;
   if (status == 0) {
     console.log('waiting for accepting');
-    setTimeout(taskStatus, 5000);
+    return setTimeout(taskStatus, 5000);
   } else if (status == 1) {
     console.log('waiting for engaging');
-    setTimeout(taskStatus, 5000);
-    return status;
+    return setTimeout(taskStatus, 5000);
   } else if (status == 2) {
     console.log('waiting for finishing');
-    setTimeout(taskStatus, 5000);
-    return status;
+    return setTimeout(taskStatus, 5000);
   } else if (status == 3) {
     console.log('task done');
   }
   return status;
 }
 
+function waitUntilAccept(callback) {
+  var status = getTask(taskid.nowid).status;
+  while (status != 1) {
+    setTimeout(function() {
+      waitUntilAccept(callback);
+    }, 5000);
+    return;
+  }
+  callback();
+}
+
 function taskFinish() { //if task done
   finishTask(taskid.nowid);
+  window.location.href = '/home';
   location.reload();
 }
 
@@ -408,8 +405,6 @@ function onReceiveTask(dest) {
       //return onlineTask();
     }
   }, 1000)
-
-
 }
 
 // preview route between passenger position and destination

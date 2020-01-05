@@ -352,14 +352,14 @@ function engageTask(taskId) {
   });
 }
 
-function reportTask(taskId, content) {
+function reportTask(taskId, comment) {
   $.ajax({
     method: "POST",
-    url: "/api/v0/task/report",
+    url: "/api/v0/tasks/" + taskId + "/reports",
     data: {
       authenticity_token: Util.AuthToken,
       id: taskId,
-      content: content
+      comment: comment
     },
     dataType: "json",
     success: function (result) {
