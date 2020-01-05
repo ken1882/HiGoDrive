@@ -26,6 +26,17 @@ class NotificationManager{
   
   static ready() {
     NotificationManager.setup(NotificationManager.logSubscription);
+    
+    if (navigator.serviceWorker) {
+      console.log('Registering serviceworker');
+      navigator.serviceWorker.register('/serviceworker.js', { scope: './' })
+        .then(function(reg) {
+          console.log(reg.scope, 'register');
+          console.log('Service worker change, registered the service worker');
+        });
+    } else {
+      alertSWSupport();
+    }
   }
   
   static setup(onSubscribed) {
@@ -106,5 +117,33 @@ class NotificationManager{
 
   static logSubscription(subscription) {
     console.log("Current subscription", subscription.toJSON());
+  }
+
+  static formHeaders() {
+    return new Headers({
+      'Content-Type': 'application/json',
+      'X-Requested-With': 'XMLHttpRequest',
+      'X-CSRF-Token': Util.AuthToken,
+    });
+  }
+
+  static sendNotification() {
+    this.getSubscription().then((subscription) => {
+      return fetch("/api/v0/push_notification", {
+        headers: this.formHeaders(),
+        method: 'POST',
+        credentials: 'include',
+        body: JSON.stringify({ subscription: subscription.toJSON() })
+      }).then((response) => {
+        console.log("Push response", response);
+        if (response.status >= 500) {
+          console.error(response.statusText);
+          alert("Sorry, there was a problem sending the notification. Try resubscribing to push messages and resending.");
+        }
+      })
+      .catch((e) => {
+        logger.error("Error sending notification", e);
+      });
+    })
   }
 }

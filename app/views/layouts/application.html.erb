@@ -29,7 +29,8 @@
     <%= javascript_tag "var AUTH_TOKEN = '#{form_authenticity_token}';" if protect_against_forgery? %>
     <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
     <%= javascript_tag "Util.initialize()"%>
-    <!-- <%= javascript_tag "NotificationManager.initialize()" %> -->
+    <%= javascript_tag "NotificationManager.initialize()" %>
+
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
       integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
       crossorigin="anonymous"></script>
@@ -43,17 +44,12 @@
     <script type="text/javascript"
       src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.1/js/tempusdominus-bootstrap-4.min.js"></script>
 
-    <!--
     <script type="text/javascript">
       window.publicKey = new Uint8Array(
-        <%
-=begin%>
- <%= SecurityManager.public_vapid_key_bytes %>
-<%
-=end%>
+        <%= SecurityManager.public_vapid_key_bytes %>
       );
     </script>
-    -->
+
     <%= yield :head %>
   </head>
 
