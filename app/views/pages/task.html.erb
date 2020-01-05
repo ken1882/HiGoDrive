@@ -9,7 +9,7 @@
 <!--內容-->
 <main>
   <div class="container">
-    <h4 class="text-center my-3">訂單紀錄</h4>
+    <h4 class="text-center my-3">訂單紀錄<br>（顯示最近8筆訂單）</h4>
     <hr>
     <div class="accordion" id="accordion">
     </div>
@@ -48,8 +48,8 @@
                     placeholder="評價敘述"></textarea>
                 </div>
                 <div class="form-row">
-                  <div class="col-6">
-                    <a href="report.html"><button type="button" class="btn btn-success btn-block p-2">我要申訴</button></a>
+                  <div class="col-6" name="report">
+                    <a href="/report"><button type="button" class="btn btn-success btn-block p-2">我要申訴</button></a>
                   </div>
                   <div class="col-6">
                     <button type="submit" class="btn btn-success btn-block p-2">送出評價</button>
@@ -151,6 +151,7 @@ function renderTaskToPage(taskId) {
       let reviewForm = cardBody.find(".review-form");
       reviewForm.attr("action", reviewForm.attr("action").replace("id", taskId));
       reviewForm.append('<input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">');
+      cardBody.find("div[name='report'] > a").attr("href", "/report?id=" + taskId);
     }
   } else {
     cardBody.html({
