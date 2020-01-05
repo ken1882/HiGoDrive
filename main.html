@@ -216,17 +216,17 @@
         </div>
         <div class="row">
           <div class="col">
-            <p><span>備註：</span><span id="psText_driver">###</span></p>
+            <p><span>備註：</span><span id="psText_driver"></span></p>
           </div>
         </div>
-        <form action="javascript:void(0);">
+        <form onsubmit="return sendMessage();">
           <div class="form-row">
             <div class="col-8">
               <textarea class="form-control" id="errand_text_send_driver" name="errand_text_send" placeholder="輸入備註"
                 rows="1"></textarea>
             </div>
             <div class="col-4">
-              <button type="submit" class="btn btn-success btn-block py-2"><small>送出備註 </small><i
+              <button type="submit" class="btn btn-success btn-block py-2"><small>送出備註</small><i
                   class="fas fa-paper-plane"></i></button>
             </div>
           </div>
@@ -267,17 +267,17 @@
           </div>
           <div class="row">
             <div class="col">
-              <p><span>備註：</span><span id="psText_passenger">###</span></p>
+              <p><span>備註：</span><span id="psText_passenger"></span></p>
             </div>
           </div>
-          <form action="javascript:void(0);">
+          <form onsubmit="return sendMessage();">
             <div class="form-row">
               <div class="col-8">
                 <textarea class="form-control" id="errand_text_send_passenger" name="errand_text_send"
                   placeholder="輸入備註" rows="1"></textarea>
               </div>
               <div class="col-4">
-                <button type="submit" class="btn btn-success btn-block py-2"><small>送出備註 </small><i
+                <button type="submit" class="btn btn-success btn-block py-2"><small>送出備註</small><i
                     class="fas fa-paper-plane"></i></button>
               </div>
             </div>
@@ -462,6 +462,39 @@
 
       //onlineTask();
       //需傳id給伺服器使差事狀態完成
+    }
+
+
+    //以下為備註傳送
+    //首先使用者確認要送出的訊息後 點選送出備註按鈕 會進入 sendMessage function
+    //會在上方備註欄顯示剛剛送出的話
+    //測試會使用 getMessage 接受對方傳的訊息 並顯示出來
+    let messages = [];
+
+    function getMessages() {
+      //test
+      let message = "TEST";
+      if (isDriver) {
+        $("#psText_driver").text("乘客 : " + message);
+      } else {
+        $("#psText_passenger").text("司機 : " + message);
+      }
+    }
+
+    function sendMessage() {
+      let msg;
+      if (isDriver) {
+        msg = $("#errand_text_send_driver").val();
+        $("#errand_text_send_driver").val("");
+        $("#psText_driver").text("你說 : " + msg);
+      } else {
+        msg = $("#errand_text_send_passenger").val();
+        $("#errand_text_send_passenger").val("");
+        $("#psText_passenger").text("你說 : " + msg);
+      }
+      //test getmsg
+      setTimeout(function () { getMessages() }, 3000);
+      return false;
     }
   </script>
 
