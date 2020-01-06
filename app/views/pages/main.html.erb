@@ -277,9 +277,6 @@
   </div>
 </nav>
 
-<!-- <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBpBgVKm6TqmDB0b3w-y3VoP3Oo-jWPWGY&libraries=places&callback=initMap"></script> -->
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBpBgVKm6TqmDB0b3w-y3VoP3Oo-jWPWGY&libraries=places&callback=initMap"></script>
-
 <script type="text/javascript">
   //訂單建立階段按下預約行程會使用此 function
   //會把調整時間的選項顯示出來並把選項文字改成取消預約
@@ -472,6 +469,7 @@
 
 <script type="text/javascript">
   $(document).ready(function() {
+    initMap();
     $('#datetimepicker').datetimepicker({
       minDate: new Date(),
       defaultDate: new Date()
