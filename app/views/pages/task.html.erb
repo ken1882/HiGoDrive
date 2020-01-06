@@ -14,7 +14,6 @@
     <div class="accordion" id="accordion">
     </div>
     <div style="display: none;">
-
       <div class="card" id="template-card-finished" style="display: none;">
           <div class="card-header px-0" id="headingOne">
             <button id="collapse-btn" class="btn btn-block" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false"
@@ -100,11 +99,10 @@ function renderTaskToPage(taskId) {
   let task = getTask(taskId);
   let placeName = task.dest.placeName;
   let departTime = task.dest.datetimepicker;
-  // TODO: author_name or driver_name
-  let currentUsername = getUserInfo(getCurrentUser()).username;
-  let authorName = getUserInfo(task.author_id).username;
-  let driverName = task.driver_id ? getUserInfo(task.driver_id).username : "N/A";
-  let isPassenger = authorName == currentUsername;
+  let [author, driver] = [task.author_name, task.driver_name];
+  let authorName = author.username;
+  let driverName = task.driver_id ? driver.username : "N/A";
+  let isPassenger = <%= current_user.roles == 1 %>;
   let status = task.status;
   let [statusMsg, statusClass] = {
       0: ["等待中", "text-primary tag"],
@@ -142,7 +140,7 @@ function renderTaskToPage(taskId) {
   if (status == 3) {
     let review = undefined;
     getTaskReview(taskId).forEach(r => {
-      if (r.author_id == getCurrentUser()) { review = r; }
+      if (r.author_id == "<%= current_user.id %>") { review = r; }
     });
     if (review) {
       cardBody.html('<span>評價：' + review.score + '星 (' + review.comment + ')</span>');
