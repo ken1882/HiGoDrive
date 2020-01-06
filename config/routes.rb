@@ -69,7 +69,7 @@ Rails.application.routes.draw do
       match '/tasks/:task_id/reports', to: 'reports#index', via: [:get]
       match '/tasks/:task_id/reports', to: 'reports#create', via: [:post]
 
-      post '/push_notification', to:'push_notifications#create'
+      post '/push_register', to:'push_notifications#create'
 
     end
   end

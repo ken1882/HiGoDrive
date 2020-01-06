@@ -7,20 +7,30 @@ module Api
       before_action :set_task, only: [:index, :create]
       before_action :set_user
       before_action :validate_task
-      before_action :validate_user, only: [:index, :show]
 
-      # GET /tasks/:task_id/reviews
+      # GET /tasks/:task_id/reports
       def index
-        render json: @task.reports.collect{|r| r.json_info}, status: :ok
+        if RoleManager.match?(@user.roles, :admin)
+          render json: @task.reports.collect{|r| r.json_info}, status: :ok
+        else
+          reports = @task.reports
+          idx  = reports.find_index{|r| r.author_id == @user.id}
+          ret = idx.nil? ? nil : reports[idx].json_info
+          render json: ret, status: :ok
+        end
       end
 
-      # GET /tasks/:task_id/reviews/1
+      # GET /tasks/:task_id/reports/1
       def show
-        render json: @report.json_info, status: :ok
+        if RoleManager.match?(@user.roles, :admin)
+          render json: @report.json_info, status: :ok
+        else
+          return unauthorized
+        end
       end
 
-      # POST /reviews
-      # POST /reviews.json
+      # POST /reports
+      # POST /reports.json
       def create
         _params = report_init_params
         _params[:id] = SecurityManager.md5("#{@user.id}@#{@task.id}")
@@ -71,11 +81,6 @@ module Api
 
       def validate_task
         return not_found unless @task
-        return true
-      end
-
-      def validate_user
-        return unauthorized unless RoleManager.match?(@user.roles, :admin)
         return true
       end
     end

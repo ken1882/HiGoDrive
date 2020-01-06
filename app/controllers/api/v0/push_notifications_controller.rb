@@ -2,8 +2,16 @@ module Api
   module V0
     class PushNotificationsController < ApplicationController
       include PushNotificationsHelper
+      before_action :verify_login
+      before_action :set_user
 
-      # /push_notification
+      def self.send_notification(target_id, message)
+        @target = User.find(target_id)
+        return 404 if @target_id.nil?
+        
+      end
+
+      # /push_register
       def create
         Rails.logger.info "Sending push notification from #{push_params.inspect}"
         subscription_params = fetch_subscription_params
@@ -13,28 +21,17 @@ module Api
           p256dh: subscription_params.dig(:keys, :p256dh),
           auth: subscription_params.dig(:keys, :auth)
     
-        head :ok
-      end
+        return_ok
+      end      
 
       private
-
-      def push_params
-        params.permit(:message, { subscription: [:endpoint, keys: [:auth, :p256dh]]})
+      def verify_login
+        return unauthorized unless logged_in?
+        return true
       end
 
-      def fetch_message
-        push_params.fetch(:message, "Yay, you sent a push notification!")
-      end
-
-      def fetch_subscription_params
-        @subscription_params ||= push_params.fetch(:subscription) { extract_session_subscription }
-      end
-
-      def extract_session_subscription
-        subscription = session.fetch(:subscription){
-          raise PushNotificationError, "Cannot create notification: no :subscription in params or session"
-        }
-        JSON.parse(subscription).with_indifferent_access
+      def set_user
+        @user = current_user
       end
     end    
   end
