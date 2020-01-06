@@ -40,7 +40,6 @@
   <script type="text/javascript"
     src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.1/js/tempusdominus-bootstrap-4.min.js"></script>
   <script src="JS/locate.js"></script>
-
 </head>
 
 <body>
@@ -493,12 +492,12 @@
     function sendMessage() {
       let msg;
       if (isDriver) {
-        msg = "<p class='my-0'><span>你說: " + $("#errand_text_send_driver").val() + "</span></p>";
+        msg = "<p class='my-0'><span>你說 : " + $("#errand_text_send_driver").val() + "</span></p>";
         $("#errand_text_send_driver").val("");
         $("#psText_driver").append(msg);
         $("#psText_driver").scrollTop($("#psText_driver").get(0).scrollHeight)
       } else {
-        msg = "<p class='my-0'><span>你說: " + $("#errand_text_send_passenger").val() + "</span></p>";
+        msg = "<p class='my-0'><span>你說 : " + $("#errand_text_send_passenger").val() + "</span></p>";
         $("#errand_text_send_passenger").val("");
         $("#psText_passenger").append(msg);
         $("#psText_passenger").scrollTop($("#psText_passenger").get(0).scrollHeight)
