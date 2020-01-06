@@ -215,8 +215,12 @@
           </div>
         </div>
         <div class="row">
-          <div class="col">
-            <p><span>備註：</span><span id="psText_driver"></span></p>
+          <div class="col-3">
+            <p><span>備註：</span></p>
+          </div>
+          <div class="col-9">
+            <div class="psText p-0 my-1" id="psText_driver">
+            </div>
           </div>
         </div>
         <form onsubmit="return sendMessage();">
@@ -266,8 +270,12 @@
             </div>
           </div>
           <div class="row">
-            <div class="col">
-              <p><span>備註：</span><span id="psText_passenger"></span></p>
+            <div class="col-3">
+              <p><span>備註：</span></p>
+            </div>
+            <div class="col-9">
+              <div class="psText p-0 my-1" id="psText_passenger">
+              </div>
             </div>
           </div>
           <form onsubmit="return sendMessage();">
@@ -472,24 +480,28 @@
 
     function getMessages() {
       //test
-      let message = "TEST";
+      let message = "<p class='my-0'><span>乘客 : TEST</span></p>";
       if (isDriver) {
-        $("#psText_driver").text("乘客 : " + message);
+        $("#psText_driver").append(message);
+        $("#psText_driver").scrollTop($("#psText_driver").get(0).scrollHeight)
       } else {
-        $("#psText_passenger").text("司機 : " + message);
+        $("#psText_passenger").append(message);
+        $("#psText_passenger").scrollTop($("#psText_passenger").get(0).scrollHeight)
       }
     }
 
     function sendMessage() {
       let msg;
       if (isDriver) {
-        msg = $("#errand_text_send_driver").val();
+        msg = "<p class='my-0'><span>你說: " + $("#errand_text_send_driver").val() + "</span></p>";
         $("#errand_text_send_driver").val("");
-        $("#psText_driver").text("你說 : " + msg);
+        $("#psText_driver").append(msg);
+        $("#psText_driver").scrollTop($("#psText_driver").get(0).scrollHeight)
       } else {
-        msg = $("#errand_text_send_passenger").val();
+        msg = "<p class='my-0'><span>你說: " + $("#errand_text_send_passenger").val() + "</span></p>";
         $("#errand_text_send_passenger").val("");
-        $("#psText_passenger").text("你說 : " + msg);
+        $("#psText_passenger").append(msg);
+        $("#psText_passenger").scrollTop($("#psText_passenger").get(0).scrollHeight)
       }
       //test getmsg
       setTimeout(function () { getMessages() }, 3000);
