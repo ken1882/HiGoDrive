@@ -1,30 +1,24 @@
 module Mailer
-  @client = Postmark::ApiClient.new(ENV['POSTMARK_TOKEN'])
-  SenderEmail = "00657121@email.ntou.edu.tw"
-  ForgotMailBody = %{
-    Dear %s, you have recently requested to reset your password.
-    Please enter the following link to procesed.<br>
-    https://%s?username=%s&token=%s
-  }
+  require 'gmail'
+
+  @gmail = Gmail.new(ENV['EMAIL_NAME'], ENV['EMAIL_PASSWORD'])
+
   module_function
   
-  def password_reset_url(domain)
-    "#{domain}/account-recovery/reset"
+  # TODO
+  def password_reset_url
+    "/"
   end
 
-  def send(domain, target_email, username, token)
+  def send(target_email, username, token)
     # Send an email
-    @client.deliver format_forgot_mail(domain, target_email, username, token)
-  end
-  
-  def format_forgot_mail(domain, target_email, username, token)
-    {
-      from: SenderEmail,
-      to: target_email,
-      subject: 'Password reset request',
-      html_body: sprintf(ForgotMailBody, username, 
-        password_reset_url(domain), username, token),
-      track_opens: true
-    }
+    email = @gmail.generate_message do
+      to target_email
+      subject 'Password reset request'
+      body "#{password_reset_url}?username=#{username}&token=#{token}"
+    end
+    email.deliver!
+
+    @gmail.deliver(email)
   end
 end
