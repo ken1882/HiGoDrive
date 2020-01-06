@@ -177,7 +177,9 @@ function getTask(taskId) {
     success: function (result) {
       taskInfo["dest"] = JSON.parse(result.dest);
       taskInfo["driver_id"] = result.driver_id;
+      taskInfo["driver_name"] = result.driver_name;
       taskInfo["author_id"] = result.author_id;
+      taskInfo["author_name"] = result.author_name;
       taskInfo["status"] = result.status;
     },
     error: function(xhr) {
@@ -350,6 +352,24 @@ function engageTask(taskId) {
     },
     async: true
   });
+}
+
+function getTaskReport(taskId) {
+  let report = undefined;
+  $.ajax({
+    method: "GET",
+    url: "/api/v0/tasks/" + taskId + "/reports",
+    data: null,
+    dataType: "json",
+    success: function (result) {s
+      report = result;
+    },
+    error: function(xhr) {
+      console.log("An error occured:", xhr.status, xhr.statusText);
+    },
+    async: false
+  });
+  return report;
 }
 
 function reportTask(taskId, comment) {
