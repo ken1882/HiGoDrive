@@ -113,9 +113,9 @@
     $("#password_confirmation").on("focusout", function (e) {
       if ($("#password_confirmation").val() != "") {
         if ($("#password").val() != $(this).val()) {
-          $(this).removeClass("is-valid").addClass("is-invalid");
+          $(this).addClass("is-invalid");
         } else {
-          $(this).removeClass("is-invalid").addClass("is-valid");
+          $(this).removeClass("is-invalid");
         }
       }
     });
