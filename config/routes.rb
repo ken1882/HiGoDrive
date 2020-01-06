@@ -5,8 +5,9 @@ Rails.application.routes.draw do
   root 'pages#index'
   get '/index', to: 'pages#index'
 
-  get '/signup', to: 'pages#signup'
   get '/login', to: 'pages#login'
+  get '/signup', to: 'pages#signup'
+  get '/signup/driver', to: 'pages#driverSignup'
 
   get '/home', to: 'pages#home'
 
