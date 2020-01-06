@@ -1,3 +1,11 @@
+const taskStatus = Object.freeze({
+  "WAITING": 0,
+  "ACCEPTED": 1,
+  "ENGAGING": 2,
+  "FINISHED": 3,
+  "CANCELLED": 4,
+});
+
 //function : acceptTask  rejectTask onlineTask taskrunning 需串 api  acceptTask 備註待更改
 var map, marker, directionsService, directionsDisplay, info;
 var zoom = 17, lat = 25.1506194, lng = 121.7760687;
@@ -302,32 +310,28 @@ function taskrunning() { //if driver accept task call back
 
   var ps = document.getElementById("psText_driver").innerHTML // web get driver ps text
   // driverReceive();
-  taskStatus();
+
+  waitUntil(taskStatus.FINISHED, function() {
+    console.log("task finished");
+    taskFinish();
+  });
 }
 
-function taskStatus() {
-  console.log(taskid.nowid);
+function waitUntil(expected, callback) {
   var status = getTask(taskid.nowid).status;
-  if (status == 0) {
-    console.log('waiting for accepting');
-    return setTimeout(taskStatus, 5000);
-  } else if (status == 1) {
-    console.log('waiting for engaging');
-    return setTimeout(taskStatus, 5000);
-  } else if (status == 2) {
-    console.log('waiting for finishing');
-    return setTimeout(taskStatus, 5000);
-  } else if (status == 3) {
-    console.log('task done');
-  }
-  return status;
-}
-
-function waitUntilAccept(callback) {
-  var status = getTask(taskid.nowid).status;
-  while (status != 1) {
+  while (status != expected) {
+    switch (status) {
+      case taskStatus.WAITING:
+        console.log("waiting for accepting");  break;
+      case taskStatus.ACCEPTED:
+        console.log("waiting for engaging");  break;
+      case taskStatus.ENGAGING:
+        console.log("waiting for finishing");  break;
+      default:
+        console.log("status: ", status);
+    }
     setTimeout(function() {
-      waitUntilAccept(callback);
+      waitUntil(expected, callback);
     }, 5000);
     return;
   }
@@ -335,8 +339,10 @@ function waitUntilAccept(callback) {
 }
 
 function taskFinish() { //if task done
-  finishTask(taskid.nowid);
-  window.location.href = '/';
+  if (isDriver) {
+    finishTask(taskid.nowid);
+  }
+  window.location.href = '/task';
 }
 
 //driver on line

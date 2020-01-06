@@ -375,13 +375,14 @@
     if (taskId) {
       taskid.nowid = taskId;
       console.log("errand start!");
-      // FIXME
-      waitUntilAccept(function() {
-        console.log("driverReceive()");
+      waitUntil(taskStatus.ACCEPTED, function() {
+        console.log("task has been received by driver");
         driverReceive();
       });
     } else {
       // createTask failed
+      alert("Failed to create new task, since you are in 3 minute cooldown");
+      window.location.href = "/";
     }
     return false;
   }
