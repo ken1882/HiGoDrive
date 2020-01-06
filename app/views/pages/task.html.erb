@@ -100,8 +100,6 @@ function renderTaskToPage(taskId) {
   let placeName = task.dest.placeName;
   let departTime = task.dest.datetimepicker;
   let [author, driver] = [task.author_name, task.driver_name];
-  let authorName = author.username;
-  let driverName = task.driver_id ? driver.username : "N/A";
   let isPassenger = <%= current_user.roles == 1 %>;
   let status = task.status;
   let [statusMsg, statusClass] = {
@@ -127,7 +125,7 @@ function renderTaskToPage(taskId) {
   collpaseBtn.attr("data-target", "#" + collapse.attr("id"));
   collpaseBtn.attr("aria-controls", collapse.attr("id"));
 
-  header.find("p[name='user_id']").html(isPassenger ? driverName : authorName);
+  header.find("p[name='user_id']").html(isPassenger ? driver : author);
   header.find("p[name='dist']").html(placeName);
   header.find("p[name='route']").html(departTime);
   header.find("p[name='status']").html(statusMsg);
