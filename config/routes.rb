@@ -47,12 +47,12 @@ Rails.application.routes.draw do
       match '/tasks/:task_id/reviews/:id', to: 'reviews#show', via: [:get]
       match '/tasks/:task_id/reviews', to: 'reviews#index', via: [:get]
       match '/tasks/:task_id/reviews', to: 'reviews#create', via: [:post]
-
+      
       match '/tasks/:task_id/reports/:id', to: 'reports#show', via: [:get]
       match '/tasks/:task_id/reports', to: 'reports#index', via: [:get]
       match '/tasks/:task_id/reports', to: 'reports#create', via: [:post]
 
-      post '/push_notification', to:'push_notifications#create'
+      post '/push_register', to:'push_notifications#create'
 
     end
   end
