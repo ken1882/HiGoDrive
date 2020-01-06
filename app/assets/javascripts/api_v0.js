@@ -361,7 +361,7 @@ function getTaskReport(taskId) {
     url: "/api/v0/tasks/" + taskId + "/reports",
     data: null,
     dataType: "json",
-    success: function (result) {s
+    success: function (result) {
       report = result;
     },
     error: function(xhr) {
