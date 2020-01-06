@@ -1,0 +1,49 @@
+<% provide :page_title, "Home" %>
+
+<div class="container">
+
+  <div class="mt-4 mb-0 p-2">
+    <a href="/" class="list-group-item-action">
+      <h2 class="text-center">HiGoDrive</h2>
+    </a>
+    <img id="motor" class="rounded mx-auto d-block" src=<%= image_url 'motorcycle-solid.svg' %> type="image/svg+xml" />
+    <h5 class="text-center">現在就握起龍頭，開始賺取費用！！</h5>
+    <hr>
+  </div>
+
+
+  <form action="">
+    <div class="form-group">
+      <label for="driver_license">駕照正面照片</label>
+      <input type="file" class="form-control-file" id="driver_license" name="driver_license" accept="image/*">
+    </div>
+    <div class="form-group">
+      <label for="vehicle_license">行照正面照片</label>
+      <input type="file" class="form-control-file" id="vehicle_license" name="vehicle_license" accept="image/*">
+    </div>
+    <div class="form-group">
+      <label for="exterior">車身照片</label>
+      <input type="file" class="form-control-file" id="exterior" name="exterior" accept="image/*">
+    </div>
+    <div class="form-group">
+      <label for="plate">車牌</label>
+      <input type="text" class="form-control" id="plate" name="plate" required>
+    </div>
+    <div class="form-group">
+      <label for="model">車型</label>
+      <input type="text" class="form-control" id="model" name="model" required>
+    </div>
+    <br>
+    <br>
+    <div class="px-5 py-3">
+      <button type="submit" class="btn btn-success btn-lg btn-block">申請</button>
+    </div>
+  </form>
+
+  <div class="row">
+    <div class="col-12 mt-5 mb-2">
+      <span class="float-left">&copyHiGoDrive 2019</span>
+      <a class="float-right" href="mailto:higodrive@sevice.mail.com">聯絡我們</a>
+    </div>
+  </div>
+</div>
