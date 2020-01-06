@@ -81,51 +81,62 @@
     </div>
   </div>
   <script>
-    $('#driver_license').on("change", function () {
+    $("document").ready(function () {
+      var img = {
+        "driver_license": "",
+        "vehicle_license": "",
+        "exterior": ""
+      };
+      $('input[type=file]').on("change", function () {
 
-      var $files = $(this).get(0).files;
+        var $files = $(this).get(0).files;
 
-      if ($files.length) {
+        if ($files.length) {
 
-        // Reject big files
-        if ($files[0].size > $(this).data("max-size") * 1024) {
-          console.log("Please select a smaller file");
-          return false;
+          // Reject big files
+          if ($files[0].size > $(this).data("max-size") * 1024) {
+            console.log("Please select a smaller file");
+            return false;
+          }
+
+          // Begin file upload
+          console.log("Uploading file to Imgur..");
+
+          // Replace ctrlq with your own API key
+          var apiUrl = 'https://api.imgur.com/3/image';
+          var apiKey = '609d7822f8deef7';
+
+          var settings = {
+            async: false,
+            crossDomain: true,
+            processData: false,
+            contentType: false,
+            type: 'POST',
+            url: apiUrl,
+            headers: {
+              Authorization: 'Client-ID ' + apiKey,
+              Accept: 'application/json'
+            },
+            mimeType: 'multipart/form-data'
+          };
+
+          var formData = new FormData();
+          formData.append("image", $files[0]);
+          settings.data = formData;
+          // console.log($(this).attr('id'))
+
+          var tmp;
+          // Response contains stringified JSON
+          // Image URL available at response.data.link
+          $.ajax(settings).done(function (response) {
+            tmp = JSON.parse(response).data.link;
+            console.log(JSON.parse(response).data.link); // imgur url
+          });
+          //console.log(tmp)
+          img[$(this).attr('id')] = tmp;
+          console.log(img)
         }
-
-        // Begin file upload
-        console.log("Uploading file to Imgur..");
-
-        // Replace ctrlq with your own API key
-        var apiUrl = 'https://api.imgur.com/3/image';
-        var apiKey = '85d60dedb3e4241d3b30c3526e88662e7bc6c667';
-
-        var settings = {
-          async: false,
-          crossDomain: true,
-          processData: false,
-          contentType: false,
-          type: 'POST',
-          url: apiUrl,
-          headers: {
-            Authorization: 'Client-ID ' + apiKey,
-            Accept: 'application/json'
-          },
-          mimeType: 'multipart/form-data'
-        };
-
-        var formData = new FormData();
-        formData.append("image", $files[0]);
-        settings.data = formData;
-        console.log(settings)
-
-        // Response contains stringified JSON
-        // Image URL available at response.data.link
-        $.ajax(settings).done(function (response) {
-          console.log(response);
-        });
-
-      }
+      });
     });
   </script>
 </body>
