@@ -122,7 +122,7 @@ class User
       'email'      => email,
       'roles'      => roles,
       'bio'        => bio,
-      'avatar_url' => avatar_url,
+      'avatar_url' => get_gravatar_url,
     }
   end
 
@@ -156,6 +156,10 @@ class User
       :lat => self.lat,
       :lng => self.lng
     }
+  end
+
+  def get_gravatar_url(size = 360)
+    return "https://s.gravatar.com/avatar/" + Digest::MD5.hexdigest(email) + "?s=#{size}"
   end
 
   def generate_reset_token(auth_token)

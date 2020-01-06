@@ -14,12 +14,12 @@
       <div class="card mb-3 mx-auto" style="max-width: 540px;">
         <div class="row no-gutters">
           <div class="col-4">
-            <img id="user" src="<%= "https://s.gravatar.com/avatar/" + Digest::MD5.hexdigest(current_user.email) + "?s=360" %>" type="image/png" class="card-img rounded m-1 p-4" alt="user">
+            <img id="user" src="<%= current_user.get_gravatar_url %>" type="image/png" class="card-img rounded m-1 p-4" alt="user">
           </div>
           <div class="col-8">
             <div class="card-body">
               <h5 class="card-title">用戶名稱：<%= current_user.username %></h5>
-              <p class="card-text">用戶類型：<%= h = {1 => "Passenger", 2 => "Driver"}; h.default = "Passenger & Driver"; h[current_user.roles] %></p>
+              <p class="card-text">用戶類型：<%= h = {1 => "Passenger", 2 => "Driver"}; h.default = ""; h[current_user.roles] %></p>
               <p class="card-text">電子信箱：<%= current_user.email %></p>
               <p class="card-text">手機號碼：<%= current_user.phone %></p>
               <p class="card-text">個人資訊：<%= current_user.bio %></p>
