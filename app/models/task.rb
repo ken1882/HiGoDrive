@@ -54,9 +54,11 @@ class Task
   def public_json_info
     {
       author_id: author_id.to_s,
+      author_name: author.username,
       dest: dest,
       depart_time: depart_time.to_i,
       driver_id: driver_id.to_s,
+      driver_name: driver.username,
       equipments: equipments,
       status: status
     }
