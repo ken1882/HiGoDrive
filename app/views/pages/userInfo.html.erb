@@ -14,7 +14,7 @@
       <div class="card mb-3 mx-auto" style="max-width: 540px;">
         <div class="row no-gutters">
           <div class="col-4">
-            <img id="user" src=<%= image_url 'user-circle-regular.svg' %> type="image/svg+xml" class="card-img" alt="user">
+            <img id="user" src="<%= "https://s.gravatar.com/avatar/" + Digest::MD5.hexdigest(current_user.email) + "?s=360" %>" type="image/png" class="card-img rounded m-1 p-4" alt="user">
           </div>
           <div class="col-8">
             <div class="card-body">
@@ -78,12 +78,3 @@
     </div>
   </div>
 </nav>
-
-<script>
-  function getGravatar(email, size) {
-  }
-
-  $(document).ready(function() {
-    let gravatarUrl = getGravatar('<%= puts current_user.email %>', 180);
-  });
-</script>
