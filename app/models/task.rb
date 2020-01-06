@@ -58,7 +58,7 @@ class Task
       dest: dest,
       depart_time: depart_time.to_i,
       driver_id: driver_id.to_s,
-      driver_name: driver.username,
+      driver_name: driver ? driver.username : nil,
       equipments: equipments,
       status: status
     }
