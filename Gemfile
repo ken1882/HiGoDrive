@@ -35,7 +35,7 @@ gem 'mongoid', git: 'https://github.com/mongodb/mongoid.git'
 gem 'bootsnap', '>= 1.1.0', require: false
 
 # Mailer gem
-gem 'postmark'
+gem 'ruby-gmail'
 
 # Push notification
 gem "webpush"

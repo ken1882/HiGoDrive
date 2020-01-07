@@ -2,13 +2,22 @@ ENV['BUNDLE_GEMFILE'] ||= File.expand_path('../Gemfile', __dir__)
 
 # Path on local machine that contains key files
 PRECONFIG_PATH = ["#{ENV['HOME']}/RoR"]
+KEYFILE_MAP = {
+  'mongoid'       => 'MONGODB_URI',
+  'master'        => 'SECRET_KEY_BASE',
+  'vapid_public'  => 'VAPID_PUBLIC_KEY',
+  'vapid_private' => 'VAPID_PRIVATE_KEY',
+  'postmark'      => 'POSTMARK_TOKEN',
+  'smtp'          => 'SMTP_SETTING'
+}
+
 PRECONFIG_PATH.each do |path|
   next unless File.exist?("#{path}/mongoid.key")
-  File.open("#{path}/mongoid.key", 'r'){|f| ENV['MONGODB_URI'] ||= f.read.chomp}
-  File.open("#{path}/master.key", 'r'){|f| ENV['SECRET_KEY_BASE'] ||= f.read.chomp}
-  File.open("#{path}/vapid_public.key", 'r'){|f| ENV['VAPID_PUBLIC_KEY'] ||= f.read.chomp}
-  File.open("#{path}/vapid_private.key", 'r'){|f| ENV['VAPID_PRIVATE_KEY'] ||= f.read.chomp}
-  File.open("#{path}/postmark.key", 'r'){|f| ENV['POSTMARK_TOKEN'] ||= f.read.chomp}
+  KEYFILE_MAP.each do |fname, val|
+    File.open("#{path}/#{fname}.key", 'r') do |file|
+      ENV[val] ||= file.read.chomp
+    end
+  end
 end
 
 require 'bundler/setup' # Set up gems listed in the Gemfile.

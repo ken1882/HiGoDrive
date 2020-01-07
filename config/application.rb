@@ -35,6 +35,14 @@ module GuaneiArk
     config.assets.initialize_on_precompile = false
     config.assets.compile = true
 
+    config.action_mailer.smtp_settings = proc {
+      line = ENV['SMTP_SETTING']
+      keys = line.split(',').collect{|seg| seg.split(':')}.to_h.symbolize_keys
+      keys[:port] = keys[:port].to_i
+      keys[:enable_starttls_auto] = keys[:enable_starttls_auto].to_i == '0' ? false : true
+      keys
+    }.call
+
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration can go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded after loading
