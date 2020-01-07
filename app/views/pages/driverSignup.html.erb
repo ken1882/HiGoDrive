@@ -12,18 +12,18 @@
   </div>
 
 
-  <form action="">
+  <form id="driver-license-form" action="" method="POST">
     <div class="form-group">
       <label for="driver_license">駕照正面照片</label>
-      <input type="file" class="form-control-file" id="driver_license" name="driver_license" accept="image/*">
+      <input type="file" class="form-control-file" id="driver_license" name="driver_license" accept="image/*" required>
     </div>
     <div class="form-group">
       <label for="vehicle_license">行照正面照片</label>
-      <input type="file" class="form-control-file" id="vehicle_license" name="vehicle_license" accept="image/*">
+      <input type="file" class="form-control-file" id="vehicle_license" name="vehicle_license" accept="image/*" required>
     </div>
     <div class="form-group">
       <label for="exterior">車身照片</label>
-      <input type="file" class="form-control-file" id="exterior" name="exterior" accept="image/*">
+      <input type="file" class="form-control-file" id="exterior" name="exterior" accept="image/*" required>
     </div>
     <div class="form-group">
       <label for="plate">車牌</label>
@@ -47,3 +47,53 @@
     </div>
   </div>
 </div>
+
+<script>
+  $("document").ready(function () {
+    var img = {
+      "driver_license": "",
+      "vehicle_license": "",
+      "exterior": ""
+    };
+
+    $('input[type=file]').on("change", function () {
+      var $files = $(this).get(0).files;
+
+      if ($files.length) {
+        // Reject big files
+        if ($files[0].size > $(this).data("max-size") * 1024) {
+          alert("Please select a smaller file");
+          return false;
+        }
+
+        // Replace ctrlq with your own API key
+        var apiUrl = 'https://api.imgur.com/3/image';
+        var apiKey = '609d7822f8deef7';
+
+        var settings = {
+          async: false,
+          crossDomain: true,
+          processData: false,
+          contentType: false,
+          type: 'POST',
+          url: apiUrl,
+          headers: {
+            Authorization: 'Client-ID ' + apiKey,
+            Accept: 'application/json'
+          },
+          mimeType: 'multipart/form-data'
+        };
+
+        var formData = new FormData();
+        formData.append("image", $files[0]);
+        settings.data = formData;
+
+        var tmp;
+        $.ajax(settings).done(function (response) {
+          tmp = JSON.parse(response).data.link;
+        });
+        img[$(this).attr('id')] = tmp;
+      }
+    });
+  });
+</script>
