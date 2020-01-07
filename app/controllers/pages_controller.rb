@@ -43,6 +43,9 @@ class PagesController < ApplicationController
   end
 
   def report
+    flash.now[:danger] = 'Please log in first' unless logged_in?
+    return login unless logged_in?
+    render 'report'
   end
 
   def userInfo
@@ -67,5 +70,12 @@ class PagesController < ApplicationController
     flash.now[:danger] = 'Please log in first' unless logged_in?
     return login unless logged_in?
     render 'editUserBio'
+  end
+
+  def admin
+    # TODO: LOGIN CHECK
+    # flash.now[:danger] = 'Please log in as administrator' unless logged_in?
+    # return login unless logged_in?
+    render 'admin'
   end
 end

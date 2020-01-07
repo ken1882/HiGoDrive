@@ -23,6 +23,8 @@ Rails.application.routes.draw do
   get '/account-recovery', to: 'pages#passwordForget'
   get '/account-recovery/reset', to: 'pages#passwordReset'
 
+  get '/admin', to: 'pages#admin'
+
   match '/login'  =>"api/#{CurrentVersion}/session#new",     via: [:get]
   match '/login'  => "api/#{CurrentVersion}/session#create", via: [:post]
   match '/logout' =>"api/#{CurrentVersion}/session#destroy", via: [:delete, :get]

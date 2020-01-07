@@ -1,0 +1,98 @@
+<% provide :page_title, "Administration" %>
+
+<div class="container">
+  <div class="m-4 p-2">
+    <h2 class="text-center">HiGoDrive</h2>
+    <br>
+    <img id="motor" class="rounded mx-auto d-block" src=<%= image_url 'motorcycle-solid.svg' %> type="image/svg+xml" />
+    <hr>
+  </div>
+
+  <div class="accordion" id="accordion">
+    <!--樣式模板>>-->
+    <div class="card">
+      <div class="card-header" id="headingOne">
+        <button class="btn btn-block" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false"
+          aria-controls="collapseOne">
+          <div class="row">
+            <div class="col-5">
+              <span name="id" class="text-primary text-left">用戶：12345</span>
+            </div>
+            <div class="col-5">
+              <span name="type" class="text-warning">申訴處理</span>
+            </div>
+            <div class="col-2">
+              <i class="fas fa-sort-down fa-lg"></i>
+            </div>
+          </div>
+        </button>
+      </div>
+      <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+        <div class="card-body">
+          <span>訂單簡介</span>
+          <ul>
+            <li>目的地：</li>
+            <li>路程：</li>
+            <li>費用：</li>
+          </ul>
+          <p><span>申訴者ID：</span><a href="#">123456</a></p>
+          <p><span>被申訴ID：</span><a href="#">48763</a></p>
+          <p id="report_content">申訴說明：垃圾司機</p>
+          <br>
+          <button type="button" class="btn btn-success btn-block">申訴處理完成</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" id="headingTwo">
+        <button class="btn btn-block" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false"
+          aria-controls="collapseTwo">
+          <div class="row">
+            <div class="col-5">
+              <span name="id" class="text-primary text-left">用戶：58586</span>
+            </div>
+            <div class="col-5">
+              <span name="type" class="text-warning">司機資格審核</span>
+            </div>
+            <div class="col-2">
+              <i class="fas fa-sort-down fa-lg"></i>
+            </div>
+          </div>
+        </button>
+      </div>
+      <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+        <div class="card-body">
+          <p>
+            駕照正面照片
+            <img src="#" alt="駕照正面照片">
+          </p>
+          <p>
+            行照正片照片
+            <img src="#" alt="行照正片照片">
+          </p>
+          <p>
+            車身照片
+            <img src="#" alt="車身照片">
+          </p>
+          <p>車牌：</p>
+          <p>車型：</p>
+          <br>
+          <div class="row">
+            <div class="col">
+              <button type="button" class="btn btn-danger btn-block">不通過</button>
+            </div>
+            <div class="col">
+              <button type="button" class="btn btn-success btn-block">通過</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--<<樣式模板-->
+  </div>
+</div>
+
+<script type="text/javascript">
+  $('.collapse').collapse()
+</script>
