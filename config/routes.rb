@@ -1,7 +1,5 @@
 CurrentVersion = 'v0'
 Rails.application.routes.draw do
-
-  resources :messages
   # home page
   root 'static_pages#home'
   get '/index', to: 'static_pages#home'
@@ -20,6 +18,7 @@ Rails.application.routes.draw do
       resources :tasks
       resources :reviews
       resources :reports
+      resources :push_notifications
 
       post '/checkusername', to: 'users#checkusername'
       post '/checkemail', to: 'users#checkemail'
@@ -31,7 +30,7 @@ Rails.application.routes.draw do
       put '/user/update', to: 'users#update'
       post '/user/setpos', to: 'users#setpos'
       get '/user/getpos', to: 'users#getpos'
-      
+
       match '/users/search/:username', to: 'users#peak', via: [:get]
       
       get '/mytasks', to: 'users#user_tasks'
@@ -50,11 +49,11 @@ Rails.application.routes.draw do
       match '/tasks/:task_id/reviews', to: 'reviews#create', via: [:post]
       
       match '/tasks/:task_id/reports/:id', to: 'reports#show', via: [:get]
-      match '/tasks/:task_id/reports', to: 'reports#index', via: [:get]
       match '/tasks/:task_id/reports', to: 'reports#create', via: [:post]
+      post '/finish_report', to: 'reports#mark_finished'
 
-      post '/push_register', to: 'push_notifications#create'
       post '/verify_driver', to: 'users#verify_driver'
+      
     end
   end
   

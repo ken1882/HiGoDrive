@@ -2,7 +2,9 @@ class User
   include Mongoid::Document
   include Mongoid::Timestamps
   include ActiveModel::SecurePassword
+  
   has_many :tasks, dependent: :destroy
+  has_many :push_notification, dependent: :destroy
 
   UsernameRegex = /\A[[:alnum:]]*\z/
   EmailRegex = /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i
@@ -27,12 +29,15 @@ class User
   field :tasks_engaging, type: Array
   field :tasks_history, type: Array
   field :forgot_timestamp, type: DateTime
+  field :endpoint, type: String           # notification 
+  field :p256dh, type: String             # notification 
+  field :auth, type: String               # notification 
   field :driver_license, type: String
   field :vehicle_license, type: String
   field :exterior, type: String
   field :plate, type: String
   field :model, type: String
-  
+
   validates :roles, numericality: { only_integer: true }
   validates :username, presence: true, length: {in: 6..32}, 
     uniqueness: true, format: {with: UsernameRegex}

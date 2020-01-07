@@ -5,22 +5,31 @@ module Api
       before_action :verify_login
       before_action :set_user
 
-      def self.send_notification(target_id, message)
-        @target = User.find(target_id)
-        return 404 if @target_id.nil?
-        
+      def self.create_notification(user, message='Yay! A Notification!')
+        user = User.wide_query(user) unless user.is_a? User
+        user.push_notifications.create({
+          :parent  => user.id,
+          :message => message
+        })
       end
 
-      # /push_register
+      def self.send_notification(notification)
+        user = User.find(notification.parent)
+        WebpushJob.perform_later notification.message,
+          endpoint: user.endpoint,
+          p256dh: user.p256dh,
+          auth: user.auth
+      end
+
+      # POST /push_notifications
       def create
-        Rails.logger.info "Sending push notification from #{push_params.inspect}"
-        subscription_params = fetch_subscription_params
-    
-        WebpushJob.perform_later fetch_message,
-          endpoint: subscription_params[:endpoint],
-          p256dh: subscription_params.dig(:keys, :p256dh),
-          auth: subscription_params.dig(:keys, :auth)
-    
+        @user.update(
+          {
+            endpoint: subscription_params[:endpoint],
+            p256dh: subscription_params.dig(:keys, :p256dh),
+            auth: subscription_params.dig(:keys, :auth)
+          }
+        )
         return_ok
       end      
 
