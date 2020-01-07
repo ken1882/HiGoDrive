@@ -42,7 +42,7 @@
   }
 
   let taskId = parseInt(getQueryVariable("id"));
-  if (!taskId || !getMyTasks().includes(taskId)) {
+  if (!taskId || !getTaskHistory().includes(taskId)) {
     window.location.href = "/task";
   }
 
