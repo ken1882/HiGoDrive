@@ -54,7 +54,7 @@ Rails.application.routes.draw do
       match '/tasks/:task_id/reports', to: 'reports#create', via: [:post]
 
       post '/push_register', to: 'push_notifications#create'
-      post 'verify_driver', to: 'users#verify_driver'
+      post '/verify_driver', to: 'users#verify_driver'
     end
   end
   
