@@ -48,7 +48,6 @@
       <hr>
       <div class="accordion" id="accordion">
 
-        <!--樣式模板>>-->
         <template class="taskTemplate">
           <div class="card">
             <div class="card-header px-0" id="heading">
@@ -74,13 +73,16 @@
             <div id="collapse" class="collapse" aria-labelledby="heading" data-parent="#accordion">
               <div class="card-body">
                 <div class="scoreOther p-2">
-                  對方給的評價：
+                  對方給你的評價：
                 </div>
-                <div class="scoreSelfDone p-2">
-                  你給的評價：
+                <div class="scoreDone p-2">
+                  你給對方的評價：
                 </div>
-                <form action="javascript:void(0)">
-                  <div class="scoreSelf p-2">
+                <form action="#">
+                  <div class="score p-2">
+                    請給對方一個評價：
+                    <div class="scoreSelf p-2">
+                    </div>
                   </div>
                   <div class="form-group">
                     <textarea class="form-control" name="scoreTextarea" rows="2" placeholder="評價敘述"></textarea>
@@ -99,7 +101,6 @@
             </div>
           </div>
         </template>
-        <!--<<樣式模板-->
 
       </div>
 
@@ -108,6 +109,7 @@
         <h3 class="text-center">沒有訂單紀錄</h3>
         <hr>
       </div>
+
     </div>
 
   </main>
@@ -145,466 +147,201 @@
   <script type="text/javascript">
     $('.collapse').collapse();
 
-    /*
-    $('.scoreOther').raty({
-      number: 5,
-      path: 'assets',
-      hints: ['非常差', '差', '普通', '好', '非常好'],
-      starHalf: 'star-half.png',
-      starOff: 'star-off.png',
-      starOn: 'star-on.png',
-    });
-    $('.scoreSelfDone').raty({
-      number: 5,
-      path: 'assets',
-      hints: ['非常差', '差', '普通', '好', '非常好'],
-      starHalf: 'star-half.png',
-      starOff: 'star-off.png',
-      starOn: 'star-on.png',
-    });
-    $('.scoreSelf').raty({
-      number: 5,
-      path: 'assets',
-      hints: ['非常差', '差', '普通', '好', '非常好'],
-      starHalf: 'star-half.png',
-      starOff: 'star-off.png',
-      starOn: 'star-on.png',
-      cancel: false,
-      targetKeep: true,
-    });
-    */
-
-    var cnt = 0;
+    var taskId = 0;
 
     var getTemplate = function () {
       var tmpTask = $("template.taskTemplate").html();
       return $(tmpTask).clone();
     }
 
-    //我方已評價 / 對方已評價 / 已申訴
-    function task1() {
+    function task(type) {
       let temp = getTemplate();
-      let headingText = "heading" + cnt;
-      let collapseText = "collapse" + cnt;
 
       //fake data
-      cnt++;
-      let id = 12345;
-      let score = 5;
-      let location = "基隆火車站";
-      let time = "2019/12/3 18:00";
-      let tag = "已完成";
-
-      temp.find("#heading").attr("id", headingText);
-      temp.find("#headingBtn").attr("data-target", "#" + collapseText);
-      temp.find("#headingBtn").attr("aria-controls", collapseText);
-      temp.find("#user_id").text(id);
-      temp.find("#taskdist").text("目的地：" + location);
-      temp.find("#taskRoute").text("時間：" + time);
-      temp.find("#taskTag").text(tag);
-      temp.find("#taskTag").addClass("text-success")
-      temp.find("#collapse").attr("aria-labelledby", headingText);
-      temp.find("#collapse").attr("id", collapseText);
-      temp.find(".scoreOther").raty({
-        number: 5,
-        score: score,
-        readOnly: true,
-        path: 'assets',
-        hints: ['非常差', '差', '普通', '好', '非常好'],
-        starHalf: 'star-half.png',
-        starOff: 'star-off.png',
-        starOn: 'star-on.png',
-      });
-      temp.find(".scoreSelfDone").raty({
-        number: 5,
-        score: score - 1,
-        readOnly: true,
-        path: 'assets',
-        hints: ['非常差', '差', '普通', '好', '非常好'],
-        starHalf: 'star-half.png',
-        starOff: 'star-off.png',
-        starOn: 'star-on.png'
-      });
-      temp.find("form").hide();
-
-      let output = temp[0].outerHTML;
-      $("#accordion").append(output);
-    }
-
-    //我方已評價 / 對方已評價 / 未申訴
-    function task2() {
-      let temp = getTemplate();
-      let headingText = "heading" + cnt;
-      let collapseText = "collapse" + cnt;
-
-      //fake data
-      cnt++;
-      let id = 12345;
-      let score = 3;
-      let location = "基隆火車站";
-      let time = "2019/12/3 18:00";
-      let tag = "已完成";
-
-      temp.find("#heading").attr("id", headingText);
-      temp.find("#headingBtn").attr("data-target", "#" + collapseText);
-      temp.find("#headingBtn").attr("aria-controls", collapseText);
-      temp.find("#user_id").text(id);
-      temp.find("#taskdist").text("目的地：" + location);
-      temp.find("#taskRoute").text("時間：" + time);
-      temp.find("#taskTag").text(tag);
-      temp.find("#taskTag").addClass("text-success")
-      temp.find("#collapse").attr("aria-labelledby", headingText);
-      temp.find("#collapse").attr("id", collapseText);
-      temp.find(".scoreOther").raty({
-        number: 5,
-        score: score,
-        readOnly: true,
-        path: 'assets',
-        hints: ['非常差', '差', '普通', '好', '非常好'],
-        starHalf: 'star-half.png',
-        starOff: 'star-off.png',
-        starOn: 'star-on.png',
-      });
-      temp.find(".scoreSelfDone").raty({
-        number: 5,
-        score: score - 1,
-        readOnly: true,
-        path: 'assets',
-        hints: ['非常差', '差', '普通', '好', '非常好'],
-        starHalf: 'star-half.png',
-        starOff: 'star-off.png',
-        starOn: 'star-on.png'
-      });
-      temp.find("form textarea, form .scoreBtn").hide();
-
-      let output = temp[0].outerHTML;
-      $("#accordion").append(output);
-    }
-
-    //我方已評價 / 對方未評價 / 已申訴
-    function task3() {
-      let temp = getTemplate();
-      let headingText = "heading" + cnt;
-      let collapseText = "collapse" + cnt;
-
-      //fake data
-      cnt++;
-      let scoreText = "對方還沒有對您評價"
-      let id = 12345;
-      let score = 5;
-      let location = "基隆火車站";
-      let time = "2019/12/3 18:00";
-      let tag = "已完成";
-
-      temp.find("#heading").attr("id", headingText);
-      temp.find("#headingBtn").attr("data-target", "#" + collapseText);
-      temp.find("#headingBtn").attr("aria-controls", collapseText);
-      temp.find("#user_id").text(id);
-      temp.find("#taskdist").text("目的地：" + location);
-      temp.find("#taskRoute").text("時間：" + time);
-      temp.find("#taskTag").text(tag);
-      temp.find("#taskTag").addClass("text-success")
-      temp.find("#collapse").attr("aria-labelledby", headingText);
-      temp.find("#collapse").attr("id", collapseText);
-      temp.find(".scoreOther").text(scoreText);
-      temp.find(".scoreSelfDone").raty({
-        number: 5,
-        score: score - 1,
-        readOnly: true,
-        path: 'assets',
-        hints: ['非常差', '差', '普通', '好', '非常好'],
-        starHalf: 'star-half.png',
-        starOff: 'star-off.png',
-        starOn: 'star-on.png'
-      });
-      temp.find("form").hide();
-
-      let output = temp[0].outerHTML;
-      $("#accordion").append(output);
-    }
-
-    //我方已評價 / 對方未評價 / 未申訴
-    function task4() {
-      let temp = getTemplate();
-      let headingText = "heading" + cnt;
-      let collapseText = "collapse" + cnt;
-
-      //fake data
-      cnt++;
+      let resvText = '<span>差事已預約尚未開始進行</span>';
+      let rejectText = '<span>拒絕原因：太遠了</span>';
       let scoreText = "對方還沒有對您評價";
+      taskId++;
+      let headingText = "heading" + taskId;
+      let collapseText = "collapse" + taskId;
       let id = 12345;
-      let score = 3;
+      let score = 4;
       let location = "基隆火車站";
       let time = "2019/12/3 18:00";
-      let tag = "已完成";
+      let tag = ["已完成", "已預約", "已拒絕"];
 
       temp.find("#heading").attr("id", headingText);
       temp.find("#headingBtn").attr("data-target", "#" + collapseText);
       temp.find("#headingBtn").attr("aria-controls", collapseText);
+      temp.find("#headingBtn").attr("id", "headingBtn" + taskId);
       temp.find("#user_id").text(id);
+      temp.find("#user_id").attr("id", "user_id" + taskId);
       temp.find("#taskdist").text("目的地：" + location);
+      temp.find("#taskdist").attr("id", "taskdist" + taskId);
       temp.find("#taskRoute").text("時間：" + time);
-      temp.find("#taskTag").text(tag);
-      temp.find("#taskTag").addClass("text-success")
+      temp.find("#taskRoute").attr("id", "taskRoute" + taskId);
+      if (type < 9) {
+        //完成狀況
+        temp.find("#taskTag").text(tag[0]);
+        temp.find("#taskTag").addClass("text-success");
+      } else if (type == 9) {
+        //預約狀況
+        temp.find("#taskTag").text(tag[1]);
+        temp.find("#taskTag").addClass("text-primary");
+      } else if (type == 10) {
+        //拒絕狀況
+        temp.find("#taskTag").text(tag[2]);
+        temp.find("#taskTag").addClass("text-danger");
+      }
+      temp.find("#taskTag").attr("id", "taskTag" + taskId);
       temp.find("#collapse").attr("aria-labelledby", headingText);
       temp.find("#collapse").attr("id", collapseText);
-      temp.find(".scoreOther").text(scoreText);
-      temp.find(".scoreSelfDone").raty({
-        number: 5,
-        score: score - 1,
-        readOnly: true,
-        path: 'assets',
-        hints: ['非常差', '差', '普通', '好', '非常好'],
-        starHalf: 'star-half.png',
-        starOff: 'star-off.png',
-        starOn: 'star-on.png'
-      });
-      temp.find("form textarea, form .scoreBtn").hide();
+      //我方已評價 / 對方已評價 / 已申訴
+      if (type == 1) {
+        temp.find(".scoreOther").raty({
+          number: 5,
+          score: score,
+          readOnly: true,
+          path: 'assets',
+          hints: ['非常差', '差', '普通', '好', '非常好'],
+          starHalf: 'star-half.png',
+          starOff: 'star-off.png',
+          starOn: 'star-on.png',
+        });
+        temp.find(".scoreDone").raty({
+          number: 5,
+          score: score - 1,
+          readOnly: true,
+          path: 'assets',
+          hints: ['非常差', '差', '普通', '好', '非常好'],
+          starHalf: 'star-half.png',
+          starOff: 'star-off.png',
+          starOn: 'star-on.png'
+        });
+        temp.find("form, .score").hide();
+      }
+      //我方已評價 / 對方已評價 / 未申訴
+      if (type == 2) {
+        temp.find(".scoreOther").raty({
+          number: 5,
+          score: score,
+          readOnly: true,
+          path: 'assets',
+          hints: ['非常差', '差', '普通', '好', '非常好'],
+          starHalf: 'star-half.png',
+          starOff: 'star-off.png',
+          starOn: 'star-on.png',
+        });
+        temp.find(".scoreDone").raty({
+          number: 5,
+          score: score - 1,
+          readOnly: true,
+          path: 'assets',
+          hints: ['非常差', '差', '普通', '好', '非常好'],
+          starHalf: 'star-half.png',
+          starOff: 'star-off.png',
+          starOn: 'star-on.png'
+        });
+        temp.find("form textarea, form .scoreBtn, .score").hide();
+      }
+      //我方已評價 / 對方未評價 / 已申訴
+      if (type == 3) {
+        temp.find(".scoreOther").text(scoreText);
+        temp.find(".scoreDone").raty({
+          number: 5,
+          score: score - 1,
+          readOnly: true,
+          path: 'assets',
+          hints: ['非常差', '差', '普通', '好', '非常好'],
+          starHalf: 'star-half.png',
+          starOff: 'star-off.png',
+          starOn: 'star-on.png'
+        });
+        temp.find("form, .score").hide();
+      }
+      //我方已評價 / 對方未評價 / 未申訴
+      if (type == 4) {
+        temp.find(".scoreOther").text(scoreText);
+        temp.find(".scoreDone").raty({
+          number: 5,
+          score: score - 1,
+          readOnly: true,
+          path: '/assets',
+          hints: ['非常差', '差', '普通', '好', '非常好'],
+          starHalf: 'star-half.png',
+          starOff: 'star-off.png',
+          starOn: 'star-on.png'
+        });
+        temp.find("form textarea, form .scoreBtn, .score").hide();
+      }
+      //我方未評價 / 對方已評價 / 已申訴
+      if (type == 5) {
+        temp.find(".scoreOther").raty({
+          number: 5,
+          score: score,
+          readOnly: true,
+          path: 'assets',
+          hints: ['非常差', '差', '普通', '好', '非常好'],
+          starHalf: 'star-half.png',
+          starOff: 'star-off.png',
+          starOn: 'star-on.png',
+        });
+        temp.find(".score").raty({
+          number: 5,
+          path: 'assets',
+          hints: ['非常差', '差', '普通', '好', '非常好'],
+          starHalf: 'star-half.png',
+          starOff: 'star-off.png',
+          starOn: 'star-on.png',
+          cancel: false,
+          targetKeep: true,
+        });
+        temp.find(".reportBtn, .scoreDone").hide();
+      }
+      //我方未評價 / 對方已評價 / 未申訴
+      if (type == 6) {
+        temp.find(".scoreOther").raty({
+          number: 5,
+          score: score,
+          readOnly: true,
+          path: 'assets',
+          hints: ['非常差', '差', '普通', '好', '非常好'],
+          starHalf: 'star-half.png',
+          starOff: 'star-off.png',
+          starOn: 'star-on.png',
+        });
+        temp.find(".scoreDone").hide();
+      }
+      //我方未評價 / 對方未評價 / 已申訴
+      if (type == 7) {
+        temp.find(".scoreOther").text(scoreText);
+        temp.find(".reportBtn, .scoreDone").hide();
+      }
+      //我方未評價 / 對方未評價 / 未申訴
+      if (type == 8) {
+        temp.find(".scoreOther").text(scoreText);
+        temp.find(".scoreDone").hide();
+      }
+      //差事預約
+      if (type == 9) {
+        temp.find(".card-body").html(resvText);
+      }
+      //差事拒絕
+      if (type == 10) {
+        temp.find(".card-body").html(rejectText);
+      }
 
       let output = temp[0].outerHTML;
       $("#accordion").append(output);
-    }
-
-    //我方未評價 / 對方已評價 / 已申訴
-    function task5() {
-      let temp = getTemplate();
-      let headingText = "heading" + cnt;
-      let collapseText = "collapse" + cnt;
-
-      //fake data
-      cnt++;
-      let id = 12345;
-      let score = 5;
-      let location = "基隆火車站";
-      let time = "2019/12/3 18:00";
-      let tag = "已完成";
-
-      temp.find("#heading").attr("id", headingText);
-      temp.find("#headingBtn").attr("data-target", "#" + collapseText);
-      temp.find("#headingBtn").attr("aria-controls", collapseText);
-      temp.find("#user_id").text(id);
-      temp.find("#taskdist").text("目的地：" + location);
-      temp.find("#taskRoute").text("時間：" + time);
-      temp.find("#taskTag").text(tag);
-      temp.find("#taskTag").addClass("text-success")
-      temp.find("#collapse").attr("aria-labelledby", headingText);
-      temp.find("#collapse").attr("id", collapseText);
-      temp.find(".scoreOther").raty({
-        number: 5,
-        score: score,
-        readOnly: true,
-        path: 'assets',
-        hints: ['非常差', '差', '普通', '好', '非常好'],
-        starHalf: 'star-half.png',
-        starOff: 'star-off.png',
-        starOn: 'star-on.png',
-      });
-      temp.find(".scoreSelf").raty({
+      $(".scoreSelf").raty({
         number: 5,
         path: 'assets',
         hints: ['非常差', '差', '普通', '好', '非常好'],
         starHalf: 'star-half.png',
         starOff: 'star-off.png',
         starOn: 'star-on.png',
-        cancel: false,
         targetKeep: true,
       });
-      temp.find(".reportBtn").hide();
-
-      let output = temp[0].outerHTML;
-      $("#accordion").append(output)
-    }
-
-    //我方未評價 / 對方已評價 / 未申訴
-    function task6() {
-      let temp = getTemplate();
-      let headingText = "heading" + cnt;
-      let collapseText = "collapse" + cnt;
-
-      //fake data
-      cnt++;
-      let id = 12345;
-      let score = 5;
-      let location = "基隆火車站";
-      let time = "2019/12/3 18:00";
-      let tag = "已完成";
-
-      temp.find("#heading").attr("id", headingText);
-      temp.find("#headingBtn").attr("data-target", "#" + collapseText);
-      temp.find("#headingBtn").attr("aria-controls", collapseText);
-      temp.find("#user_id").text(id);
-      temp.find("#taskdist").text("目的地：" + location);
-      temp.find("#taskRoute").text("時間：" + time);
-      temp.find("#taskTag").text(tag);
-      temp.find("#taskTag").addClass("text-success")
-      temp.find("#collapse").attr("aria-labelledby", headingText);
-      temp.find("#collapse").attr("id", collapseText);
-      temp.find(".scoreOther").raty({
-        number: 5,
-        score: score,
-        readOnly: true,
-        path: 'assets',
-        hints: ['非常差', '差', '普通', '好', '非常好'],
-        starHalf: 'star-half.png',
-        starOff: 'star-off.png',
-        starOn: 'star-on.png',
-      });
-      temp.find(".scoreSelf").raty({
-        number: 5,
-        path: 'assets',
-        hints: ['非常差', '差', '普通', '好', '非常好'],
-        starHalf: 'star-half.png',
-        starOff: 'star-off.png',
-        starOn: 'star-on.png',
-        cancel: false,
-        targetKeep: true,
-      });
-
-      let output = temp[0].outerHTML;
-      $("#accordion").append(output)
-    }
-
-    //我方未評價 / 對方未評價 / 已申訴
-    function task7() {
-      let temp = getTemplate();
-      let headingText = "heading" + cnt;
-      let collapseText = "collapse" + cnt;
-
-      //fake data
-      cnt++;
-      let scoreText = "對方還沒有對您評價"
-      let id = 12345;
-      let score = 5;
-      let location = "基隆火車站";
-      let time = "2019/12/3 18:00";
-      let tag = "已完成";
-
-      temp.find("#heading").attr("id", headingText);
-      temp.find("#headingBtn").attr("data-target", "#" + collapseText);
-      temp.find("#headingBtn").attr("aria-controls", collapseText);
-      temp.find("#user_id").text(id);
-      temp.find("#taskdist").text("目的地：" + location);
-      temp.find("#taskRoute").text("時間：" + time);
-      temp.find("#taskTag").text(tag);
-      temp.find("#taskTag").addClass("text-success")
-      temp.find("#collapse").attr("aria-labelledby", headingText);
-      temp.find("#collapse").attr("id", collapseText);
-      temp.find(".scoreOther").text(scoreText);
-      temp.find(".scoreSelf").raty({
-        number: 5,
-        path: 'assets',
-        hints: ['非常差', '差', '普通', '好', '非常好'],
-        starHalf: 'star-half.png',
-        starOff: 'star-off.png',
-        starOn: 'star-on.png',
-        cancel: false,
-        targetKeep: true,
-      });
-      temp.find(".reportBtn").hide();
-
-      let output = temp[0].outerHTML;
-      $("#accordion").append(output);
-    }
-
-    //我方未評價 / 對方未評價 / 未申訴
-    function task8() {
-      let temp = getTemplate();
-      let headingText = "heading" + cnt;
-      let collapseText = "collapse" + cnt;
-
-      //fake data
-      cnt++;
-      let scoreText = "對方還沒有對您評價"
-      let id = 12345;
-      let score = 5;
-      let location = "基隆火車站";
-      let time = "2019/12/3 18:00";
-      let tag = "已完成";
-
-      temp.find("#heading").attr("id", headingText);
-      temp.find("#headingBtn").attr("data-target", "#" + collapseText);
-      temp.find("#headingBtn").attr("aria-controls", collapseText);
-      temp.find("#user_id").text(id);
-      temp.find("#taskdist").text("目的地：" + location);
-      temp.find("#taskRoute").text("時間：" + time);
-      temp.find("#taskTag").text(tag);
-      temp.find("#taskTag").addClass("text-success")
-      temp.find("#collapse").attr("aria-labelledby", headingText);
-      temp.find("#collapse").attr("id", collapseText);
-      temp.find(".scoreOther").text(scoreText);
-      temp.find(".scoreSelf").raty({
-        number: 5,
-        path: 'assets',
-        hints: ['非常差', '差', '普通', '好', '非常好'],
-        starHalf: 'star-half.png',
-        starOff: 'star-off.png',
-        starOn: 'star-on.png',
-        cancel: false,
-        targetKeep: true,
-      });
-
-      let output = temp[0].outerHTML;
-      $("#accordion").append(output);
-    }
-
-    //差事預約
-    function resv() {
-      let temp = getTemplate();
-      let resvText = '<span>差事已預約尚未開始進行</span>'
-      let headingText = "heading" + cnt;
-      let collapseText = "collapse" + cnt;
-
-      //fake data
-      cnt++;
-      let id = 48763;
-      let location = "基隆火車站";
-      let time = "2019/12/3 18:00";
-      let tag = "已預約 22:00";
-
-      temp.find("#heading").attr("id", headingText);
-      temp.find("#headingBtn").attr("data-target", "#" + collapseText);
-      temp.find("#headingBtn").attr("aria-controls", collapseText);
-      temp.find("#user_id").text(id);
-      temp.find("#taskdist").text("目的地：" + location);
-      temp.find("#taskRoute").text("時間：" + time);
-      temp.find("#taskTag").text(tag);
-      temp.find("#taskTag").addClass("text-primary")
-      temp.find("#collapse").attr("aria-labelledby", headingText);
-      temp.find("#collapse").attr("id", collapseText);
-
-      temp.find(".card-body").html(resvText);
-      let output = temp[0].outerHTML;
-      $("#accordion").append(output);
-    }
-
-    //差事拒絕
-    function reject() {
-      let temp = getTemplate();
-      let rejectText = '<span>拒絕原因：太遠了</span>'
-      let headingText = "heading" + cnt;
-      let collapseText = "collapse" + cnt;
-
-      //fake data
-      cnt++;
-      let id = 56789;
-      let location = "基隆火車站";
-      let time = "2019/12/3 18:00";
-      let tag = "已拒絕";
-
-      temp.find("#heading").attr("id", headingText);
-      temp.find("#headingBtn").attr("data-target", "#" + collapseText);
-      temp.find("#headingBtn").attr("aria-controls", collapseText);
-      temp.find("#user_id").text(id);
-      temp.find("#taskdist").text("目的地：" + location);
-      temp.find("#taskRoute").text("時間：" + time);
-      temp.find("#taskTag").text(tag);
-      temp.find("#taskTag").addClass("text-danger")
-      temp.find("#collapse").attr("aria-labelledby", headingText);
-      temp.find("#collapse").attr("id", collapseText);
-
-      temp.find(".card-body").html(rejectText);
-      let output = temp[0].outerHTML;
-      $("#accordion").append(output);
     }
   </script>
 </body>
