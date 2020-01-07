@@ -88,7 +88,7 @@
                   <div class="form-row">
                     <div class="col-6">
                       <a href="report.html"><button type="button"
-                          class="btn btn-success btn-block repotrBtn p-2">我要申訴</button></a>
+                          class="btn btn-success btn-block reportBtn p-2">我要申訴</button></a>
                     </div>
                     <div class="col-6">
                       <button type="submit" class="btn btn-success btn-block scoreBtn p-2">送出評價</button>
@@ -144,6 +144,8 @@
 
   <script type="text/javascript">
     $('.collapse').collapse();
+
+    /*
     $('.scoreOther').raty({
       number: 5,
       path: 'assets',
@@ -170,6 +172,7 @@
       cancel: false,
       targetKeep: true,
     });
+    */
 
     var cnt = 0;
 
@@ -364,22 +367,184 @@
 
     //我方未評價 / 對方已評價 / 已申訴
     function task5() {
+      let temp = getTemplate();
+      let headingText = "heading" + cnt;
+      let collapseText = "collapse" + cnt;
 
+      //fake data
+      cnt++;
+      let id = 12345;
+      let score = 5;
+      let location = "基隆火車站";
+      let time = "2019/12/3 18:00";
+      let tag = "已完成";
+
+      temp.find("#heading").attr("id", headingText);
+      temp.find("#headingBtn").attr("data-target", "#" + collapseText);
+      temp.find("#headingBtn").attr("aria-controls", collapseText);
+      temp.find("#user_id").text(id);
+      temp.find("#taskdist").text("目的地：" + location);
+      temp.find("#taskRoute").text("時間：" + time);
+      temp.find("#taskTag").text(tag);
+      temp.find("#taskTag").addClass("text-success")
+      temp.find("#collapse").attr("aria-labelledby", headingText);
+      temp.find("#collapse").attr("id", collapseText);
+      temp.find(".scoreOther").raty({
+        number: 5,
+        score: score,
+        readOnly: true,
+        path: 'assets',
+        hints: ['非常差', '差', '普通', '好', '非常好'],
+        starHalf: 'star-half.png',
+        starOff: 'star-off.png',
+        starOn: 'star-on.png',
+      });
+      temp.find(".scoreSelf").raty({
+        number: 5,
+        path: 'assets',
+        hints: ['非常差', '差', '普通', '好', '非常好'],
+        starHalf: 'star-half.png',
+        starOff: 'star-off.png',
+        starOn: 'star-on.png',
+        cancel: false,
+        targetKeep: true,
+      });
+      temp.find(".reportBtn").hide();
+
+      let output = temp[0].outerHTML;
+      $("#accordion").append(output)
     }
 
     //我方未評價 / 對方已評價 / 未申訴
     function task6() {
+      let temp = getTemplate();
+      let headingText = "heading" + cnt;
+      let collapseText = "collapse" + cnt;
 
+      //fake data
+      cnt++;
+      let id = 12345;
+      let score = 5;
+      let location = "基隆火車站";
+      let time = "2019/12/3 18:00";
+      let tag = "已完成";
+
+      temp.find("#heading").attr("id", headingText);
+      temp.find("#headingBtn").attr("data-target", "#" + collapseText);
+      temp.find("#headingBtn").attr("aria-controls", collapseText);
+      temp.find("#user_id").text(id);
+      temp.find("#taskdist").text("目的地：" + location);
+      temp.find("#taskRoute").text("時間：" + time);
+      temp.find("#taskTag").text(tag);
+      temp.find("#taskTag").addClass("text-success")
+      temp.find("#collapse").attr("aria-labelledby", headingText);
+      temp.find("#collapse").attr("id", collapseText);
+      temp.find(".scoreOther").raty({
+        number: 5,
+        score: score,
+        readOnly: true,
+        path: 'assets',
+        hints: ['非常差', '差', '普通', '好', '非常好'],
+        starHalf: 'star-half.png',
+        starOff: 'star-off.png',
+        starOn: 'star-on.png',
+      });
+      temp.find(".scoreSelf").raty({
+        number: 5,
+        path: 'assets',
+        hints: ['非常差', '差', '普通', '好', '非常好'],
+        starHalf: 'star-half.png',
+        starOff: 'star-off.png',
+        starOn: 'star-on.png',
+        cancel: false,
+        targetKeep: true,
+      });
+
+      let output = temp[0].outerHTML;
+      $("#accordion").append(output)
     }
 
     //我方未評價 / 對方未評價 / 已申訴
     function task7() {
+      let temp = getTemplate();
+      let headingText = "heading" + cnt;
+      let collapseText = "collapse" + cnt;
 
+      //fake data
+      cnt++;
+      let scoreText = "對方還沒有對您評價"
+      let id = 12345;
+      let score = 5;
+      let location = "基隆火車站";
+      let time = "2019/12/3 18:00";
+      let tag = "已完成";
+
+      temp.find("#heading").attr("id", headingText);
+      temp.find("#headingBtn").attr("data-target", "#" + collapseText);
+      temp.find("#headingBtn").attr("aria-controls", collapseText);
+      temp.find("#user_id").text(id);
+      temp.find("#taskdist").text("目的地：" + location);
+      temp.find("#taskRoute").text("時間：" + time);
+      temp.find("#taskTag").text(tag);
+      temp.find("#taskTag").addClass("text-success")
+      temp.find("#collapse").attr("aria-labelledby", headingText);
+      temp.find("#collapse").attr("id", collapseText);
+      temp.find(".scoreOther").text(scoreText);
+      temp.find(".scoreSelf").raty({
+        number: 5,
+        path: 'assets',
+        hints: ['非常差', '差', '普通', '好', '非常好'],
+        starHalf: 'star-half.png',
+        starOff: 'star-off.png',
+        starOn: 'star-on.png',
+        cancel: false,
+        targetKeep: true,
+      });
+      temp.find(".reportBtn").hide();
+
+      let output = temp[0].outerHTML;
+      $("#accordion").append(output);
     }
 
     //我方未評價 / 對方未評價 / 未申訴
     function task8() {
+      let temp = getTemplate();
+      let headingText = "heading" + cnt;
+      let collapseText = "collapse" + cnt;
 
+      //fake data
+      cnt++;
+      let scoreText = "對方還沒有對您評價"
+      let id = 12345;
+      let score = 5;
+      let location = "基隆火車站";
+      let time = "2019/12/3 18:00";
+      let tag = "已完成";
+
+      temp.find("#heading").attr("id", headingText);
+      temp.find("#headingBtn").attr("data-target", "#" + collapseText);
+      temp.find("#headingBtn").attr("aria-controls", collapseText);
+      temp.find("#user_id").text(id);
+      temp.find("#taskdist").text("目的地：" + location);
+      temp.find("#taskRoute").text("時間：" + time);
+      temp.find("#taskTag").text(tag);
+      temp.find("#taskTag").addClass("text-success")
+      temp.find("#collapse").attr("aria-labelledby", headingText);
+      temp.find("#collapse").attr("id", collapseText);
+      temp.find(".scoreOther").text(scoreText);
+      temp.find(".scoreSelf").raty({
+        number: 5,
+        path: 'assets',
+        hints: ['非常差', '差', '普通', '好', '非常好'],
+        starHalf: 'star-half.png',
+        starOff: 'star-off.png',
+        starOn: 'star-on.png',
+        cancel: false,
+        targetKeep: true,
+      });
+
+      let output = temp[0].outerHTML;
+      $("#accordion").append(output);
     }
 
     //差事預約
