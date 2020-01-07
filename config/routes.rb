@@ -1,6 +1,7 @@
 CurrentVersion = 'v0'
 Rails.application.routes.draw do
 
+  resources :messages
   # home page
   root 'static_pages#home'
   get '/index', to: 'static_pages#home'

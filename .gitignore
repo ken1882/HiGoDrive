@@ -25,3 +25,6 @@
 
 # Ignore mongoid uri key file
 /config/mongoid.key
+
+# Ignore email config
+/config/email.yml

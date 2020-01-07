@@ -187,10 +187,14 @@ class User
   
   def engage_task(tid)
     self.add_to_set(tasks_engaging: tid)
+    self.add_to_set(tasks_history: tid)
   end
 
   def resolve_task(tid)
     self.pull(tasks_engaging: tid)
-    self.add_to_set(tasks_history: tid)
+  end
+
+  def all_tasks
+    self.tasks + self.tasks_history
   end
 end
