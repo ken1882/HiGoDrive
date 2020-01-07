@@ -124,29 +124,6 @@ function searchUser(username) {
 
 /************************************ TASK ************************************/
 
-// return [task id 1, task id 2, ...]
-function getMyTasks() {
-  let engaging = getEngagingTask();
-  let history = getTaskHistory();
-  let myTasks = engaging.concat(history);
-  $.ajax({
-    method: "GET",
-    url: "/api/v0/mytasks",
-    data: null,
-    dataType: "json",
-    success: function (result) {
-      myTasks = myTasks.concat(result);
-    },
-    error: function(xhr) {
-      console.log("An error occured:", xhr.status, xhr.statusText);
-    },
-    async: false
-  });
-  myTasks = Array.from(new Set(myTasks));
-  myTasks.sort(function(a, b) { return b - a; });
-  return myTasks;
-}
-
 // return [current task id, next task id]
 function getNextTask(taskId) {
   let nextTask = undefined;
@@ -266,6 +243,8 @@ function getTaskHistory() {
     },
     async: false
   });
+  tasks = Array.from(new Set(tasks));
+  tasks.sort(function(a, b) { return b - a; });
   return tasks;
 }
 
