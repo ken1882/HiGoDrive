@@ -162,7 +162,7 @@ function renderTaskToPage(taskId) {
 }
 
 $(document).ready(function() {
-  let myTasks = getMyTasks();
+  let myTasks = getTaskHistory();
   if (myTasks && myTasks.length) {
     myTasks.slice(0, 8).forEach(taskId => { renderTaskToPage(taskId); });
     $('.score').raty({
