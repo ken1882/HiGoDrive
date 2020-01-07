@@ -89,7 +89,7 @@ class Task
   end
 
   def accepted?
-    (status || 0) != ProgressStatus[:new]
+    driver_id.nil? && (status || 0) != ProgressStatus[:new]
   end
 
   def engaging?

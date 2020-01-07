@@ -27,7 +27,12 @@ class User
   field :tasks_engaging, type: Array
   field :tasks_history, type: Array
   field :forgot_timestamp, type: DateTime
-
+  field :driver_license, type: String
+  field :vehicle_license, type: String
+  field :exterior, type: String
+  field :plate, type: String
+  field :model, type: String
+  
   validates :roles, numericality: { only_integer: true }
   validates :username, presence: true, length: {in: 6..32}, 
     uniqueness: true, format: {with: UsernameRegex}
@@ -123,6 +128,16 @@ class User
       'roles'      => roles,
       'bio'        => bio,
       'avatar_url' => avatar_url,
+    }
+  end
+
+  def driver_json_info
+    {
+      :driver_license   => driver_license,
+      :vehicle_license  => vehicle_license,
+      :exterior         => exterior,
+      :plate            => plate,
+      :model            => model
     }
   end
 
