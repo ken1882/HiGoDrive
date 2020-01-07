@@ -450,16 +450,19 @@
   //測試會使用 getMessage 接受對方傳的訊息 並顯示出來 目前只有接測試狀況
 
   function getMessages() {
-    //test
-    let message = "<p class='my-0'><span>乘客 : TEST</span></p>";
+      //test
+      let message = "TEST";
+      let msg;
       if (isDriver) {
-        $("#psText_driver").append(message);
+        msg = "<p class='my-0'><span>乘客 : " + message + "</span></p>";
+        $("#psText_driver").append(msg);
         $("#psText_driver").scrollTop($("#psText_driver").get(0).scrollHeight)
       } else {
-        $("#psText_passenger").append(message);
+        msg = "<p class='my-0'><span>司機 : " + message + "</span></p>";
+        $("#psText_passenger").append(msg);
         $("#psText_passenger").scrollTop($("#psText_passenger").get(0).scrollHeight)
       }
-  }
+    }
 
   function sendMessage() {
     let msg;
