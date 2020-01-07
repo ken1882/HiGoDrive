@@ -3,6 +3,7 @@ module TasksHelper
   private
   TaskInitParams   = [:dest, :depart_time, :equipments]
   TaskRejectParams = [:id, :reason]
+  TaskPreorderParams = [:dest, :depart_time, :equipments, :driver_id]
 
   def task_init_params
     filter_params TaskInitParams

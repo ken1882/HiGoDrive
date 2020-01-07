@@ -6,7 +6,7 @@ module Api
       before_action :set_user, only: [:show, :getpos, :forgot_password,
         :reset_password, :peak]
       before_action :set_current_user, only: [:update, :setpos,
-        :user_tasks, :tasks_engaging, :tasks_history]
+        :user_tasks, :tasks_engaging, :tasks_history, :verify_driver]
       # ----------
       before_action :validate_init_params, only: [:create]
       before_action :validate_update_params, only: [:update]
@@ -121,6 +121,11 @@ module Api
       # GET /tasks_history
       def tasks_history
         render json: @user.all_tasks || [], status: :ok
+      end
+
+      # POST /verify_driver
+      def verify_driver
+        @user.update(driver_verify_params)
       end
 
       private

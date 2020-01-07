@@ -3,13 +3,23 @@ module Api
     class ReportsController < ApplicationController
       include ReportsHelper
       before_action :validate_login
-      before_action :set_report, only: [:show, :edit, :update, :destroy]
+      before_action :set_report, only: [:mark_finished, :edit, :update, :destroy]
       before_action :set_task, only: [:index, :create]
       before_action :set_user
       before_action :validate_task
 
-      # GET /tasks/:task_id/reports
+      # GET /reports
       def index
+        return unauthorized unless RoleManager.match?(@user.roles, :admin)
+        ret = Report.all.collect do |re|
+          next if re.finished?
+          re.json_info
+        end
+        render json: ret, status: :ok
+      end
+
+      # GET /tasks/:task_id/reports
+      def show
         if RoleManager.match?(@user.roles, :admin)
           render json: @task.reports.collect{|r| r.json_info}, status: :ok
         else
@@ -17,15 +27,6 @@ module Api
           idx  = reports.find_index{|r| r.author_id == @user.id}
           ret = idx.nil? ? nil : reports[idx].json_info
           render json: ret, status: :ok
-        end
-      end
-
-      # GET /tasks/:task_id/reports/1
-      def show
-        if RoleManager.match?(@user.roles, :admin)
-          render json: @report.json_info, status: :ok
-        else
-          return unauthorized
         end
       end
 
@@ -50,7 +51,13 @@ module Api
           end
         end
       end
-    
+      
+      # POST /finish_report/:id
+      def mark_finished
+        return unauthorized unless RoleManager.match?(@user.roles, :admin)
+        @report.update({:finished => true})
+      end
+
       private
       # Use callbacks to share common setup or constraints between actions.
       def set_report

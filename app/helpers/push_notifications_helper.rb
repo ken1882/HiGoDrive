@@ -1,6 +1,8 @@
 module PushNotificationsHelper
   include ApplicationHelper
   
+  
+
   def push_params
     params.permit(:message, { subscription: [:endpoint, keys: [:auth, :p256dh]]})
   end
