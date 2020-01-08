@@ -97,7 +97,7 @@ module Api
         tid = params[:id].to_i rescue nil
         return bad_request if tid.nil?
         next_preorder = (@user.unaccepted_preorders || []).first
-        
+
         ret_cur = 0; ret_nxt = 0;
         idx = (tid == 0 ? 0 : $task_queue.index(tid)) || 0
         ret_cur = $task_queue[idx]
@@ -107,11 +107,15 @@ module Api
 
       # POST /task/accept
       def accept
-        @mutex.synchronize{
-          return unprocessable_entity if @task.accepted?
+        return unprocessable_entity if @task.accepted?
+        if @task.preorder?
           @task.accept(current_user.id)
-          @mutex.target = nil
-        }
+        else
+          @mutex.synchronize{
+            @task.accept(current_user.id)
+            @mutex.target = nil
+          }
+        end
         return_ok
       end
 
