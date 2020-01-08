@@ -4,19 +4,19 @@
   <div class="m-4 p-2">
     <h2 class="text-center">HiGoDrive</h2>
     <br>
-    <img id="motor" class="rounded mx-auto d-block" src=<%= image_url 'motorcycle-solid.svg' %> type="image/svg+xml" />
+    <img id="motor" class="rounded mx-auto d-block" src=<%= image_path 'motorcycle-solid.svg' %> type="image/svg+xml" />
     <hr>
   </div>
 
   <div class="accordion" id="accordion">
-    <!--樣式模板>>-->
+
     <div class="card" id="template-report">
-      <div class="card-header" id="headingOne">
-        <button class="btn btn-block" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false"
-          aria-controls="collapseOne">
+      <div class="card-header" id="headingReport">
+        <button id="headingBtn" class="btn btn-block" data-toggle="collapse" data-target="#collapseReport"
+          aria-expanded="false" aria-controls="collapseReport">
           <div class="row">
             <div class="col-5">
-              <span name="id" class="text-primary text-left">用戶：12345</span>
+              <span>用戶：</span><span id="repoterIdTitle" name="id" class="text-primary text-left"></span>
             </div>
             <div class="col-5">
               <span name="type" class="text-warning">申訴處理</span>
@@ -27,74 +27,79 @@
           </div>
         </button>
       </div>
-      <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+      <div id="collapseReport" class="collapse" aria-labelledby="headingReport" data-parent="#accordion">
         <div class="card-body">
           <span>訂單簡介</span>
           <ul>
-            <li>目的地：</li>
-            <li>路程：</li>
-            <li>費用：</li>
+            <li>目的地：<span id="placeName"></span></li>
+            <li>費用：<span id="fare"></span></li>
           </ul>
-          <p><span>申訴者ID：</span><a href="#">123456</a></p>
-          <p><span>被申訴ID：</span><a href="#">48763</a></p>
-          <p id="report_content">申訴說明：垃圾司機</p>
+          <p><span>駕駛名稱：</span><span id="driverName"></span></p>
+          <p><span>乘客名稱：</span><span id="passengerName"></span></p>
+          <p id="report_content">申訴說明：<span id="reportComment"></span></p>
           <br>
-          <button type="button" class="btn btn-success btn-block">申訴處理完成</button>
+          <form action="/api/v0/finish_report" class="finish-report-form" method="POST">
+            <button type="submit" class="btn btn-success btn-block">申訴處理完成</button>
+          </form>
         </div>
       </div>
     </div>
 
-    <div class="card">
-      <div class="card-header" id="headingTwo">
-        <button class="btn btn-block" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false"
-          aria-controls="collapseTwo">
-          <div class="row">
-            <div class="col-5">
-              <span name="id" class="text-primary text-left">用戶：58586</span>
+    <template>
+      <div class="card">
+        <div class="card-header" id="headingTwo">
+          <button class="btn btn-block" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false"
+            aria-controls="collapseTwo">
+            <div class="row">
+              <div class="col-5">
+                <span name="id" class="text-primary text-left">用戶：58586</span>
+              </div>
+              <div class="col-5">
+                <span name="type" class="text-warning">司機資格審核</span>
+              </div>
+              <div class="col-2">
+                <i class="fas fa-sort-down fa-lg"></i>
+              </div>
             </div>
-            <div class="col-5">
-              <span name="type" class="text-warning">司機資格審核</span>
-            </div>
-            <div class="col-2">
-              <i class="fas fa-sort-down fa-lg"></i>
-            </div>
-          </div>
-        </button>
-      </div>
-      <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
-        <div class="card-body">
-          <p>
-            駕照正面照片
-            <img src="#" alt="駕照正面照片">
-          </p>
-          <p>
-            行照正片照片
-            <img src="#" alt="行照正片照片">
-          </p>
-          <p>
-            車身照片
-            <img src="#" alt="車身照片">
-          </p>
-          <p>車牌：</p>
-          <p>車型：</p>
-          <br>
-          <div class="row">
-            <div class="col">
-              <button type="button" class="btn btn-danger btn-block">不通過</button>
-            </div>
-            <div class="col">
-              <button type="button" class="btn btn-success btn-block">通過</button>
+          </button>
+        </div>
+        <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+          <div class="card-body">
+            <p>
+              駕照正面照片
+              <img src="#" alt="駕照正面照片">
+            </p>
+            <p>
+              行照正片照片
+              <img src="#" alt="行照正片照片">
+            </p>
+            <p>
+              車身照片
+              <img src="#" alt="車身照片">
+            </p>
+            <p>車牌：</p>
+            <p>車型：</p>
+            <br>
+            <div class="row">
+              <div class="col">
+                <button type="button" class="btn btn-danger btn-block">不通過</button>
+              </div>
+              <div class="col">
+                <button type="button" class="btn btn-success btn-block">通過</button>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-    <!--<<樣式模板-->
+    </template>
+
   </div>
 </div>
 
 <script type="text/javascript">
   function renderReport(report) {
+    if (!report)  return;
+
     let card = $("#template-report").clone();
 
     let taskId = report.task_id;
@@ -104,13 +109,37 @@
     let driverName = reportedTask.driver_name;
     let passengerName = reportedTask.author_name;
 
+    let reportId = report.id;
     let reporterId = report.author_id;
+    let reporterName = report.author_name;
     let reportComment = report.comment;
     let reportTime = report.created_at;
 
-    // TODO: fill card content
+    card.find("#repoterIdTitle").text(reporterName);
+    card.find("#headingReport").attr("id", "headingReport" + taskId);
+    card.find("#headingBtn").attr("data-target", "#" + "collapseReport" + taskId);
+    card.find("#headingBtn").attr("aria-controls", "collapseReport" + taskId);
+    card.find("#headingBtn").attr("id", "headingBtn" + taskId);
+    card.find("#headingReport").text(reporterId);
+    card.find("#headingReport").attr("id", "headingReport" + taskId);
+    card.find("#collapseReport").attr("aria-labelledby", "headingReport" + taskId);
+    card.find("#collapseReport").attr("id", "collapseReport" + taskId);
+    card.find("#placeName").text(placeName);
+    card.find("#placeName").attr("id", "placeName" + taskId);
+    card.find("#fare").text(fare);
+    card.find("#fare").attr("id", "fare" + taskId);
+    card.find("#driverName").text(driverName);
+    card.find("#driverName").attr("id", "driverName" + taskId);
+    card.find("#passengerName").text(passengerName);
+    card.find("#passengerName").attr("id", "passengerName" + taskId);
+    card.find("#reportComment").text(reportComment);
+    card.find("#reportComment").attr("id", "reportComment" + taskId);
 
-    // $("#accordion").append(card);
+    let reportForm = card.find(".finish-report-form");
+    reportForm.append('<input type="hidden" name="id" value="' + reportId + '">');
+    reportForm.append('<input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">');
+
+    $("#accordion").append(card);
   }
 
   $(document).ready(function() {
@@ -118,7 +147,6 @@
     reportList.forEach(report => {
       renderReport(report);
     });
+    $("#template-report").remove();
   });
-
-  $('.collapse').collapse();
 </script>
