@@ -14,15 +14,15 @@
   <form id="driver-license-form" action="">
     <div class="form-group">
       <label for="driver_license">駕照正面照片</label>
-      <input type="file" class="form-control-file" id="driver_license" name="driver_license" accept="image/*" required>
+      <input type="file" class="form-control-file" id="driver_license" name="driver_license" value="" accept="image/*" required>
     </div>
     <div class="form-group">
       <label for="vehicle_license">行照正面照片</label>
-      <input type="file" class="form-control-file" id="vehicle_license" name="vehicle_license" accept="image/*" required>
+      <input type="file" class="form-control-file" id="vehicle_license" name="vehicle_license" value="" accept="image/*" required>
     </div>
     <div class="form-group">
       <label for="exterior">車身照片</label>
-      <input type="file" class="form-control-file" id="exterior" name="exterior" accept="image/*" required>
+      <input type="file" class="form-control-file" id="exterior" name="exterior" value="" accept="image/*" required>
     </div>
     <div class="form-group">
       <label for="plate">車牌</label>
@@ -48,8 +48,6 @@
 </div>
 
 <script>
-  let imgurUrl = {};
-
   $("document").ready(function () {
       $('input[type=file]').on("change", function () {
 
@@ -83,22 +81,23 @@
           formData.append("image", $files[0]);
           settings.data = formData;
 
-          let url;
+          let url = undefined;
           // Response contains stringified JSON
           // Image URL available at response.data.link
           $.ajax(settings).done(function (response) {
             url = JSON.parse(response).data.link;
           });
-          imgurUrl[$(this).attr('id')] = url;
+
+          $(this)[0].setAttribute("value", url);
         }
       });
     });
 
     $("#driver-license-form").submit(function() {
       let driver = {
-        driverLicense: imgurUrl["driver_license"],
-        vehicleLicense: imgurUrl["vehicle_license"],
-        exterior: imgurUrl["exterior"],
+        driverLicense: $("#driver_license").attr("value"),
+        vehicleLicense: $("#vehicle_license").attr("value"),
+        exterior: $("#exterior").attr("value"),
         plate: $("#plate").val(),
         model: $("#model").val()
       };
