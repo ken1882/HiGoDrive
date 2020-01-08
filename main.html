@@ -109,6 +109,9 @@
           <div class="form-group">
             <label for="orderDriver">預約司機</label>
             <input type="text" class="form-control" id="orderDriver" name="orderDriver">
+            <div class="invalid-feedback">
+              找不到該名司機
+            </div>
           </div>
           <div class="row">
             <div class="col px-2">
@@ -331,11 +334,27 @@
   <script async defer
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBpBgVKm6TqmDB0b3w-y3VoP3Oo-jWPWGY&libraries=places&callback=initMap"></script>
   <script type="text/javascript">
+    //test function
+    function checkUserName(e) {
+      return false;
+    }
+
+    //check reserve driver name
+    $("#orderDriver").on("focusout", function (e) {
+      if (checkUserName($("#orderDriver").val())) {
+        $(this).removeClass("is-invalid");
+      } else {
+        $(this).addClass("is-invalid");
+      }
+
+    });
+
     //訂單建立階段按下預約行程會使用此 function
     //會把調整時間的選項顯示出來並把選項文字改成取消預約
     //如果按下取消預約 則會把 datepicker 的內容清除 並取消顯示
     function resv(item) {
       document.getElementById('datetimepickerDiv').style.display = "flex";
+      $("#searchDriver").removeClass("d-none");
       console.log(document.getElementById('resvtime').value);
       if (item.innerHTML == "預約行程") {
         item.innerHTML = "取消預約";
@@ -343,6 +362,7 @@
         item.innerHTML = "預約行程";
         $('#datetimepicker').datetimepicker('clear');
         $('#datetimepicker').datetimepicker('date', new Date());
+        $("#searchDriver").addClass("d-none");
         document.getElementById('datetimepickerDiv').style.display = "none";
       }
     }
