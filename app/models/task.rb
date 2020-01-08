@@ -17,6 +17,7 @@ class Task
   validates :depart_time, presence: true
 
   ProgressStatus = {
+    :preorder => -1,
     :new      => 0,
     :accepted => 1,
     :engaging => 2,
@@ -38,13 +39,17 @@ class Task
   
   def initialize(_params)
     _params[:equipments] ||= 0
-    _params[:status]       = 0
     _params[:depart_time]  = Time.at(_params[:depart_time].to_i)
-    @@mutex.synchronize{
-      $task_queue << @@next_id
-      _params[:id] = @@next_id
-      @@next_id += 1
-    }
+    if _params[:preorder].to_i.to_bool
+      _params[:status] = ProgressStatus[:preorder]
+    else
+      _params[:status] = ProgressStatus[:new]
+      @@mutex.synchronize{
+        $task_queue << @@next_id
+        _params[:id] = @@next_id
+        @@next_id += 1
+      }
+    end
     super
   end
 
@@ -86,6 +91,11 @@ class Task
 
   def reject(msg)
     self.add_to_set(reject_reasons: msg)
+    cancel if preorder?
+  end
+
+  def preorder?
+    status == ProgressStatus[:preorder]
   end
 
   def accepted?

@@ -1,7 +1,7 @@
 module TasksHelper
   include ApplicationHelper
   private
-  TaskInitParams   = [:dest, :depart_time, :equipments]
+  TaskInitParams   = [:dest, :depart_time, :equipments, :preorder]
   TaskRejectParams = [:id, :reason]
   TaskPreorderParams = [:dest, :depart_time, :equipments, :driver_id]
 

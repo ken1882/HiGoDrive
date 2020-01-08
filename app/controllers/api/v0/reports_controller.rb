@@ -6,7 +6,7 @@ module Api
       before_action :set_report, only: [:mark_finished, :edit, :update, :destroy]
       before_action :set_task, only: [:create]
       before_action :set_user
-      before_action :validate_task
+      before_action :validate_task, only: [:create]
 
       # GET /reports
       def index

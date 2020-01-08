@@ -26,13 +26,9 @@ module Api
         mu
       end
 
-      def self.create_task(user, depart_time, equips, driver=nil)
+      def self.create_task(user, _params)
         user = User.wide_query(user) unless user.is_a? User
-        user.tasks.create({
-          equipments: equips,
-          depart_time: depart_time,
-          driver_id: driver
-        })
+        user.tasks.create(_params)
       end
 
       # GET /tasks
@@ -51,7 +47,7 @@ module Api
       # POST /tasks.json
       def create
         _params = task_init_params
-        @task = TasksController.create_task(current_user, _params[:depart_time], _params[:equipments])
+        @task = TasksController.create_task(current_user, _params)
         respond_to do |format|
           if @task.save
             format.html { redirect_to '/home', notice: 'Task was successfully created.' }
