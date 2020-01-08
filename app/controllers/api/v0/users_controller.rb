@@ -163,7 +163,8 @@ module Api
       # GET /unprocessed_licenses
       def unprocessed_licenses
         return forbidden unless RoleManager.match?(@user.roles, :admin)
-        render json: $unlicensed_drivers, status: :ok
+        ret = User.find($unlicensed_drivers).collect{|u| u.driver_json_info}
+        render json: ret, status: :ok
       end
 
       private
