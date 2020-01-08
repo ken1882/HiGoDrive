@@ -10,10 +10,14 @@ module Api
 
       # GET /reports
       def index
-        return unauthorized unless RoleManager.match?(@user.roles, :admin)
-        ret = Report.all.collect do |re|
-          next if re.finished?
-          re.json_info
+        ret = []
+        if RoleManager.match?(@user.roles, :admin)
+          ret = Report.all.collect do |re|
+            next if re.finished?
+            re.json_info
+          end
+        else
+          ret = @user.reports.collect{|re| re.json_info}
         end
         render json: ret, status: :ok
       end
