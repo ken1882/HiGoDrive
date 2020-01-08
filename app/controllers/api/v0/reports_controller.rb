@@ -19,7 +19,7 @@ module Api
         else
           ret = Report.all.collect{|re| re.json_info if re.author_id == @user.id}
         end
-        render json: ret, status: :ok
+        render json: ret.compact, status: :ok
       end
 
       # GET /tasks/:task_id/reports
