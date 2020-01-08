@@ -68,12 +68,17 @@ class Task
   end
 
   def accept(_did)
-    @@mutex.synchronize{$task_queue.delete(self.id.to_i)}
+    if preorder?
+      driver.pull(unaccepted_preorders: self.id)
+      driver.add_to_set(accepted_preorders: self.id)
+    else
+      @@mutex.synchronize{$task_queue.delete(self.id.to_i)}
+      driver.engage_task(self.id)
+    end
     self.update({
       status: ProgressStatus[:accepted],
       driver_id: _did
     })
-    driver.engage_task(self.id)
   end
 
   def engage

@@ -212,8 +212,9 @@ module Api
       end
       
       def driver_licensed?
-        return true unless RoleManager.match?(params[:roles].to_i, :driver)
-        return @user.licensed?
+        #return true unless RoleManager.match?(params[:roles].to_i, :driver)
+        #return @user.licensed?
+        return true
       end
 
       def coordinates_ok?(lat, lng)
