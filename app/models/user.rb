@@ -4,7 +4,7 @@ class User
   include ActiveModel::SecurePassword
   
   has_many :tasks, dependent: :destroy
-  has_many :push_notification, dependent: :destroy
+  has_many :push_notifications, dependent: :destroy
 
   UsernameRegex = /\A[[:alnum:]]*\z/
   EmailRegex = /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i

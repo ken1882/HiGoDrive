@@ -4,7 +4,7 @@ module Api
       include ReportsHelper
       before_action :validate_login
       before_action :set_report, only: [:mark_finished, :edit, :update, :destroy]
-      before_action :set_task, only: [:index, :create]
+      before_action :set_task, only: [:create]
       before_action :set_user
       before_action :validate_task
 
