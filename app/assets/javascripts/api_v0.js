@@ -122,6 +122,27 @@ function searchUser(username) {
   return targetUserId;
 }
 
+function verifyDriver(driver) {
+  $.ajax({
+    method: "POST",
+    url: "/api/v0/verify_driver",
+    data: {
+      authenticity_token: Util.AuthToken,
+      driver_license: driver.driverLicense,
+      vehicle_license: driver.vehicleLicense,
+      exterior: driver.exterior,
+      plate: driver.plate,
+      model: driver.model
+    },
+    dataType: "json",
+    success: null,
+    error: function(xhr) {
+      console.log("An error occured:", xhr.status, xhr.statusText);
+    },
+    async: true
+  });
+}
+
 /************************************ TASK ************************************/
 
 // return [current task id, next task id]

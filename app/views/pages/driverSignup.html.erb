@@ -1,4 +1,4 @@
-<% provide :page_title, "Home" %>
+<% provide :page_title, "Driver Signup" %>
 
 <div class="container">
 
@@ -11,8 +11,7 @@
     <hr>
   </div>
 
-
-  <form id="driver-license-form" action="" method="POST">
+  <form id="driver-license-form" action="">
     <div class="form-group">
       <label for="driver_license">駕照正面照片</label>
       <input type="file" class="form-control-file" id="driver_license" name="driver_license" accept="image/*" required>
@@ -49,51 +48,61 @@
 </div>
 
 <script>
+  let imgurUrl = {};
+
   $("document").ready(function () {
-    var img = {
-      "driver_license": "",
-      "vehicle_license": "",
-      "exterior": ""
-    };
+      $('input[type=file]').on("change", function () {
 
-    $('input[type=file]').on("change", function () {
-      var $files = $(this).get(0).files;
+        let $files = $(this).get(0).files;
 
-      if ($files.length) {
-        // Reject big files
-        if ($files[0].size > $(this).data("max-size") * 1024) {
-          alert("Please select a smaller file");
-          return false;
+        if ($files.length) {
+          // Reject big files
+          if ($files[0].size > $(this).data("max-size") * 1024) {
+            alert("Please select a smaller file");
+            return false;
+          }
+
+          // Replace ctrlq with your own API key
+          let apiUrl = 'https://api.imgur.com/3/image';
+          let apiKey = '609d7822f8deef7';
+          let settings = {
+            async: false,
+            crossDomain: true,
+            processData: false,
+            contentType: false,
+            type: 'POST',
+            url: apiUrl,
+            headers: {
+              Authorization: 'Client-ID ' + apiKey,
+              Accept: 'application/json'
+            },
+            mimeType: 'multipart/form-data'
+          };
+
+          let formData = new FormData();
+          formData.append("image", $files[0]);
+          settings.data = formData;
+
+          let url;
+          // Response contains stringified JSON
+          // Image URL available at response.data.link
+          $.ajax(settings).done(function (response) {
+            url = JSON.parse(response).data.link;
+          });
+          imgurUrl[$(this).attr('id')] = url;
         }
-
-        // Replace ctrlq with your own API key
-        var apiUrl = 'https://api.imgur.com/3/image';
-        var apiKey = '609d7822f8deef7';
-
-        var settings = {
-          async: false,
-          crossDomain: true,
-          processData: false,
-          contentType: false,
-          type: 'POST',
-          url: apiUrl,
-          headers: {
-            Authorization: 'Client-ID ' + apiKey,
-            Accept: 'application/json'
-          },
-          mimeType: 'multipart/form-data'
-        };
-
-        var formData = new FormData();
-        formData.append("image", $files[0]);
-        settings.data = formData;
-
-        var tmp;
-        $.ajax(settings).done(function (response) {
-          tmp = JSON.parse(response).data.link;
-        });
-        img[$(this).attr('id')] = tmp;
-      }
+      });
     });
-  });
+
+    $("#driver-license-form").submit(function() {
+      let driver = {
+        driverLicense: imgurUrl["driver_license"],
+        vehicleLicense: imgurUrl["vehicle_license"],
+        exterior: imgurUrl["exterior"],
+        plate: $("#plate").val(),
+        model: $("#model").val()
+      };
+      verifyDriver(driver);
+      return false;
+    });
 </script>
