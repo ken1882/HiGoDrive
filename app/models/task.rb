@@ -75,8 +75,7 @@ class Task
 
   def accept(_did)
     if preorder?
-      driver.pull(unaccepted_preorders: self.id)
-      driver.add_to_set(accepted_preorders: self.id)
+      driver.accept_preorder(self.id)
     else
       @@mutex.synchronize{$task_queue.delete(self.id.to_i)}
       driver.engage_task(self.id)
