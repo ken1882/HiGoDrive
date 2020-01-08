@@ -16,7 +16,7 @@ module Api
       def self.send_notification(notification)
         user = User.find(notification.parent)
         return if user.nil?
-        WebpushJob.perform_later notification.message,
+        WebpushJob.perform_later notification.json_info,
           endpoint: user.endpoint,
           p256dh: user.p256dh,
           auth: user.auth
