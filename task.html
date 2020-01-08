@@ -154,21 +154,74 @@
       return $(tmpTask).clone();
     }
 
-    function task(type) {
-      let temp = getTemplate();
+    //fake function
+    function getTaskReport(id) {
+      return true;
+    }
 
-      //fake data
+    function getTaskReview(id) {
+      var fakeReview = [
+        {
+          author_id: 12345,
+          score: 1,
+          comment: ""
+        },
+        {
+          author_id: 56789,
+          score: 3,
+          comment: ""
+        }
+      ]
+      return fakeReview;
+    }
+
+    function getCurrentUser() {
+      let id = 56789;
+      return id;
+    }
+    //---------------------
+
+    function task() {
+      let temp = getTemplate();
       let resvText = '<span>差事已預約尚未開始進行</span>';
       let rejectText = '<span>拒絕原因：太遠了</span>';
+      let goingText = '<span>差事進行中</span>';
       let scoreText = "對方還沒有對您評價";
-      taskId++;
+
+      //let taskInfo = getTasks(taskId);
+      let isReport = getTaskReport(taskId);
+      let reviewObject = getTaskReview(taskId);
+      let user = getCurrentUser();
+
+      let isFinish = true;
+      let isReserve = false;
+      let isReject = false;
+      let isGoing = false;
+
+      let otherScore = false;
+      let otherScoreStar;
+      let selfScore = false;
+      let selfScoreStar;
+
+      for (let i = 0; i < reviewObject.length; i++) {
+        if (reviewObject[i]["author_id"] == user) {
+          selfScore = true;
+          selfScoreStar = reviewObject[i]["score"]
+        } else {
+          otherScore = true;
+          otherScoreStar = reviewObject[i]["score"]
+        }
+      }
+
       let headingText = "heading" + taskId;
       let collapseText = "collapse" + taskId;
+
+      //fake data
       let id = 12345;
-      let score = 4;
       let location = "基隆火車站";
       let time = "2019/12/3 18:00";
-      let tag = ["已完成", "已預約", "已拒絕"];
+      let tag = ["已完成", "已預約", "已拒絕", "進行中"];
+      taskId++;
 
       temp.find("#heading").attr("id", headingText);
       temp.find("#headingBtn").attr("data-target", "#" + collapseText);
@@ -180,159 +233,85 @@
       temp.find("#taskdist").attr("id", "taskdist" + taskId);
       temp.find("#taskRoute").text("時間：" + time);
       temp.find("#taskRoute").attr("id", "taskRoute" + taskId);
-      if (type < 9) {
-        //完成狀況
+
+      if (isFinish) {
         temp.find("#taskTag").text(tag[0]);
         temp.find("#taskTag").addClass("text-success");
-      } else if (type == 9) {
-        //預約狀況
+      }
+      if (isReserve) {
         temp.find("#taskTag").text(tag[1]);
         temp.find("#taskTag").addClass("text-primary");
-      } else if (type == 10) {
-        //拒絕狀況
+      }
+      if (isReject) {
         temp.find("#taskTag").text(tag[2]);
         temp.find("#taskTag").addClass("text-danger");
       }
+      if (isGoing) {
+        temp.find("#taskTag").text(tag[3]);
+        temp.find("#taskTag").addClass("text-warning");
+      }
+
       temp.find("#taskTag").attr("id", "taskTag" + taskId);
       temp.find("#collapse").attr("aria-labelledby", headingText);
       temp.find("#collapse").attr("id", collapseText);
-      //我方已評價 / 對方已評價 / 已申訴
-      if (type == 1) {
-        temp.find(".scoreOther").raty({
-          number: 5,
-          score: score,
-          readOnly: true,
-          path: 'assets',
-          hints: ['非常差', '差', '普通', '好', '非常好'],
-          starHalf: 'star-half.png',
-          starOff: 'star-off.png',
-          starOn: 'star-on.png',
-        });
-        temp.find(".scoreDone").raty({
-          number: 5,
-          score: score - 1,
-          readOnly: true,
-          path: 'assets',
-          hints: ['非常差', '差', '普通', '好', '非常好'],
-          starHalf: 'star-half.png',
-          starOff: 'star-off.png',
-          starOn: 'star-on.png'
-        });
-        temp.find("form, .score").hide();
+
+      if (isFinish) {
+
+        //對方評價
+        if (otherScore) {
+          temp.find(".scoreOther").raty({
+            number: 5,
+            score: otherScoreStar,
+            readOnly: true,
+            path: 'assets',
+            hints: ['非常差', '差', '普通', '好', '非常好'],
+            starHalf: 'star-half.png',
+            starOff: 'star-off.png',
+            starOn: 'star-on.png',
+          });
+        } else {
+          temp.find(".scoreOther").text(scoreText);
+        }
+
+        //我方評價
+        if (selfScore) {
+          temp.find(".scoreDone").raty({
+            number: 5,
+            score: selfScoreStar,
+            readOnly: true,
+            path: 'assets',
+            hints: ['非常差', '差', '普通', '好', '非常好'],
+            starHalf: 'star-half.png',
+            starOff: 'star-off.png',
+            starOn: 'star-on.png'
+          });
+          temp.find("form textarea, form .scoreBtn, form .score").hide();
+        } else {
+          temp.find(".scoreDone").hide();
+        }
+
+        //申訴
+        if (isReport) {
+          temp.find(".reportBtn").hide();
+        }
+
       }
-      //我方已評價 / 對方已評價 / 未申訴
-      if (type == 2) {
-        temp.find(".scoreOther").raty({
-          number: 5,
-          score: score,
-          readOnly: true,
-          path: 'assets',
-          hints: ['非常差', '差', '普通', '好', '非常好'],
-          starHalf: 'star-half.png',
-          starOff: 'star-off.png',
-          starOn: 'star-on.png',
-        });
-        temp.find(".scoreDone").raty({
-          number: 5,
-          score: score - 1,
-          readOnly: true,
-          path: 'assets',
-          hints: ['非常差', '差', '普通', '好', '非常好'],
-          starHalf: 'star-half.png',
-          starOff: 'star-off.png',
-          starOn: 'star-on.png'
-        });
-        temp.find("form textarea, form .scoreBtn, .score").hide();
-      }
-      //我方已評價 / 對方未評價 / 已申訴
-      if (type == 3) {
-        temp.find(".scoreOther").text(scoreText);
-        temp.find(".scoreDone").raty({
-          number: 5,
-          score: score - 1,
-          readOnly: true,
-          path: 'assets',
-          hints: ['非常差', '差', '普通', '好', '非常好'],
-          starHalf: 'star-half.png',
-          starOff: 'star-off.png',
-          starOn: 'star-on.png'
-        });
-        temp.find("form, .score").hide();
-      }
-      //我方已評價 / 對方未評價 / 未申訴
-      if (type == 4) {
-        temp.find(".scoreOther").text(scoreText);
-        temp.find(".scoreDone").raty({
-          number: 5,
-          score: score - 1,
-          readOnly: true,
-          path: '/assets',
-          hints: ['非常差', '差', '普通', '好', '非常好'],
-          starHalf: 'star-half.png',
-          starOff: 'star-off.png',
-          starOn: 'star-on.png'
-        });
-        temp.find("form textarea, form .scoreBtn, .score").hide();
-      }
-      //我方未評價 / 對方已評價 / 已申訴
-      if (type == 5) {
-        temp.find(".scoreOther").raty({
-          number: 5,
-          score: score,
-          readOnly: true,
-          path: 'assets',
-          hints: ['非常差', '差', '普通', '好', '非常好'],
-          starHalf: 'star-half.png',
-          starOff: 'star-off.png',
-          starOn: 'star-on.png',
-        });
-        temp.find(".score").raty({
-          number: 5,
-          path: 'assets',
-          hints: ['非常差', '差', '普通', '好', '非常好'],
-          starHalf: 'star-half.png',
-          starOff: 'star-off.png',
-          starOn: 'star-on.png',
-          cancel: false,
-          targetKeep: true,
-        });
-        temp.find(".reportBtn, .scoreDone").hide();
-      }
-      //我方未評價 / 對方已評價 / 未申訴
-      if (type == 6) {
-        temp.find(".scoreOther").raty({
-          number: 5,
-          score: score,
-          readOnly: true,
-          path: 'assets',
-          hints: ['非常差', '差', '普通', '好', '非常好'],
-          starHalf: 'star-half.png',
-          starOff: 'star-off.png',
-          starOn: 'star-on.png',
-        });
-        temp.find(".scoreDone").hide();
-      }
-      //我方未評價 / 對方未評價 / 已申訴
-      if (type == 7) {
-        temp.find(".scoreOther").text(scoreText);
-        temp.find(".reportBtn, .scoreDone").hide();
-      }
-      //我方未評價 / 對方未評價 / 未申訴
-      if (type == 8) {
-        temp.find(".scoreOther").text(scoreText);
-        temp.find(".scoreDone").hide();
-      }
-      //差事預約
-      if (type == 9) {
+
+      if (isReserve) {
         temp.find(".card-body").html(resvText);
       }
-      //差事拒絕
-      if (type == 10) {
+
+      if (isReject) {
         temp.find(".card-body").html(rejectText);
+      }
+
+      if (isGoing) {
+        temp.find(".card-body").html(goingText);
       }
 
       let output = temp[0].outerHTML;
       $("#accordion").append(output);
+
       $(".scoreSelf").raty({
         number: 5,
         path: 'assets',
