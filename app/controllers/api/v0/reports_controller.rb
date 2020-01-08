@@ -55,11 +55,12 @@ module Api
           end
         end
       end
-      
+
       # POST /finish_report/:id
       def mark_finished
         return unauthorized unless RoleManager.match?(@user.roles, :admin)
         @report.update({:finished => true})
+        redirect_to '/admin'
       end
 
       private
@@ -67,7 +68,7 @@ module Api
       def set_report
         @report = Report.find(params[:id])
       end
-      
+
       def set_task
         return @review.task if @review
         @task = Task.find params[:task_id].to_i
@@ -96,4 +97,4 @@ module Api
       end
     end
   end # Api::V0
-end    
+end
