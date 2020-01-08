@@ -106,7 +106,7 @@
               </div>
             </div>
           </div>
-          <div class="form-group">
+          <div id="orderDriverDiv" class="form-group d-none">
             <label for="orderDriver">預約司機</label>
             <input type="text" class="form-control" id="orderDriver" name="orderDriver">
             <div class="invalid-feedback">
@@ -346,7 +346,6 @@
       } else {
         $(this).addClass("is-invalid");
       }
-
     });
 
     //訂單建立階段按下預約行程會使用此 function
@@ -354,7 +353,7 @@
     //如果按下取消預約 則會把 datepicker 的內容清除 並取消顯示
     function resv(item) {
       document.getElementById('datetimepickerDiv').style.display = "flex";
-      $("#searchDriver").removeClass("d-none");
+      $("#orderDriverDiv").removeClass("d-none");
       console.log(document.getElementById('resvtime').value);
       if (item.innerHTML == "預約行程") {
         item.innerHTML = "取消預約";
@@ -362,7 +361,9 @@
         item.innerHTML = "預約行程";
         $('#datetimepicker').datetimepicker('clear');
         $('#datetimepicker').datetimepicker('date', new Date());
-        $("#searchDriver").addClass("d-none");
+        $("#orderDriver").val("");
+        $("#orderDriver").removeClass("is-invalid");
+        $("#orderDriverDiv").addClass("d-none");
         document.getElementById('datetimepickerDiv').style.display = "none";
       }
     }
