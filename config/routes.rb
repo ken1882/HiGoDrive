@@ -76,6 +76,7 @@ Rails.application.routes.draw do
       post '/upload_license', to: 'users#accept_license'
       post '/accept_license', to: 'users#accept_license'
       post '/reject_license', to: 'users#reject_license'
+      get '/unprocessed_licenses', to: 'users#unprocessed_licenses'
 
       match '/tasks/comment', to: 'tasks#send_comment', via: [:post]
     end

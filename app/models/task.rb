@@ -37,6 +37,12 @@ class Task
   end
   def self.mutex; @@mutex; end
 
+  def self.execute_preorder(tid)
+    _task = self.find(tid)
+    return unless _task
+    # TODO
+  end
+
   def initialize(_params)
     _params[:equipments] ||= 0
     _params[:depart_time]  = Time.at(_params[:depart_time].to_i)
