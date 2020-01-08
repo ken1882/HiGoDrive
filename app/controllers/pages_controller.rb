@@ -73,9 +73,8 @@ class PagesController < ApplicationController
   end
 
   def admin
-    # TODO: LOGIN CHECK
-    # flash.now[:danger] = 'Please log in as administrator' unless logged_in?
-    # return login unless logged_in?
+    flash.now[:danger] = 'Please log in as administrator' unless logged_in?
+    return login unless logged_in?
     render 'admin'
   end
 end
