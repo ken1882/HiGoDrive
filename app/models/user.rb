@@ -223,6 +223,10 @@ class User
     self.add_to_set(tasks_history: tid)
   end
 
+  def engage_preorder(tid)
+    self.add_to_set(tasks_engaging: tid)
+  end
+
   def resolve_task(tid)
     self.pull(tasks_engaging: tid)
     self.pull(accepted_preorders: tid)

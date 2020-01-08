@@ -10,6 +10,6 @@ class TaskPreorder
   end
 
   def execute
-    # TODO
+    Task.execute_preorder(@task_id)
   end
 end

@@ -96,12 +96,15 @@ module Api
       def next_task
         tid = params[:id].to_i rescue nil
         return bad_request if tid.nil?
-        next_preorder = (@user.unaccepted_preorders || []).first
-
         ret_cur = 0; ret_nxt = 0;
         idx = (tid == 0 ? 0 : $task_queue.index(tid)) || 0
-        ret_cur = $task_queue[idx]
-        ret_nxt = $task_queue[idx+1]
+        if next_preorder = (@user.unaccepted_preorders || []).first
+          ret_nxt = $task_queue[idx]
+          ret_cur = next_preorder
+        else
+          ret_cur = $task_queue[idx]
+          ret_nxt = $task_queue[idx+1]
+        end
         render json: {task_id: ret_cur || 0, next_id: ret_nxt || 0}
       end
 
@@ -110,6 +113,7 @@ module Api
         return unprocessable_entity if @task.accepted?
         if @task.preorder?
           @task.accept(current_user.id)
+          TimerManager.add_preorder(@task.id, @task.depart_time.to_i)
         else
           @mutex.synchronize{
             @task.accept(current_user.id)
