@@ -18,9 +18,9 @@ module TimerManager
     end
   end
 
-  def add_preorder(uid, _time)
+  def add_preorder(task_id, _time)
     @@mutex.synchronize {
-      @preorder_queue << TaskPreorder.new(uid, _time)
+      @preorder_queue << TaskPreorder.new(task_id, _time)
     }
   end
 

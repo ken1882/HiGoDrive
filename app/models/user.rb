@@ -37,6 +37,8 @@ class User
   field :exterior, type: String
   field :plate, type: String
   field :model, type: String
+  field :unaccepted_preorders, type: Array
+  field :accepted_preorders, type: Array
 
   validates :roles, numericality: { only_integer: true }
   validates :username, presence: true, length: {in: 6..32},
@@ -216,6 +218,8 @@ class User
 
   def resolve_task(tid)
     self.pull(tasks_engaging: tid)
+    self.pull(accepted_preorders: tid)
+    self.pull(unaccepted_preorders: tid)
   end
 
   def all_tasks
