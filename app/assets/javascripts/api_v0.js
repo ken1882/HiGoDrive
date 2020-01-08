@@ -421,6 +421,38 @@ function getUnreadNotification() {
 
 /******************************* ADMINISTRATION *******************************/
 function getReportList() {
-
+  let reports = undefined;
+  $.ajax({
+    method: "GET",
+    url: "/api/v0/reports",
+    data: null,
+    dataType: "json",
+    success: function (result) {
+      reports = result;
+    },
+    error: function(xhr) {
+      console.log("An error occured:", xhr.status, xhr.statusText);
+    },
+    async: false
+  });
+  return reports;
 }
 
+function finishReport(taskId) {
+  $.ajax({
+    method: "POST",
+    url: "/api/v0/finish_report/" + taskId,
+    data: {
+      authenticity_token: Util.AuthToken,
+      id: taskId
+    },
+    dataType: "json",
+    success: function(r) {
+      console.log(r);
+    },
+    error: function(xhr) {
+      console.log("An error occured:", xhr.status, xhr.statusText);
+    },
+    async: true
+  });
+}
