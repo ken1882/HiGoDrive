@@ -6,7 +6,8 @@ module Api
       before_action :set_user, only: [:show, :getpos, :forgot_password,
         :reset_password, :peak]
       before_action :set_current_user, only: [:update, :setpos,
-        :user_tasks, :tasks_engaging, :tasks_history, :verify_driver]
+        :user_tasks, :tasks_engaging, :tasks_history, :verify_driver,
+        :driver_info]
       # ----------
       before_action :validate_init_params, only: [:create]
       before_action :validate_update_params, only: [:update]
@@ -126,6 +127,14 @@ module Api
       # POST /verify_driver
       def verify_driver
         @user.update(driver_verify_params)
+      end
+
+      # GET /driver_info/:uid
+      def driver_info
+        return unauthorized if RoleManager.match?(@user.roles, :admin)
+        target = User.wide_query(params[:id])
+        return not_found unless target
+        render json: target.driver_json_info, status: :ok
       end
 
       private

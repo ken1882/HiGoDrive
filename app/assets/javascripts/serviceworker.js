@@ -3,11 +3,12 @@ self.queued_messages = [];
 
 function onPush(event){
   let title = "HiGoDrive";
-  let body = (event.data && event.data.text()) || "Yay a message";
+  let msg = JSON.parse((event.data && event.data.text()) || "{}");
+  let body = msg.message;
   let tag = "push-ga-notification-tag-" + Date();
   console.log("Received push message", event);
-  console.log(`Message: ${title}`)
-  self.queued_messages.push(title);
+  console.log(`Message: ${body}`)
+  self.queued_messages.push(msg);
   event.waitUntil(
     self.registration.showNotification(title, { body, tag })
   );

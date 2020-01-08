@@ -71,8 +71,11 @@ Rails.application.routes.draw do
       match '/tasks/:task_id/reports', to: 'reports#create', via: [:post]
       post '/finish_report', to: 'reports#mark_finished'
 
+      match 'driver_info/:id', to: 'users#driver_info', via: [:get]
       post '/verify_driver', to: 'users#verify_driver'
       post '/notification_test', to: 'push_notifications#test_send'
+
+      match '/tasks/comment', to: 'tasks#send_comment', via: [:post]
     end
   end
 

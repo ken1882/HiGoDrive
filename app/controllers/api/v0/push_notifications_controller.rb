@@ -16,10 +16,15 @@ module Api
       def self.send_notification(notification)
         user = User.find(notification.parent)
         return if user.nil?
-        WebpushJob.perform_later notification.message,
+        WebpushJob.perform_later notification.json_info,
           endpoint: user.endpoint,
           p256dh: user.p256dh,
           auth: user.auth
+      end
+
+      # GET /push_notifications
+      def index
+        render json: @user.push_notifications.collect{|n| n.json_info}, status: :ok
       end
 
       # POST /push_notifications

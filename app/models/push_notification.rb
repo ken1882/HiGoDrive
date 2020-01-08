@@ -9,4 +9,12 @@ class PushNotification
   def send_message
     Api::V0::PushNotificationsController.send_notification(self)
   end
+
+  def json_info
+    {
+      :id      => id.to_s,
+      :parent  => parent.to_s,
+      :message => message,
+    }
+  end
 end
