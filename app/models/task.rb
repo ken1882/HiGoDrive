@@ -42,6 +42,7 @@ class Task
     _params[:depart_time]  = Time.at(_params[:depart_time].to_i)
     if _params[:preorder].to_i.to_bool
       _params[:status] = ProgressStatus[:preorder]
+      driver.add_to_set(:unaccepted_preorders, self.id)
     else
       _params[:status] = ProgressStatus[:new]
       @@mutex.synchronize{
@@ -70,12 +71,17 @@ class Task
   end
 
   def accept(_did)
-    @@mutex.synchronize{$task_queue.delete(self.id.to_i)}
+    if preorder?
+      driver.pull(unaccepted_preorders: self.id)
+      driver.add_to_set(accepted_preorders: self.id)
+    else
+      @@mutex.synchronize{$task_queue.delete(self.id.to_i)}
+      driver.engage_task(self.id)
+    end
     self.update({
       status: ProgressStatus[:accepted],
       driver_id: _did
     })
-    driver.engage_task(self.id)
   end
 
   def engage

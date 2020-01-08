@@ -74,7 +74,7 @@ class User
   def self.register_param_ok?(params)
     return false if exist?(params)
     return false if (params[:password] || '').length < 6
-    return false unless params[:username].match(/^[[:alnum:]]*$/)
+    return false unless params[:username].match(/^([[:alnum:]]|\_)*$/)
     return true
   end
 
@@ -90,6 +90,7 @@ class User
 
   def initialize(_params)
     _params[:phone] = Util.format_phone_number(_params[:phone])
+    _params[:roles] = _params[:roles].to_i
     super
   end
 
