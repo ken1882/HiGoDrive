@@ -42,6 +42,7 @@ class Task
     _params[:depart_time]  = Time.at(_params[:depart_time].to_i)
     if _params[:preorder].to_i.to_bool
       _params[:status] = ProgressStatus[:preorder]
+      driver.add_to_set(:unaccepted_preorders, self.id)
     else
       _params[:status] = ProgressStatus[:new]
       @@mutex.synchronize{
