@@ -36,7 +36,7 @@ module TimerManager
 
   def delete_preorder(*idx)
     @@mutex.synchronize{
-      idx.reverse_each{|i| @preorder_queue.delete_at(i)}
+      idx.flatten.reverse_each{|i| @preorder_queue.delete_at(i)}
     }
   end
 
