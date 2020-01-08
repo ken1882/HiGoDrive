@@ -10,7 +10,7 @@
 
   <div class="accordion" id="accordion">
     <!--樣式模板>>-->
-    <div class="card">
+    <div class="card" id="template-report">
       <div class="card-header" id="headingOne">
         <button class="btn btn-block" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false"
           aria-controls="collapseOne">
@@ -94,5 +94,31 @@
 </div>
 
 <script type="text/javascript">
-  $('.collapse').collapse()
+  function renderReport(report) {
+    let card = $("#template-report").clone();
+
+    let taskId = report.task_id;
+    let reportedTask = getTask(taskId);
+    let placeName = reportedTask.dest.placeName;
+    let fare = reportedTask.dest.fare;
+    let driverName = reportedTask.driver_name;
+    let passengerName = reportedTask.author_name;
+
+    let reporterId = report.author_id;
+    let reportComment = report.comment;
+    let reportTime = report.created_at;
+
+    // TODO: fill card content
+
+    // $("#accordion").append(card);
+  }
+
+  $(document).ready(function() {
+    let reportList = getReportList();
+    reportList.forEach(report => {
+      renderReport(report);
+    });
+  });
+
+  $('.collapse').collapse();
 </script>
