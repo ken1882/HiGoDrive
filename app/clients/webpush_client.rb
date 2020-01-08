@@ -36,7 +36,8 @@ class WebpushClient
       vapid: {
         subject: "mailto:006571121@email.ntou.edu.tw",
         public_key: public_key,
-        private_key: private_key
+        private_key: private_key,
+        expiration: 60 * 60 * 12
       }
   end
 

@@ -53,7 +53,7 @@ Rails.application.routes.draw do
       post '/finish_report', to: 'reports#mark_finished'
 
       post '/verify_driver', to: 'users#verify_driver'
-      
+      post '/notification_test', to: 'push_notifications#test_send'
     end
   end
   
