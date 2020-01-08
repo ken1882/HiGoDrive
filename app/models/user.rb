@@ -229,8 +229,22 @@ class User
     self.pull(unaccepted_preorders: tid)
   end
 
+  def add_preorder(tid)
+    self.add_to_set(unaccepted_preorders: tid)
+  end
+
+  def accept_preorder(tid)
+    self.pull(unaccepted_preorders: tid)
+    self.add_to_set(accept_preorders: tid)
+  end
+
   def all_tasks
-    self.tasks.collect{|t| t.id} + (self.tasks_history || [])
+    _all = self.tasks.collect{|t| t.id} + (self.tasks_history || [])
+    ret  = []
+    Task.all.each do |t|
+      ret << t.public_json_info if _all.include?(t.id)
+    end
+    return ret
   end
 
   def accept_license

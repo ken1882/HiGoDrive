@@ -56,6 +56,7 @@ module Api
         @task = TasksController.create_task(current_user, _params)
         respond_to do |format|
           if @task.save
+            @task.driver.add_preorder(@task.id) if @task.preorder?
             format.html { redirect_to '/home', notice: 'Task was successfully created.' }
             format.json { render json: {message: 'created', id: @task.id}, status: :created}
           else
