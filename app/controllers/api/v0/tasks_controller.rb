@@ -96,6 +96,8 @@ module Api
       def next_task
         tid = params[:id].to_i rescue nil
         return bad_request if tid.nil?
+        next_preorder = (@user.unaccepted_preorders || []).first
+        
         ret_cur = 0; ret_nxt = 0;
         idx = (tid == 0 ? 0 : $task_queue.index(tid)) || 0
         ret_cur = $task_queue[idx]

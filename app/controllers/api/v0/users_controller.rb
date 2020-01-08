@@ -7,7 +7,8 @@ module Api
         :reset_password, :peak]
       before_action :set_current_user, only: [:update, :setpos,
         :user_tasks, :tasks_engaging, :tasks_history, :driver_info,
-        :upload_license, :accept_license, :reject_license]
+        :upload_license, :accept_license, :reject_license,
+        :unprocessed_licenses]
       # ----------
       before_action :validate_init_params, only: [:create]
       before_action :validate_update_params, only: [:update]
