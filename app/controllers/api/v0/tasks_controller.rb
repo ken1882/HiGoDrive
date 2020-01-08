@@ -129,6 +129,17 @@ module Api
         return_ok
       end
 
+      # POST /tasks/comment
+      def send_comment
+        return unprocessable_entity if @task.closed?
+        target = nil
+        target = @task.author if @user.id == @task.driver_id
+        target = @task.driver_id if @user.id == @task.author_id
+        return forbidden unless target
+        PushNotificationsController.create_notification(target, params[:message]).send_message
+        return_ok
+      end
+
       private
       # Use callbacks to share common setup or constraints between actions.
       def set_task
