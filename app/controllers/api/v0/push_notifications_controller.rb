@@ -22,6 +22,11 @@ module Api
           auth: user.auth
       end
 
+      # GET /push_notifications
+      def index
+        render json: @user.push_notifications.collect{|n| n.json_info}, status: :ok
+      end
+
       # POST /push_notifications
       # Register push notifications
       def create
