@@ -47,6 +47,12 @@ module Api
       # POST /tasks.json
       def create
         _params = task_init_params
+        _params[:preorder] = _params[:preorder].to_i.to_bool
+        if _params[:preorder]
+          _driver = User.find(_params[:driver_id])
+          return not_found unless _driver
+          return forbidden unless _driver.licensed?
+        end
         @task = TasksController.create_task(current_user, _params)
         respond_to do |format|
           if @task.save
@@ -135,6 +141,7 @@ module Api
         PushNotificationsController.create_notification(target, params[:message]).send_message
         return_ok
       end
+
 
       private
       # Use callbacks to share common setup or constraints between actions.

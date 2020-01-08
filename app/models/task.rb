@@ -40,7 +40,7 @@ class Task
   def initialize(_params)
     _params[:equipments] ||= 0
     _params[:depart_time]  = Time.at(_params[:depart_time].to_i)
-    if _params[:preorder].to_i.to_bool
+    if _params[:preorder]
       _params[:status] = ProgressStatus[:preorder]
       driver.add_to_set(:unaccepted_preorders, self.id)
     else
