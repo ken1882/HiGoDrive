@@ -6,8 +6,8 @@ module Api
       before_action :set_user, only: [:show, :getpos, :forgot_password,
         :reset_password, :peak]
       before_action :set_current_user, only: [:update, :setpos,
-        :user_tasks, :tasks_engaging, :tasks_history, :verify_driver,
-        :driver_info]
+        :user_tasks, :tasks_engaging, :tasks_history, :driver_info,
+        :upload_license, :accept_license, :reject_license]
       # ----------
       before_action :validate_init_params, only: [:create]
       before_action :validate_update_params, only: [:update]
@@ -124,17 +124,45 @@ module Api
         render json: @user.all_tasks || [], status: :ok
       end
 
-      # POST /verify_driver
-      def verify_driver
-        @user.update(driver_verify_params)
+      # POST /upload_license
+      def upload_license
+        return unprocessable_entity if @user.licensed?
+        @user.update(driver_license_params)
+        $unlicensed_drivers << @user.id
+        return_ok
+      end
+
+      # POST /accept_license
+      def accept_license
+        return forbidden unless RoleManager.match?(@user.roles, :admin)
+        return bad_request if @user.licensed? || @user.driver_license.nil?
+        target = User.find(params[:id])
+        return not_found unless target
+        target.accept_driver
+        return_ok
+      end
+
+      # POST /reject_license
+      def reject_license
+        return forbidden unless RoleManager.match?(@user.roles, :admin)
+        target = User.find(params[:id])
+        return not_found unless target
+        target.revoke_license
+        return_ok
       end
 
       # GET /driver_info/:uid
       def driver_info
         return unauthorized if RoleManager.match?(@user.roles, :admin)
-        target = User.wide_query(params[:id])
+        target = User.find(params[:id])
         return not_found unless target
         render json: target.driver_json_info, status: :ok
+      end
+
+      # GET /unprocessed_licenses
+      def unprocessed_licenses
+        return forbidden unless RoleManager.match?(@user.roles, :admin)
+        render json: $unlicensed_drivers, status: :ok
       end
 
       private

@@ -10,7 +10,7 @@ module UsersHelper
   UserPosParams    = [:lat, :lng]
   UserResetParams  = [:username, :token, :password, :password_confirmation]
   UserResetFields  = [:password, :password_confirmation]
-  DriverVerifyParams = [:driver_license, :vehicle_license, :exterior, :plate, :model]
+  DriverLicenseParams = [:driver_license, :vehicle_license, :exterior, :plate, :model]
   SupportedAvatarFormat = [:png, :jpg, :jpeg, :bmp, :webp]
 
   ForgotDuration   = 60 * 30
@@ -43,7 +43,7 @@ module UsersHelper
     filter_params UserResetFields
   end
 
-  def driver_verify_params
-    filter_params DriverVerifyParams
+  def driver_license_params
+    filter_params DriverLicenseParams
   end
 end

@@ -72,8 +72,10 @@ Rails.application.routes.draw do
       post '/finish_report', to: 'reports#mark_finished'
 
       match 'driver_info/:id', to: 'users#driver_info', via: [:get]
-      post '/verify_driver', to: 'users#verify_driver'
       post '/notification_test', to: 'push_notifications#test_send'
+      post '/upload_license', to: 'users#accept_license'
+      post '/accept_license', to: 'users#accept_license'
+      post '/reject_license', to: 'users#reject_license'
 
       match '/tasks/comment', to: 'tasks#send_comment', via: [:post]
     end

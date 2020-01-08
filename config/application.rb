@@ -49,6 +49,7 @@ module GuaneiArk
     # the framework and any gems in your application.
     config.after_initialize do
       puts "#{SPLIT_LINE}Pre-init"
+      User.setup
       Task.setup
       TimerManager.initialize
       Rails.application.eager_load! if Rails.production?

@@ -39,6 +39,7 @@ class User
   field :model, type: String
   field :unaccepted_preorders, type: Array
   field :accepted_preorders, type: Array
+  field :verified_driver, type: Boolean
 
   validates :roles, numericality: { only_integer: true }
   validates :username, presence: true, length: {in: 6..32},
@@ -53,6 +54,15 @@ class User
 
   has_secure_password
   validates :password_digest, presence: true, length: {in: 6..256}
+
+  def self.setup
+    $unlicensed_drivers = []
+    self.all.each do |user|
+      next unless RoleManager.match?(user.roles, :driver)
+      next if user.licensed?
+      $unlicensed_drivers << user.id.to_s
+    end
+  end
 
   def self.username_exist?(uname)
     self.where({'username' => uname}).count != 0
@@ -204,7 +214,7 @@ class User
   end
 
   def licensed?
-    return RoleManager.match?(roles, :driver)
+    return self.verified_driver || false
   end
 
   def mutex
@@ -224,6 +234,21 @@ class User
   end
 
   def all_tasks
-    self.tasks + self.tasks_history
+    self.tasks.collect{|t| t.id} + (self.tasks_history || [])
+  end
+
+  def accept_license
+    update_attribute :verified_driver, true
+  end
+
+  def revoke_license
+    self.update({
+      :driver_license   => nil,
+      :vehicle_license  => nil,
+      :exterior         => nil,
+      :plate            => nil,
+      :model            => nil,
+      :verified_driver  => false
+    })
   end
 end
