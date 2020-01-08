@@ -6,6 +6,7 @@ class PagesController < ApplicationController
 
   def home
     return index unless logged_in?
+    return admin if RoleManager.match?(current_user.roles, :admin)
     render 'main'
   end
 
@@ -75,6 +76,7 @@ class PagesController < ApplicationController
   def admin
     flash.now[:danger] = 'Please log in as administrator' unless logged_in?
     return login unless logged_in?
+    return home unless RoleManager.match?(current_user.roles, :admin)
     render 'admin'
   end
 end
