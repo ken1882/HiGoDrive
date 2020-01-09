@@ -7,6 +7,9 @@ module PushNotificationsHelper
     :message => "Yay, we sent you a push notification!",
   }
 
+  MessageTaskAccepted = "Your request#%s has been accepted by %s"
+  MessagePreorderAccepted = "Your preorder to %s has been accepted"
+
   def push_params
     params.permit(:message, { subscription: [:endpoint, keys: [:auth, :p256dh]]})
   end

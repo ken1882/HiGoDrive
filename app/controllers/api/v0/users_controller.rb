@@ -61,6 +61,9 @@ module Api
         @user = User.new(user_init_params)
         respond_to do |format|
           if @user.save
+            # dirty hack to auto login
+            session[:user_id] = @user.id
+            # -----
             format.html do
               if RoleManager.match?(params[:roles].to_i, :driver)
                 redirect_to '/signup/driver', notice: 'Please upload your licenses'

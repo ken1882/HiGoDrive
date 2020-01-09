@@ -22,6 +22,16 @@ module Api
           auth: user.auth
       end
 
+      def self.send_task_accepted(_task)
+        msg = sprintf(MessageTaskAccepted, _task.id.to_s[0...4], _task.driver.name)
+        self.create_notification(_task.user, msg)
+      end
+
+      def self.send_preorder_accepted(_task)
+        msg = sprintf(MessagePreorderAccepted, _task.driver.name)
+        self.create_notification(_task.user, msg)
+      end
+
       # GET /push_notifications
       def index
         render json: @user.push_notifications.collect{|n| n.json_info}, status: :ok
