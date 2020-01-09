@@ -66,15 +66,15 @@
         <div class="card-body">
           <p>
             駕照正面照片
-            <img id="driver_license" alt="駕照正面照片">
+            <img id="driver_license" alt="駕照正面照片" width="240" height="240">
           </p>
           <p>
             行照正片照片
-            <img id="vehicle_license" alt="行照正片照片">
+            <img id="vehicle_license" alt="行照正片照片" width="240" height="240">
           </p>
           <p>
             車身照片
-            <img id="exterior" alt="車身照片">
+            <img id="exterior" alt="車身照片" width="240" height="240">
           </p>
           <p>車牌：<span id="palte"></span></p>
           <p>車型：<span id="module"></span></p>
@@ -142,35 +142,32 @@
 
   function renderLicenses(license) {
     let card = $("#template-license").clone();
+    let id = license.id;
+    let id = license.username;
+    let driver_licenseImg = license.driver_license;
+    let vehicle_licenseImg = license.vehicle_license;
+    let exteriorImg = license.exterior;
+    let plateText = license.plate;
+    let modelText = license.model;
 
-    console.log(license);
-
-    let taskId;
-    let applyId;
-    let driver_licenseImg;
-    let vehicle_licenseImg;
-    let exteriorImg;
-    let palteText;
-    let moduleText;
-
-    card.find("#headingLicense").attr("id", "headingLicense" + taskId);
-    card.find("#licenseBtn").attr("data-target", "#" + "collapseLicense" + taskId);
-    card.find("#licenseBtn").attr("aria-controls", "collapseLicense" + taskId);
-    card.find("#licenseBtn").attr("id", "licenseBtn" + taskId);
+    card.find("#headingLicense").attr("id", "headingLicense" + id);
+    card.find("#licenseBtn").attr("data-target", "#" + "collapseLicense" + id);
+    card.find("#licenseBtn").attr("aria-controls", "collapseLicense" + id);
+    card.find("#licenseBtn").attr("id", "licenseBtn" + id);
     card.find("#headingLicense").text(applyId);
-    card.find("#headingLicense").attr("id", "headingLicense" + taskId);
-    card.find("#collapseLicense").attr("aria-labelledby", "headingLicense" + taskId);
-    card.find("#collapseLicense").attr("id", "collapseLicense" + taskId);
+    card.find("#headingLicense").attr("id", "headingLicense" + id);
+    card.find("#collapseLicense").attr("aria-labelledby", "headingLicense" + id);
+    card.find("#collapseLicense").attr("id", "collapseLicense" + id);
     card.find("#driver_license").attr("src", driver_licenseImg);
-    card.find("#driver_license").attr("id", "driver_license" + taskId);
+    card.find("#driver_license").attr("id", "driver_license" + id);
     card.find("#vehicle_license").attr("src", vehicle_licenseImg);
-    card.find("#vehicle_license").attr("id", "vehicle_license" + taskId);
+    card.find("#vehicle_license").attr("id", "vehicle_license" + id);
     card.find("#exterior").attr("src", exteriorImg);
-    card.find("#exterior").attr("id", "exterior" + taskId);
-    card.find("#palte").text(palteText);
-    card.find("#palte").attr("id", "palte" + taskId);
-    card.find("#module").text(moduleText);
-    card.find("#module").attr("id", "palte" + taskId);
+    card.find("#exterior").attr("id", "exterior" + id);
+    card.find("#palte").text(plateText);
+    card.find("#palte").attr("id", "palte" + id);
+    card.find("#module").text(modelText);
+    card.find("#module").attr("id", "palte" + id);
 
     $("#accordion").append(card);
   }

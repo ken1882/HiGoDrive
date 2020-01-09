@@ -21,7 +21,6 @@ class PagesController < ApplicationController
   end
 
   def driverSignup
-    return home if logged_in?
     render 'driverSignup'
   end
 

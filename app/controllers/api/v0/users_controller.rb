@@ -139,6 +139,7 @@ module Api
         return unprocessable_entity if @user.licensed?
         @user.update(driver_license_params)
         $unlicensed_drivers << @user.id
+        PushNotificationsController.send_license_uploaded(@user)
         return_ok
       end
 
@@ -149,6 +150,7 @@ module Api
         target = User.find(params[:id])
         return not_found unless target
         target.accept_driver
+        PushNotificationsController.send_license_accepted(target)
         return_ok
       end
 
@@ -158,6 +160,7 @@ module Api
         target = User.find(params[:id])
         return not_found unless target
         target.revoke_license
+        PushNotificationsController.send_license_rejected(target)
         return_ok
       end
 

@@ -41,16 +41,16 @@ class User
   field :accepted_preorders, type: Array
   field :verified_driver, type: Boolean
 
-  validates :roles, numericality: { only_integer: true }
-  validates :username, presence: true, length: {in: 6..32},
-    uniqueness: true, format: {with: UsernameRegex}
+  # validates :roles, numericality: { only_integer: true }
+  # validates :username, presence: true, length: {in: 6..32},
+  #   uniqueness: true, format: {with: UsernameRegex}
 
-  validates :email, presence: true, format: {with: EmailRegex},
-    length: {in: 3..256}, uniqueness: { case_sensitive: false }
+  # validates :email, presence: true, format: {with: EmailRegex},
+  #   length: {in: 3..256}, uniqueness: { case_sensitive: false }
 
-  validates :realname, presence: true
-  validates :phone, presence: true, uniqueness: true,
-    format: {with: PhoneRegex}
+  # validates :realname, presence: true
+  # validates :phone, presence: true, uniqueness: true,
+  #   format: {with: PhoneRegex}
 
   has_secure_password
   validates :password_digest, presence: true, length: {in: 6..256}
