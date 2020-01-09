@@ -1,0 +1,108 @@
+<% provide :page_title, "Driver Signup" %>
+
+<div class="container">
+
+  <div class="mt-4 mb-0 p-2">
+    <a href="/" class="list-group-item-action">
+      <h2 class="text-center">HiGoDrive</h2>
+    </a>
+    <img id="motor" class="rounded mx-auto d-block" src=<%= image_url 'motorcycle-solid.svg' %> type="image/svg+xml" />
+    <h5 class="text-center">現在就握起龍頭，開始賺取費用！！</h5>
+    <hr>
+  </div>
+
+  <form id="driver-license-form" action="">
+    <div class="form-group">
+      <label for="driver_license">駕照正面照片</label>
+      <input type="file" class="form-control-file" id="driver_license" name="driver_license" value="" accept="image/*" required>
+    </div>
+    <div class="form-group">
+      <label for="vehicle_license">行照正面照片</label>
+      <input type="file" class="form-control-file" id="vehicle_license" name="vehicle_license" value="" accept="image/*" required>
+    </div>
+    <div class="form-group">
+      <label for="exterior">車身照片</label>
+      <input type="file" class="form-control-file" id="exterior" name="exterior" value="" accept="image/*" required>
+    </div>
+    <div class="form-group">
+      <label for="plate">車牌</label>
+      <input type="text" class="form-control" id="plate" name="plate" required>
+    </div>
+    <div class="form-group">
+      <label for="model">車型</label>
+      <input type="text" class="form-control" id="model" name="model" required>
+    </div>
+    <br>
+    <br>
+    <div class="px-5 py-3">
+      <button type="submit" class="btn btn-success btn-lg btn-block">申請</button>
+    </div>
+  </form>
+
+  <div class="row">
+    <div class="col-12 mt-5 mb-2">
+      <span class="float-left">&copyHiGoDrive 2019</span>
+      <a class="float-right" href="mailto:higodrive@sevice.mail.com">聯絡我們</a>
+    </div>
+  </div>
+</div>
+
+<script>
+  $("document").ready(function () {
+      $('input[type=file]').on("change", function () {
+
+        let $files = $(this).get(0).files;
+
+        if ($files.length) {
+          // Reject big files
+          if ($files[0].size > $(this).data("max-size") * 1024) {
+            alert("Please select a smaller file");
+            return false;
+          }
+
+          // Replace ctrlq with your own API key
+          let apiUrl = 'https://api.imgur.com/3/image';
+          let apiKey = '609d7822f8deef7';
+          let settings = {
+            async: false,
+            crossDomain: true,
+            processData: false,
+            contentType: false,
+            type: 'POST',
+            url: apiUrl,
+            headers: {
+              Authorization: 'Client-ID ' + apiKey,
+              Accept: 'application/json'
+            },
+            mimeType: 'multipart/form-data'
+          };
+
+          let formData = new FormData();
+          formData.append("image", $files[0]);
+          settings.data = formData;
+
+          let url = undefined;
+          // Response contains stringified JSON
+          // Image URL available at response.data.link
+          $.ajax(settings).done(function (response) {
+            url = JSON.parse(response).data.link;
+          });
+
+          $(this)[0].setAttribute("value", url);
+        }
+      });
+    });
+
+    $("#driver-license-form").submit(function() {
+      let license = {
+        driverLicense: $("#driver_license").attr("value"),
+        vehicleLicense: $("#vehicle_license").attr("value"),
+        exterior: $("#exterior").attr("value"),
+        plate: $("#plate").val(),
+        model: $("#model").val()
+      };
+      uploadLicense(license);
+      location.href = '/';
+      return false;
+    });
+</script>

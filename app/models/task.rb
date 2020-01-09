@@ -17,6 +17,7 @@ class Task
   validates :depart_time, presence: true
 
   ProgressStatus = {
+    :preorder => -1,
     :new      => 0,
     :accepted => 1,
     :engaging => 2,
@@ -36,15 +37,28 @@ class Task
   end
   def self.mutex; @@mutex; end
 
+  def self.execute_preorder(tid)
+    _task = self.find(tid)
+    return unless _task
+    _task.engage
+    _task.driver.engage_preorder
+  end
+
   def initialize(_params)
     _params[:equipments] ||= 0
-    _params[:status]       = 0
     _params[:depart_time]  = Time.at(_params[:depart_time].to_i)
-    @@mutex.synchronize{
-      $task_queue << @@next_id
-      _params[:id] = @@next_id
-      @@next_id += 1
-    }
+    if _params[:preorder]
+      _params[:status] = ProgressStatus[:preorder]
+      driver.add_to_set(:unaccepted_preorders, self.id)
+    else
+      _params[:status] = ProgressStatus[:new]
+      @@mutex.synchronize{
+        $task_queue << @@next_id
+        _params[:id] = @@next_id
+        @@next_id += 1
+      }
+      _params.delete(:preorder)
+    end
     super
   end
 
@@ -53,22 +67,29 @@ class Task
 
   def public_json_info
     {
+      id: self.id,
       author_id: author_id.to_s,
+      author_name: author.username,
       dest: dest,
       depart_time: depart_time.to_i,
       driver_id: driver_id.to_s,
+      driver_name: driver ? driver.username : nil,
       equipments: equipments,
       status: status
     }
   end
 
   def accept(_did)
-    @@mutex.synchronize{$task_queue.delete(self.id.to_i)}
     self.update({
       status: ProgressStatus[:accepted],
       driver_id: _did
     })
-    driver.engage_task(self.id)
+    if preorder?
+      driver.accept_preorder(self.id)
+    else
+      @@mutex.synchronize{$task_queue.delete(self.id.to_i)}
+      driver.engage_task(self.id)
+    end
   end
 
   def engage
@@ -87,10 +108,15 @@ class Task
 
   def reject(msg)
     self.add_to_set(reject_reasons: msg)
+    cancel if preorder?
+  end
+
+  def preorder?
+    status == ProgressStatus[:preorder]
   end
 
   def accepted?
-    (status || 0) != ProgressStatus[:new]
+    driver_id.nil? && (status || 0) != ProgressStatus[:new]
   end
 
   def engaging?

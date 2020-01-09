@@ -1,8 +1,8 @@
 GIT
   remote: https://github.com/mongodb/mongoid.git
-  revision: 2f1e032e9a945e4108bfa48340dd5d1dd808a3ae
+  revision: 39212b79b1b2d440a4641a8671ada9e7e8d4d49b
   specs:
-    mongoid (7.1.0)
+    mongoid (7.1.0.rc0)
       activemodel (>= 5.1, < 6.1)
       mongo (>= 2.7.0, < 3.0.0)
 
@@ -62,7 +62,7 @@ GEM
     bson (4.7.0)
     builder (3.2.4)
     byebug (11.0.1)
-    capybara (3.29.0)
+    capybara (3.30.0)
       addressable
       mini_mime (>= 0.1.3)
       nokogiri (~> 1.8)
@@ -87,7 +87,6 @@ GEM
     erubi (1.9.0)
     execjs (2.7.0)
     ffi (1.11.3)
-    ffi (1.11.3-x64-mingw32)
     globalid (0.4.2)
       activesupport (>= 4.2.0)
     hkdf (0.3.0)
@@ -96,7 +95,6 @@ GEM
     io-like (0.3.0)
     jbuilder (2.9.1)
       activesupport (>= 4.2.0)
-    json (2.3.0)
     jwt (2.2.1)
     loofah (2.4.0)
       crass (~> 1.0.2)
@@ -113,19 +111,14 @@ GEM
     mongo (2.11.2)
       bson (>= 4.6.0, < 5.0.0)
     msgpack (1.3.1)
-    msgpack (1.3.1-x64-mingw32)
     nio4r (2.5.2)
     nokogiri (1.10.7)
       mini_portile2 (~> 2.4.0)
-    nokogiri (1.10.7-x64-mingw32)
-      mini_portile2 (~> 2.4.0)
-    postmark (1.19.1)
-      json
-    public_suffix (4.0.1)
+    public_suffix (4.0.3)
     puma (4.3.1)
       nio4r (~> 2.0)
     rack (2.0.8)
-    rack-cors (1.1.0)
+    rack-cors (1.1.1)
       rack (>= 2.0.0)
     rack-test (1.1.0)
       rack (>= 1.0, < 3)
@@ -155,7 +148,7 @@ GEM
       thor (>= 0.19.0, < 2.0)
     rake (13.0.1)
     rb-fsevent (0.10.3)
-    rb-inotify (0.10.0)
+    rb-inotify (0.10.1)
       ffi (~> 1.0)
     regexp_parser (1.6.0)
     rubyzip (2.0.0)
@@ -170,7 +163,7 @@ GEM
       sprockets (>= 2.8, < 4.0)
       sprockets-rails (>= 2.0, < 4.0)
       tilt (>= 1.1, < 3)
-    selenium-webdriver (3.142.6)
+    selenium-webdriver (3.142.7)
       childprocess (>= 0.5, < 4.0)
       rubyzip (>= 1.2.2)
     serviceworker-rails (0.6.0)
@@ -188,10 +181,8 @@ GEM
     turbolinks (5.2.1)
       turbolinks-source (~> 5.2)
     turbolinks-source (5.2.0)
-    tzinfo (1.2.5)
+    tzinfo (1.2.6)
       thread_safe (~> 0.1)
-    tzinfo-data (1.2019.3)
-      tzinfo (>= 1.0.0)
     uglifier (4.2.0)
       execjs (>= 0.3.0, < 3)
     web-console (3.7.0)
@@ -210,7 +201,6 @@ GEM
 
 PLATFORMS
   ruby
-  x64-mingw32
 
 DEPENDENCIES
   bcrypt (~> 3.1.7)
@@ -224,7 +214,6 @@ DEPENDENCIES
   loofah (>= 2.3.1)
   mongoid!
   nokogiri (>= 1.10.4)
-  postmark
   puma (>= 3.12.2)
   rack (>= 2.0.8)
   rack-cors (>= 1.0.4)
@@ -243,4 +232,4 @@ RUBY VERSION
    ruby 2.5.3p105
 
 BUNDLED WITH
-   1.17.3
+   1.16.2

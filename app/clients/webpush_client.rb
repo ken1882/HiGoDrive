@@ -29,14 +29,15 @@ class WebpushClient
     Rails.logger.info("auth: #{auth}")
     
     Webpush.payload_send \
-      message: message,
+      message: message.to_json,
       endpoint: endpoint,
       p256dh: p256dh,
       auth: auth,
       vapid: {
         subject: "mailto:006571121@email.ntou.edu.tw",
         public_key: public_key,
-        private_key: private_key
+        private_key: private_key,
+        expiration: 60 * 60 * 12
       }
   end
 

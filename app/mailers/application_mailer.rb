@@ -1,4 +1,4 @@
 class ApplicationMailer < ActionMailer::Base
-  default from: 'HiGoDrive noreply@higodrive.org'
+  default from: '00657121@email.ntou.edu.tw'
   layout 'mailer'
 end

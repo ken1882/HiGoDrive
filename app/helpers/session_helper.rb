@@ -1,5 +1,5 @@
 module SessionHelper
-
+  
   CookieExpireTime = 10 # years
 
   # Logs in the given user.

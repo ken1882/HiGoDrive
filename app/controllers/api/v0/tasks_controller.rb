@@ -26,6 +26,11 @@ module Api
         mu
       end
 
+      def self.create_task(user, _params)
+        user = User.wide_query(user) unless user.is_a? User
+        user.tasks.create(_params)
+      end
+
       # GET /tasks
       # GET /tasks.json
       def index
@@ -41,9 +46,17 @@ module Api
       # POST /tasks
       # POST /tasks.json
       def create
-        @task = current_user.tasks.create(task_init_params)
+        _params = task_init_params
+        _params[:preorder] = _params[:preorder].to_i.to_bool
+        if _params[:preorder]
+          _driver = User.find(_params[:driver_id])
+          return not_found unless _driver
+          return forbidden unless _driver.licensed?
+        end
+        @task = TasksController.create_task(current_user, _params)
         respond_to do |format|
           if @task.save
+            @task.driver.add_preorder(@task.id) if @task.preorder?
             format.html { redirect_to '/home', notice: 'Task was successfully created.' }
             format.json { render json: {message: 'created', id: @task.id}, status: :created}
           else
@@ -85,18 +98,30 @@ module Api
         return bad_request if tid.nil?
         ret_cur = 0; ret_nxt = 0;
         idx = (tid == 0 ? 0 : $task_queue.index(tid)) || 0
-        ret_cur = $task_queue[idx]
-        ret_nxt = $task_queue[idx+1]
+        if next_preorder = (current_user.unaccepted_preorders || []).first
+          ret_nxt = $task_queue[idx]
+          ret_cur = next_preorder
+        else
+          ret_cur = $task_queue[idx]
+          ret_nxt = $task_queue[idx+1]
+        end
         render json: {task_id: ret_cur || 0, next_id: ret_nxt || 0}
       end
 
       # POST /task/accept
       def accept
-        @mutex.synchronize{
-          return unprocessable_entity if @task.accepted?
+        return unprocessable_entity if @task.accepted?
+        if @task.preorder?
           @task.accept(current_user.id)
-          @mutex.target = nil
-        }
+          TimerManager.add_preorder(@task.id, @task.depart_time.to_i)
+          PushNotificationsController.send_task_accepted(@task)
+        else
+          @mutex.synchronize{
+            @task.accept(current_user.id)
+            @mutex.target = nil
+          }
+          PushNotificationsController.send_preorder_accepted(@task)
+        end
         return_ok
       end
 
@@ -119,6 +144,19 @@ module Api
         return_ok
       end
 
+      # POST /tasks/:id/comment
+      def send_comment
+        return unprocessable_entity if @task.closed?
+        @user = current_user
+        target = nil
+        target = @task.author if @user.id == @task.driver_id
+        target = @task.driver_id if @user.id == @task.author_id
+        return forbidden unless target
+        PushNotificationsController.create_notification(target, params[:message]).send_message
+        return_ok
+      end
+
+
       private
       # Use callbacks to share common setup or constraints between actions.
       def set_task
@@ -132,6 +170,7 @@ module Api
       end
 
       def validate_timelock
+        return true
         current_user.mutex.synchronize do
           lct = current_user.tasks.last.created_at.to_i rescue 0
           if (Time.now.to_i - lct).abs < 180

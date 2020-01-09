@@ -20,8 +20,13 @@
 /public/assets
 .byebug_history
 
+/config/ssl/*
+
 # Ignore master key for decrypting credentials and more.
 /config/master.key
 
 # Ignore mongoid uri key file
 /config/mongoid.key
+
+# Ignore email config
+/config/email.yml

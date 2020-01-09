@@ -14,12 +14,12 @@
       <div class="card mb-3 mx-auto" style="max-width: 540px;">
         <div class="row no-gutters">
           <div class="col-4">
-            <img id="user" src=<%= image_url 'user-circle-regular.svg' %> type="image/svg+xml" class="card-img" alt="user">
+            <img id="user" src="<%= current_user.get_gravatar_url %>" type="image/png" class="card-img rounded m-1 p-4" alt="user">
           </div>
           <div class="col-8">
             <div class="card-body">
               <h5 class="card-title">用戶名稱：<%= current_user.username %></h5>
-              <p class="card-text">用戶類型：<%= h = {1 => "Passenger", 2 => "Driver"}; h.default = "Passenger & Driver"; h[current_user.roles] %></p>
+              <p class="card-text">用戶類型：<%= h = {1 => "Passenger", 2 => "Driver", 7 => "Administrator" }; h.default = ""; h[current_user.roles] %></p>
               <p class="card-text">電子信箱：<%= current_user.email %></p>
               <p class="card-text">手機號碼：<%= current_user.phone %></p>
               <p class="card-text">個人資訊：<%= current_user.bio %></p>
@@ -78,12 +78,3 @@
     </div>
   </div>
 </nav>
-
-<script>
-  function getGravatar(email, size) {
-  }
-
-  $(document).ready(function() {
-    let gravatarUrl = getGravatar('<%= puts current_user.email %>', 180);
-  });
-</script>

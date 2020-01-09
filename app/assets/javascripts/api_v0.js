@@ -122,30 +122,62 @@ function searchUser(username) {
   return targetUserId;
 }
 
-/************************************ TASK ************************************/
-
-// return [task id 1, task id 2, ...]
-function getMyTasks() {
-  let engaging = getEngagingTask();
-  let history = getTaskHistory();
-  let myTasks = engaging.concat(history);
+function uploadLicense(license) {
   $.ajax({
-    method: "GET",
-    url: "/api/v0/mytasks",
-    data: null,
-    dataType: "json",
-    success: function (result) {
-      myTasks = myTasks.concat(result);
+    method: "POST",
+    url: "/api/v0/upload_license",
+    data: {
+      authenticity_token: Util.AuthToken,
+      driver_license: license.driverLicense,
+      vehicle_license: license.vehicleLicense,
+      exterior: license.exterior,
+      plate: license.plate,
+      model: license.model
     },
+    dataType: "json",
+    success: null,
     error: function(xhr) {
       console.log("An error occured:", xhr.status, xhr.statusText);
     },
-    async: false
+    async: true
   });
-  myTasks = Array.from(new Set(myTasks));
-  myTasks.sort(function(a, b) { return b - a; });
-  return myTasks;
 }
+
+function acceptLicense(uid) {
+  $.ajax({
+    method: "POST",
+    url: "/api/v0/accept_license",
+    data: {
+      authenticity_token: Util.AuthToken,
+      id: uid
+    },
+    dataType: "json",
+    success: null,
+    error: function(xhr) {
+      console.log("An error occured:", xhr.status, xhr.statusText);
+    },
+    async: true
+  });
+}
+
+function rejectLicense(uid) {
+  $.ajax({
+    method: "POST",
+    url: "/api/v0/reject_license",
+    data: {
+      authenticity_token: Util.AuthToken,
+      id: uid
+    },
+    dataType: "json",
+    success: null,
+    error: function(xhr) {
+      console.log("An error occured:", xhr.status, xhr.statusText);
+    },
+    async: true
+  });
+}
+
+/************************************ TASK ************************************/
 
 // return [current task id, next task id]
 function getNextTask(taskId) {
@@ -177,7 +209,9 @@ function getTask(taskId) {
     success: function (result) {
       taskInfo["dest"] = JSON.parse(result.dest);
       taskInfo["driver_id"] = result.driver_id;
+      taskInfo["driver_name"] = result.driver_name;
       taskInfo["author_id"] = result.author_id;
+      taskInfo["author_name"] = result.author_name;
       taskInfo["status"] = result.status;
     },
     error: function(xhr) {
@@ -189,17 +223,22 @@ function getTask(taskId) {
   return taskInfo;
 }
 
-function createTask(dest, departTime, equipments) {
+function createTask(dest, departTime, equipments, preorder, driverId) {
   let taskId = 0;
+  let taskInfo = {
+    authenticity_token: Util.AuthToken,
+    dest: JSON.stringify(dest),
+    depart_time: departTime,
+    equipments: equipments,
+    preorder: preorder
+  };
+  if (driverId) {
+    taskInfo.driver_id = driverId;
+  }
   $.ajax({
     method: "POST",
     url: "/api/v0/tasks",
-    data: {
-      authenticity_token: Util.AuthToken,
-      dest: JSON.stringify(dest),
-      depart_time: departTime,
-      equipments: equipments
-    },
+    data: taskInfo,
     dataType: "json",
     success: function (result) {
       taskId = result.id;
@@ -264,6 +303,7 @@ function getTaskHistory() {
     },
     async: false
   });
+  tasks.sort(function(a, b) { return b.id - a.id; });
   return tasks;
 }
 
@@ -352,6 +392,24 @@ function engageTask(taskId) {
   });
 }
 
+function getTaskReport(taskId) {
+  let report = undefined;
+  $.ajax({
+    method: "GET",
+    url: "/api/v0/tasks/" + taskId + "/reports",
+    data: null,
+    dataType: "json",
+    success: function (result) {
+      report = result;
+    },
+    error: function(xhr) {
+      console.log("An error occured:", xhr.status, xhr.statusText);
+    },
+    async: false
+  });
+  return report;
+}
+
 function reportTask(taskId, comment) {
   $.ajax({
     method: "POST",
@@ -422,6 +480,56 @@ function getUnreadNotification() {
 
 /******************************* ADMINISTRATION *******************************/
 function getReportList() {
-
+  let reports = undefined;
+  $.ajax({
+    method: "GET",
+    url: "/api/v0/reports",
+    data: null,
+    dataType: "json",
+    success: function (result) {
+      reports = result;
+    },
+    error: function(xhr) {
+      console.log("An error occured:", xhr.status, xhr.statusText);
+    },
+    async: false
+  });
+  return reports;
 }
 
+function getUnprocessedLicenses() {
+  let licenses = undefined;
+  $.ajax({
+    method: "GET",
+    url: "/api/v0/unprocessed_licenses",
+    data: null,
+    dataType: "json",
+    success: function (result) {
+      licenses = result;
+    },
+    error: function(xhr) {
+      console.log("An error occured:", xhr.status, xhr.statusText);
+    },
+    async: false
+  });
+  return licenses;
+}
+
+function finishReport(taskId) {
+  $.ajax({
+    method: "POST",
+    url: "/api/v0/finish_report/" + taskId,
+    data: {
+      authenticity_token: Util.AuthToken,
+      id: taskId
+    },
+    dataType: "json",
+    success: function(r) {
+      console.log(r);
+    },
+    error: function(xhr) {
+      console.log("An error occured:", xhr.status, xhr.statusText);
+    },
+    async: true
+  });
+}

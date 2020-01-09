@@ -1,0 +1,5 @@
+Dear <%= @user.name %>
+You have recently requested a password request,
+please click the following link to processed.
+=====================
+<%= @domain %>/account-recovery/reset?username=<%= @user.name %>&token=<%= @token %>

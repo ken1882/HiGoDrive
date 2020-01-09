@@ -1,0 +1,206 @@
+<% provide :page_title, "Administration" %>
+
+<div class="container">
+  <div class="m-4 p-2">
+    <h2 class="text-center">HiGoDrive</h2>
+    <br>
+    <img id="motor" class="rounded mx-auto d-block" src=<%= image_path 'motorcycle-solid.svg' %> type="image/svg+xml" />
+    <hr>
+  </div>
+
+  <div class="accordion" id="accordion">
+
+    <div class="card" id="template-report">
+      <div class="card-header" id="headingReport">
+        <button id="headingBtn" class="btn btn-block" data-toggle="collapse" data-target="#collapseReport"
+          aria-expanded="false" aria-controls="collapseReport">
+          <div class="row">
+            <div class="col-5">
+              <span>用戶：</span><span id="repoterIdTitle" name="id" class="text-primary text-left"></span>
+            </div>
+            <div class="col-5">
+              <span name="type" class="text-warning">申訴處理</span>
+            </div>
+            <div class="col-2">
+              <i class="fas fa-sort-down fa-lg"></i>
+            </div>
+          </div>
+        </button>
+      </div>
+      <div id="collapseReport" class="collapse" aria-labelledby="headingReport" data-parent="#accordion">
+        <div class="card-body">
+          <span>訂單簡介</span>
+          <ul>
+            <li>目的地：<span id="placeName"></span></li>
+            <li>費用：<span id="fare"></span></li>
+          </ul>
+          <p><span>駕駛名稱：</span><span id="driverName"></span></p>
+          <p><span>乘客名稱：</span><span id="passengerName"></span></p>
+          <p id="report_content">申訴說明：<span id="reportComment"></span></p>
+          <br>
+          <form action="/api/v0/finish_report" class="finish-report-form" method="POST">
+            <button type="submit" class="btn btn-success btn-block">申訴處理完成</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" id="template-license">
+      <div class="card-header" id="headingLicense">
+        <button id="licenseBtn" class="btn btn-block" data-toggle="collapse" data-target="#collapseLicense"
+          aria-expanded="false" aria-controls="collapseLicense">
+          <div class="row">
+            <div class="col-5">
+              <span name="id" class="text-primary text-left">用戶：</span>
+            </div>
+            <div class="col-5">
+              <span name="type" class="text-warning">司機資格審核</span>
+            </div>
+            <div class="col-2">
+              <i class="fas fa-sort-down fa-lg"></i>
+            </div>
+          </div>
+        </button>
+      </div>
+      <div id="collapseLicense" class="collapse" aria-labelledby="headingLicense" data-parent="#accordion">
+        <div class="card-body">
+          <p>
+            駕照正面照片
+            <img id="driver_license" alt="駕照正面照片" width="240" height="240">
+          </p>
+          <p>
+            行照正片照片
+            <img id="vehicle_license" alt="行照正片照片" width="240" height="240">
+          </p>
+          <p>
+            車身照片
+            <img id="exterior" alt="車身照片" width="240" height="240">
+          </p>
+          <p>車牌：<span id="palte"></span></p>
+          <p>車型：<span id="module"></span></p>
+          <br>
+            <div class="row">
+            <form action="/api/v0/reject_license" class="reject-license-form" method="POST">
+              <div class="col">
+                <button type="submit" class="btn btn-danger btn-block">不通過</button>
+              </div>
+            </form>
+            <form action="/api/v0/accept_license" class="accept-license-form" method="POST">
+              <div class="col">
+                <button type="submit" class="btn btn-success btn-block">通過</button>
+              </div>
+            </form>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script type="text/javascript">
+  function renderReport(report) {
+    if (!report)  return;
+
+    let card = $("#template-report").clone();
+
+    let taskId = report.task_id;
+    let reportedTask = getTask(taskId);
+    let placeName = reportedTask.dest.placeName;
+    let fare = reportedTask.dest.fare;
+    let driverName = reportedTask.driver_name;
+    let passengerName = reportedTask.author_name;
+
+    let reportId = report.id;
+    let reporterId = report.author_id;
+    let reporterName = report.author_name;
+    let reportComment = report.comment;
+    let reportTime = report.created_at;
+
+    card.find("#repoterIdTitle").text(reporterName);
+    card.find("#headingReport").attr("id", "headingReport" + taskId);
+    card.find("#headingBtn").attr("data-target", "#" + "collapseReport" + taskId);
+    card.find("#headingBtn").attr("aria-controls", "collapseReport" + taskId);
+    card.find("#headingBtn").attr("id", "headingBtn" + taskId);
+    card.find("#headingReport").text(reporterId);
+    card.find("#headingReport").attr("id", "headingReport" + taskId);
+    card.find("#collapseReport").attr("aria-labelledby", "headingReport" + taskId);
+    card.find("#collapseReport").attr("id", "collapseReport" + taskId);
+    card.find("#placeName").text(placeName);
+    card.find("#placeName").attr("id", "placeName" + taskId);
+    card.find("#fare").text(fare);
+    card.find("#fare").attr("id", "fare" + taskId);
+    card.find("#driverName").text(driverName);
+    card.find("#driverName").attr("id", "driverName" + taskId);
+    card.find("#passengerName").text(passengerName);
+    card.find("#passengerName").attr("id", "passengerName" + taskId);
+    card.find("#reportComment").text(reportComment);
+    card.find("#reportComment").attr("id", "reportComment" + taskId);
+
+    let reportForm = card.find(".finish-report-form");
+    reportForm.append('<input type="hidden" name="id" value="' + reportId + '">');
+    reportForm.append('<input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">');
+
+    $("#accordion").append(card);
+  }
+
+  function renderLicenses(license) {
+    let card = $("#template-license").clone();
+
+    let id = license.id;
+    let username = license.username;
+    let driver_licenseImg = license.driver_license;
+    let vehicle_licenseImg = license.vehicle_license;
+    let exteriorImg = license.exterior;
+    let plateText = license.plate;
+    let modelText = license.model;
+
+    card.find("span[name='id']").get()[0].innerHTML += username;
+    card.find("#headingLicense").attr("id", "headingLicense" + id);
+    card.find("#licenseBtn").attr("data-target", "#" + "collapseLicense" + id);
+    card.find("#licenseBtn").attr("aria-controls", "collapseLicense" + id);
+    card.find("#licenseBtn").attr("id", "licenseBtn" + id);
+    card.find("#headingLicense").text(id);
+    card.find("#headingLicense").attr("id", "headingLicense" + id);
+    card.find("#collapseLicense").attr("aria-labelledby", "headingLicense" + id);
+    card.find("#collapseLicense").attr("id", "collapseLicense" + id);
+    card.find("#driver_license").attr("src", driver_licenseImg);
+    card.find("#driver_license").attr("id", "driver_license" + id);
+    card.find("#vehicle_license").attr("src", vehicle_licenseImg);
+    card.find("#vehicle_license").attr("id", "vehicle_license" + id);
+    card.find("#exterior").attr("src", exteriorImg);
+    card.find("#exterior").attr("id", "exterior" + id);
+    card.find("#palte").text(plateText);
+    card.find("#palte").attr("id", "palte" + id);
+    card.find("#module").text(modelText);
+    card.find("#module").attr("id", "palte" + id);
+
+    let acceptForm = card.find(".accept-license-form");
+    acceptForm.append('<input type="hidden" name="id" value="' + id + '">');
+    acceptForm.append('<input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">');
+
+    let rejectForm = card.find(".reject-license-form");
+    rejectForm.append('<input type="hidden" name="id" value="' + id + '">');
+    rejectForm.append('<input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">');
+
+    $("#accordion").append(card);
+  }
+
+  $(document).ready(function() {
+    let reportList = getReportList();
+    reportList.forEach(report => {
+      renderReport(report);
+    });
+    $("#template-report").remove();
+
+    let licenseList = getUnprocessedLicenses();
+    licenseList.forEach(license => {
+      renderLicenses(license);
+    });
+    $("#template-license").remove();
+  });
+
+
+
+</script>

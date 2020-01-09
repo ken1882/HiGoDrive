@@ -1,12 +1,12 @@
 CurrentVersion = 'v0'
 Rails.application.routes.draw do
-
   # home page
   root 'pages#index'
   get '/index', to: 'pages#index'
 
-  get '/signup', to: 'pages#signup'
   get '/login', to: 'pages#login'
+  get '/signup', to: 'pages#signup'
+  get '/signup/driver', to: 'pages#driverSignup'
 
   get '/home', to: 'pages#home'
 
@@ -23,6 +23,8 @@ Rails.application.routes.draw do
   get '/account-recovery', to: 'pages#passwordForget'
   get '/account-recovery/reset', to: 'pages#passwordReset'
 
+  get '/admin', to: 'pages#admin'
+
   match '/login'  =>"api/#{CurrentVersion}/session#new",     via: [:get]
   match '/login'  => "api/#{CurrentVersion}/session#create", via: [:post]
   match '/logout' =>"api/#{CurrentVersion}/session#destroy", via: [:delete, :get]
@@ -35,6 +37,7 @@ Rails.application.routes.draw do
       resources :tasks
       resources :reviews
       resources :reports
+      resources :push_notifications
 
       post '/checkusername', to: 'users#checkusername'
       post '/checkemail', to: 'users#checkemail'
@@ -65,11 +68,17 @@ Rails.application.routes.draw do
       match '/tasks/:task_id/reviews', to: 'reviews#create', via: [:post]
 
       match '/tasks/:task_id/reports/:id', to: 'reports#show', via: [:get]
-      match '/tasks/:task_id/reports', to: 'reports#index', via: [:get]
       match '/tasks/:task_id/reports', to: 'reports#create', via: [:post]
+      post '/finish_report', to: 'reports#mark_finished'
 
-      post '/push_notification', to:'push_notifications#create'
+      match 'driver_info/:id', to: 'users#driver_info', via: [:get]
+      post '/notification_test', to: 'push_notifications#test_send'
+      post '/upload_license', to: 'users#upload_license'
+      post '/accept_license', to: 'users#accept_license'
+      post '/reject_license', to: 'users#reject_license'
+      get '/unprocessed_licenses', to: 'users#unprocessed_licenses'
 
+      match '/tasks/:id/comment', to: 'tasks#send_comment', via: [:post]
     end
   end
 

@@ -3,24 +3,39 @@ module Api
     class ReportsController < ApplicationController
       include ReportsHelper
       before_action :validate_login
-      before_action :set_report, only: [:show, :edit, :update, :destroy]
-      before_action :set_task, only: [:index, :create]
+      before_action :set_report, only: [:mark_finished, :edit, :update, :destroy]
+      before_action :set_task, only: [:create]
       before_action :set_user
-      before_action :validate_task
-      before_action :validate_user, only: [:index, :show]
+      before_action :validate_task, only: [:create]
 
-      # GET /tasks/:task_id/reviews
+      # GET /reports
       def index
-        render json: @task.reports.collect{|r| r.json_info}, status: :ok
+        ret = []
+        if RoleManager.match?(@user.roles, :admin)
+          ret = Report.all.collect do |re|
+            next if re.finished?
+            re.json_info
+          end
+        else
+          ret = Report.all.collect{|re| re.json_info if re.author_id == @user.id}
+        end
+        render json: ret.compact, status: :ok
       end
 
-      # GET /tasks/:task_id/reviews/1
+      # GET /tasks/:task_id/reports
       def show
-        render json: @report.json_info, status: :ok
+        if RoleManager.match?(@user.roles, :admin)
+          render json: @task.reports.collect{|r| r.json_info}, status: :ok
+        else
+          reports = @task.reports
+          idx  = reports.find_index{|r| r.author_id == @user.id}
+          ret = idx.nil? ? nil : reports[idx].json_info
+          render json: ret, status: :ok
+        end
       end
 
-      # POST /reviews
-      # POST /reviews.json
+      # POST /reports
+      # POST /reports.json
       def create
         _params = report_init_params
         _params[:id] = SecurityManager.md5("#{@user.id}@#{@task.id}")
@@ -40,13 +55,20 @@ module Api
           end
         end
       end
-    
+
+      # POST /finish_report/:id
+      def mark_finished
+        return unauthorized unless RoleManager.match?(@user.roles, :admin)
+        @report.update({:finished => true})
+        redirect_to '/admin'
+      end
+
       private
       # Use callbacks to share common setup or constraints between actions.
       def set_report
         @report = Report.find(params[:id])
       end
-      
+
       def set_task
         return @review.task if @review
         @task = Task.find params[:task_id].to_i
@@ -73,11 +95,6 @@ module Api
         return not_found unless @task
         return true
       end
-
-      def validate_user
-        return unauthorized unless RoleManager.match?(@user.roles, :admin)
-        return true
-      end
     end
   end # Api::V0
-end    
+end

@@ -6,7 +6,9 @@ module Api
       before_action :set_user, only: [:show, :getpos, :forgot_password,
         :reset_password, :peak]
       before_action :set_current_user, only: [:update, :setpos,
-        :user_tasks, :tasks_engaging, :tasks_history]
+        :user_tasks, :tasks_engaging, :tasks_history, :driver_info,
+        :upload_license, :accept_license, :reject_license,
+        :unprocessed_licenses]
       # ----------
       before_action :validate_init_params, only: [:create]
       before_action :validate_update_params, only: [:update]
@@ -59,7 +61,16 @@ module Api
         @user = User.new(user_init_params)
         respond_to do |format|
           if @user.save
-            format.html { redirect_to '/', notice: 'User was successfully created.' }
+            # dirty hack to auto login
+            session[:user_id] = @user.id
+            # -----
+            format.html do
+              if RoleManager.match?(params[:roles].to_i, :driver)
+                redirect_to '/signup/driver', notice: 'Please upload your licenses'
+              else
+                redirect_to '/', notice: 'User was successfully created.'
+              end
+            end
             format.json { render json: {message: 'created'}, status: :created}
           else
             format.html { unprocessable_entity }
@@ -98,14 +109,14 @@ module Api
       # POST /forgotpassword
       def forgot_password
         token = @user.generate_reset_token(params["authenticity_token"])
-        Mailer.send(request.domain, @user.email, @user.username, token)
-        return_ok
+        UserMailer.reset_email(request.domain, @user, token).deliver!
+        redirect_to '/'
       end
 
       # POST /resetpassword
       def reset_password
         @user.reset_password(user_reset_fields)
-        return_ok
+        redirect_to '/'
       end
 
       # GET /mytasks
@@ -118,9 +129,56 @@ module Api
         render json: @user.tasks_engaging || [], status: :ok
       end
 
-      # GET /tasks_engaging
+      # GET /tasks_history
       def tasks_history
-        render json: @user.tasks_history || [], status: :ok
+        render json: @user.all_tasks || [], status: :ok
+      end
+
+      # POST /upload_license
+      def upload_license
+        return unprocessable_entity if @user.licensed?
+        @user.update(driver_license_params)
+        $unlicensed_drivers << @user.id
+        PushNotificationsController.send_license_uploaded(@user)
+        return_ok
+      end
+
+      # POST /accept_license
+      def accept_license
+        return forbidden unless RoleManager.match?(@user.roles, :admin)
+        target = User.find(params[:id])
+        return not_found unless target
+        return bad_request if target.licensed? || target.driver_license.nil?
+        $unlicensed_drivers.delete(target.id)
+        target.accept_license
+        PushNotificationsController.send_license_accepted(target)
+        redirect_to '/'
+      end
+
+      # POST /reject_license
+      def reject_license
+        return forbidden unless RoleManager.match?(@user.roles, :admin)
+        target = User.find(params[:id])
+        return not_found unless target
+        $unlicensed_drivers.delete(target.id)
+        target.revoke_license
+        PushNotificationsController.send_license_rejected(target)
+        return_ok
+      end
+
+      # GET /driver_info/:uid
+      def driver_info
+        return unauthorized if RoleManager.match?(@user.roles, :admin)
+        target = User.find(params[:id])
+        return not_found unless target
+        render json: target.driver_json_info, status: :ok
+      end
+
+      # GET /unprocessed_licenses
+      def unprocessed_licenses
+        return forbidden unless RoleManager.match?(@user.roles, :admin)
+        ret = User.find($unlicensed_drivers).collect{|u| u.driver_json_info}
+        render json: ret, status: :ok
       end
 
       private
@@ -151,18 +209,18 @@ module Api
       end
 
       def validate_resetpwd_params
-        tme = @user.fotgot_timestamp || 0
+        tme = @user.forgot_timestamp || 0
         return bad_request if logged_in?
         return unprocessable_entity if tme == 0
-        return gone if Time.now - tme > ForgotDuration
+        # return gone if Time.now - tme > ForgotDuration
         return unauthorized if params[:token] != @user.password_reset_token
-        return unprocessable_entity unless password_reset_ok?(_params)
+        return unprocessable_entity unless password_reset_ok?(params)
         return true
       end
 
       def validate_forgotpwd_params
         return bad_request if logged_in?
-        return gone if Time.now - (@user.forgot_timestamp || 0) < ForgotDuration
+        # return gone if Time.now - (@user.forgot_timestamp || 0) < ForgotDuration
         return unauthorized if @user.username != params[:username]
         return unauthorized if @user.email != params[:email]
         return true
@@ -198,8 +256,7 @@ module Api
       end
 
       def driver_licensed?
-        return true unless RoleManager.match?(params[:roles].to_i, :driver)
-        return @user.licensed?
+        return true
       end
 
       def coordinates_ok?(lat, lng)

@@ -10,19 +10,19 @@
 <main>
   <div class="container">
     <div class="my-2">
-      <form id="search-user" action="">
+      <form id="search-user" action="" class="form-row">
         <input class="form-control my-1 col-10" type="search" placeholder="我想要找" aria-label="搜尋其他使用者" id="search"
           name="username" required>
         <button class="btn btn-outline-success my-1 col-2" type="submit"><i class="fas fa-search"></i></button>
-      </div>
-    </form>
+      </form>
+    </div>
     <hr>
 
     <div class="userList">
       <div class="card mb-3 mx-auto" id="search-result" style="max-width: 540px; display: none;">
         <div class="row no-gutters">
           <div class="col-4">
-            <img id="user-photo" src=<%= image_url 'user-circle-regular.svg' %>>
+            <img id="user-photo" class="card-img rounded m-1 p-4" src=<%= image_url 'user-circle-regular.svg' %> alt="user">
           </div>
           <div class="col-8">
             <div class="card-body">
@@ -38,7 +38,9 @@
         </div>
       </div>
       <div class="notFound" style="display: none;">
+        <br>
         <h3 class="text-center alert alert-danger">很抱歉！找不到該使用者</h3>
+        <hr>
       </div>
     </div>
 
@@ -77,6 +79,7 @@
 
 <script>
   function listUserInfo(user) {
+    $("#user-photo").attr("src", user.avatar_url);
     $("#search-result-name").html(user.username + " (" + user.realname + ")");
     $("#search-result-email").html(user.email);
     $("#search-result-phone").html(user.phone);

@@ -14,7 +14,6 @@
     <div class="accordion" id="accordion">
     </div>
     <div style="display: none;">
-
       <div class="card" id="template-card-finished" style="display: none;">
           <div class="card-header px-0" id="headingOne">
             <button id="collapse-btn" class="btn btn-block" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false"
@@ -96,22 +95,21 @@
 
 <script>
 
-function renderTaskToPage(taskId) {
-  let task = getTask(taskId);
-  let placeName = task.dest.placeName;
-  let departTime = task.dest.datetimepicker;
-  // TODO: author_name or driver_name
-  let currentUsername = getUserInfo(getCurrentUser()).username;
-  let authorName = getUserInfo(task.author_id).username;
-  let driverName = task.driver_id ? getUserInfo(task.driver_id).username : "N/A";
-  let isPassenger = authorName == currentUsername;
+function renderTaskToPage(task) {
+  let taskId = task.id;
+  let dest = JSON.parse(task.dest);
+  let placeName = dest.placeName;
+  let departTime = dest.datetimepicker;
+  let [author, driver] = [task.author_name, task.driver_name];
+  let isPassenger = <%= current_user.roles == 1 %>;
   let status = task.status;
   let [statusMsg, statusClass] = {
-      0: ["等待中", "text-primary tag"],
-      1: ["已接受", "text-primary tag"],
-      2: ["接客中", "text-primary tag"],
-      3: ["已完成", "text-success tag"],
-      4: ["已取消", "text-danger tag"]
+      "-1": ["已預約", "text-primary tag"],
+      "0": ["等待中", "text-primary tag"],
+      "1": ["已接受", "text-primary tag"],
+      "2": ["接客中", "text-primary tag"],
+      "3": ["已完成", "text-success tag"],
+      "4": ["已取消", "text-danger tag"]
   }[status];
 
   let card = $("#template-card-finished").clone();
@@ -129,7 +127,7 @@ function renderTaskToPage(taskId) {
   collpaseBtn.attr("data-target", "#" + collapse.attr("id"));
   collpaseBtn.attr("aria-controls", collapse.attr("id"));
 
-  header.find("p[name='user_id']").html(isPassenger ? driverName : authorName);
+  header.find("p[name='user_id']").html(isPassenger ? driver : author);
   header.find("p[name='dist']").html(placeName);
   header.find("p[name='route']").html(departTime);
   header.find("p[name='status']").html(statusMsg);
@@ -142,7 +140,7 @@ function renderTaskToPage(taskId) {
   if (status == 3) {
     let review = undefined;
     getTaskReview(taskId).forEach(r => {
-      if (r.author_id == getCurrentUser()) { review = r; }
+      if (r.author_id == "<%= current_user.id %>") { review = r; }
     });
     if (review) {
       cardBody.html('<span>評價：' + review.score + '星 (' + review.comment + ')</span>');
@@ -155,10 +153,11 @@ function renderTaskToPage(taskId) {
     }
   } else {
     cardBody.html({
-        0: '<span>狀態：尚無司機接單</span>',
-        1: '<span>狀態：已被司機接單</span>',
-        2: '<span>狀態：送客中</span>',
-        4: '<span>取消原因：已過期</span>'
+        "-1": '<span>預約：已預約</span>',
+        "0": '<span>狀態：尚無司機接單</span>',
+        "1": '<span>狀態：已被司機接單</span>',
+        "2": '<span>狀態：送客中</span>',
+        "4": '<span>取消原因：已過期</span>'
     }[status]);
   }
 
@@ -166,9 +165,9 @@ function renderTaskToPage(taskId) {
 }
 
 $(document).ready(function() {
-  let myTasks = getMyTasks();
+  let myTasks = getTaskHistory();
   if (myTasks && myTasks.length) {
-    myTasks.slice(0, 8).forEach(taskId => { renderTaskToPage(taskId); });
+    myTasks.slice(0, 8).forEach(task => { renderTaskToPage(task); });
     $('.score').raty({
       number: 5,
       targetType: 'score',

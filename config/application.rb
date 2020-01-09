@@ -35,13 +35,23 @@ module GuaneiArk
     config.assets.initialize_on_precompile = false
     config.assets.compile = true
 
+    config.action_mailer.smtp_settings = proc {
+      line = ENV['SMTP_SETTING']
+      keys = line.split(',').collect{|seg| seg.split(':')}.to_h.symbolize_keys
+      keys[:port] = keys[:port].to_i
+      keys[:enable_starttls_auto] = keys[:enable_starttls_auto].to_i == '0' ? false : true
+      keys
+    }.call
+
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration can go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded after loading
     # the framework and any gems in your application.
     config.after_initialize do
       puts "#{SPLIT_LINE}Pre-init"
+      User.setup
       Task.setup
+      TimerManager.initialize
       Rails.application.eager_load! if Rails.production?
       Mongoid.raise_not_found_error = false
       puts "Rail server started! (#{Rails.env})\n#{SPLIT_LINE}"

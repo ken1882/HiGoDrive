@@ -4,7 +4,13 @@ class NotificationManager{
   }
 
   static initialize(){
-    $(document).ready(this.ready);
+    this.messages = [];
+    setTimeout(()=>{
+      if(!window._flagSWready){this.refreshServiceWorker();}
+    }, 5000);
+    setTimeout(()=>{
+      $(document).ready(this.ready);
+    }, 1000);
   }
 
   static isSupported(){
@@ -23,22 +29,32 @@ class NotificationManager{
       return result;
     });
   }
-  
+
+
   static ready() {
-    NotificationManager.setup(NotificationManager.logSubscription);
+    NotificationManager.setup(NotificationManager.sendSubInfo);
     
     if (navigator.serviceWorker) {
-      console.log('Registering serviceworker');
-      navigator.serviceWorker.register('/serviceworker.js', { scope: './' })
+      logger.log('Registering serviceworker');
+      navigator.serviceWorker.register('/serviceworker.js')
         .then(function(reg) {
-          console.log(reg.scope, 'register');
-          console.log('Service worker change, registered the service worker');
+          logger.log(reg.scope, 'register');
+          logger.log('Service worker change, registered the service worker');
         });
     } else {
       alertSWSupport();
     }
   }
-  
+
+  static refreshServiceWorker(){
+    console.log("Refreshing ServiceWorkers")
+    navigator.serviceWorker.getRegistrations().then(function(registrations){
+      for(let registration of registrations){
+       registration.unregister();
+      }
+    });
+  }
+
   static setup(onSubscribed) {
     console.log('Setting up push subscription');
   
@@ -77,10 +93,14 @@ class NotificationManager{
   }
 
   static subscribe(onSubscribed) {
+    console.log("Waiting for ServiceWorker Ready...");
     navigator.serviceWorker.ready.then((serviceWorkerRegistration) => {
+      console.log("Service Worker is ready!");
+      window._flagSWready = true;
       const pushManager = serviceWorkerRegistration.pushManager
       pushManager.getSubscription()
       .then((subscription) => {
+        console.log("Process subscription")
         if (subscription) {
           NotificationManager.refreshSubscription(pushManager, subscription, onSubscribed);
         } else {
@@ -90,10 +110,10 @@ class NotificationManager{
     });
   }
 
-  static refreshSubscription(pushManager, subscription) {
+  static refreshSubscription(pushManager, subscription, onSubscribed) {
     console.log('Refreshing subscription');
-    return subscription.unsubscribe().then((bool) => {
-      this.pushManagerSubscribe(pushManager);
+    return subscription.unsubscribe().then((_) => {
+      this.pushManagerSubscribe(pushManager, onSubscribed);
     });
   }
   
@@ -127,10 +147,11 @@ class NotificationManager{
     });
   }
 
-  static sendNotification() {
-    this.getSubscription().then((subscription) => {
-      return fetch("/api/v0/push_notification", {
-        headers: this.formHeaders(),
+  static sendSubInfo(subscription) {
+    NotificationManager.logSubscription(subscription);
+    NotificationManager.getSubscription().then((subscription) => {
+      return fetch("/api/v0/push_notifications", {
+        headers: NotificationManager.formHeaders(),
         method: 'POST',
         credentials: 'include',
         body: JSON.stringify({ subscription: subscription.toJSON() })
@@ -143,6 +164,26 @@ class NotificationManager{
       })
       .catch((e) => {
         logger.error("Error sending notification", e);
+      });
+    })
+  }
+  
+  static sendNotification() {
+    this.getSubscription().then((subscription) => {
+      return fetch("/api/v0/notification_test", {
+        headers: this.formHeaders(),
+        method: 'POST',
+        credentials: 'include',
+        body: JSON.stringify({ subscription: subscription.toJSON() })
+      }).then((response) => {
+        console.log("Push response", response);
+        if (response.status >= 500) {
+          console.error(response.statusText);
+          alert("Sorry, there was a problem sending the notification. Try resubscribing to push messages and resending.");
+        }
+      })
+      .catch((e) => {
+        console.error("Error sending notification", e);
       });
     })
   }

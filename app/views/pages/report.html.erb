@@ -42,7 +42,8 @@
   }
 
   let taskId = parseInt(getQueryVariable("id"));
-  if (!taskId || !getMyTasks().includes(taskId)) {
+  // TODO: check task if in user's task_history
+  if (!taskId) {
     window.location.href = "/task";
   }
 

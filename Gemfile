@@ -34,9 +34,6 @@ gem 'mongoid', git: 'https://github.com/mongodb/mongoid.git'
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.1.0', require: false
 
-# Mailer gem
-gem 'postmark'
-
 # Push notification
 gem "webpush"
 gem "serviceworker-rails"

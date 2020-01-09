@@ -1,5 +1,5 @@
 class PagesController < ApplicationController
-  
+
   def index
     return home if logged_in?
     render 'welcome'
@@ -7,6 +7,7 @@ class PagesController < ApplicationController
 
   def home
     return index unless logged_in?
+    return admin if RoleManager.match?(current_user.roles, :admin)
     render 'main'
   end
 
@@ -18,6 +19,10 @@ class PagesController < ApplicationController
   def signup
     return home if logged_in?
     render 'signup'
+  end
+
+  def driverSignup
+    render 'driverSignup'
   end
 
   def passwordForget
@@ -39,6 +44,9 @@ class PagesController < ApplicationController
   end
 
   def report
+    flash.now[:danger] = 'Please log in first' unless logged_in?
+    return login unless logged_in?
+    render 'report'
   end
 
   def userInfo
@@ -65,9 +73,10 @@ class PagesController < ApplicationController
     render 'editUserBio'
   end
 
-  # def assets
-  #   respond_to do |format|
-  #     format.png
-  #   end
-  # end
+  def admin
+    flash.now[:danger] = 'Please log in as administrator' unless logged_in?
+    return login unless logged_in?
+    return home unless RoleManager.match?(current_user.roles, :admin)
+    render 'admin'
+  end
 end

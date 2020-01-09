@@ -22,6 +22,9 @@
     <div class="form-group">
       <label for="password_confirmation">請再次輸入密碼</label>
       <input type="password" class="form-control" id="password_confirmation" name="password_confirmation" required>
+      <div class="invalid-feedback">
+          請確認輸入密碼相同
+        </div>
     </div>
     <div class="form-group">
       <label for="realname">真實姓名</label>
@@ -51,14 +54,6 @@
       </div>
     </div>
     <br>
-    <!--
-    <div class="form-group form-check">
-      <input type="checkbox" class="form-check-input" id="rememberMe" name="rememberMe" required>
-      <label class="form-check-label" for="rememberMe">我同意 <a href="#">使用條款</a> 及 <a href="#">隱私權政策</a></label>
-    </div>
-    -->
-    <br>
-    <br>
     <div class="px-5 py-3">
       <button type="submit" class="btn btn-success btn-lg btn-block">註冊</button>
     </div>
@@ -71,3 +66,15 @@
     </div>
   </div>
 </div>
+
+<script>
+  $("#password_confirmation").on("focusout", function (e) {
+    if ($("#password_confirmation").val() != "") {
+      if ($("#password").val() != $(this).val()) {
+        $(this).addClass("is-invalid");
+      } else {
+        $(this).removeClass("is-invalid");
+      }
+    }
+  });
+</script>
