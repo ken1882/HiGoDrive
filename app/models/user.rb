@@ -152,6 +152,8 @@ class User
 
   def driver_json_info
     {
+      :id => id.to_s,
+      :username => username,
       :driver_license   => driver_license,
       :vehicle_license  => vehicle_license,
       :exterior         => exterior,
