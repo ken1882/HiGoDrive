@@ -59,7 +59,7 @@ class User
     $unlicensed_drivers = []
     self.all.each do |user|
       next unless RoleManager.match?(user.roles, :driver)
-      next if user.licensed?
+      next if user.driver_license.nil? || user.licensed?
       $unlicensed_drivers << user.id.to_s
     end
   end
@@ -146,6 +146,7 @@ class User
       'roles'      => roles,
       'bio'        => bio,
       'avatar_url' => avatar_url,
+      'verified_driver' => verified_driver
     }
   end
 
