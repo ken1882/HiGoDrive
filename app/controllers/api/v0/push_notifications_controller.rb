@@ -32,6 +32,21 @@ module Api
         self.create_notification(_task.user, msg)
       end
 
+      def self.send_license_accepted(user)
+        msg = "Your license has been approved"
+        self.create_notification(user, msg) rescue nil
+      end
+
+      def self.send_license_rejected(user)
+        msg = "Your license has been rejected"
+        self.create_notification(user, msg) rescue nil
+      end
+
+      def self.send_license_uploaded(user)
+        msg = "Your license will be reviewed soon, please wait"
+        self.create_notification(user, msg) rescue nil
+      end
+
       # GET /push_notifications
       def index
         render json: @user.push_notifications.collect{|n| n.json_info}, status: :ok
