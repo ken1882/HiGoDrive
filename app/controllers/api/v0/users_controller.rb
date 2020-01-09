@@ -61,6 +61,9 @@ module Api
         @user = User.new(user_init_params)
         respond_to do |format|
           if @user.save
+            # dirty hack to auto login
+            session[:user_id] = @user.id
+            # -----
             format.html { redirect_to '/', notice: 'User was successfully created.' }
             format.json { render json: {message: 'created'}, status: :created}
           else
@@ -195,7 +198,7 @@ module Api
       end
 
       def validate_resetpwd_params
-        tme = @user.fotgot_timestamp || 0
+        tme = @user.forgot_timestamp || 0
         return bad_request if logged_in?
         return unprocessable_entity if tme == 0
         # return gone if Time.now - tme > ForgotDuration

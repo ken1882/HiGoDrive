@@ -2,14 +2,14 @@ module Api
   module V0
     class SessionController < ApplicationController
       LoginParams = [:username_or_email, :password, :remember_me]
-
+      
       def new
         render "session/new"
       end
 
       def create
         log_out if logged_in?
-        user = log_in(login_params[:username_or_email], login_params[:password])
+        user = log_in(_params[:username_or_email], _params[:password])
         set_user(user)
         if logged_in?
           login_params[:remember_me] == '1' ? remember(user) : forget(user)
