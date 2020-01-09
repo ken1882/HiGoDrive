@@ -40,7 +40,8 @@ class Task
   def self.execute_preorder(tid)
     _task = self.find(tid)
     return unless _task
-    # TODO
+    _task.engage
+    _task.driver.engage_preorder
   end
 
   def initialize(_params)

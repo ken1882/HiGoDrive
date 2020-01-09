@@ -2,7 +2,7 @@ class User
   include Mongoid::Document
   include Mongoid::Timestamps
   include ActiveModel::SecurePassword
-  
+
   has_many :tasks, dependent: :destroy
   has_many :push_notifications, dependent: :destroy
 
@@ -29,9 +29,9 @@ class User
   field :tasks_engaging, type: Array
   field :tasks_history, type: Array
   field :forgot_timestamp, type: DateTime
-  field :endpoint, type: String           # notification 
-  field :p256dh, type: String             # notification 
-  field :auth, type: String               # notification 
+  field :endpoint, type: String           # notification
+  field :p256dh, type: String             # notification
+  field :auth, type: String               # notification
   field :driver_license, type: String
   field :vehicle_license, type: String
   field :exterior, type: String
@@ -59,7 +59,7 @@ class User
     $unlicensed_drivers = []
     self.all.each do |user|
       next unless RoleManager.match?(user.roles, :driver)
-      next if user.licensed?
+      next if user.driver_license.nil? || user.licensed?
       $unlicensed_drivers << user.id.to_s
     end
   end
@@ -146,6 +146,7 @@ class User
       'roles'      => roles,
       'bio'        => bio,
       'avatar_url' => get_gravatar_url,
+      'verified_driver' => verified_driver
     }
   end
 
@@ -225,6 +226,10 @@ class User
   def engage_task(tid)
     self.add_to_set(tasks_engaging: tid)
     self.add_to_set(tasks_history: tid)
+  end
+
+  def engage_preorder(tid)
+    self.add_to_set(tasks_engaging: tid)
   end
 
   def resolve_task(tid)

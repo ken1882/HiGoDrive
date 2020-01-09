@@ -1,6 +1,12 @@
 module PushNotificationsHelper
   include ApplicationHelper
 
+  TestNotification = {
+    :id      => 0,
+    :parent  => 0,
+    :message => "Yay, we sent you a push notification!",
+  }
+
   def push_params
     params.permit(:message, { subscription: [:endpoint, keys: [:auth, :p256dh]]})
   end
