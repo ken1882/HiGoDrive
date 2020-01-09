@@ -98,7 +98,7 @@ module Api
         return bad_request if tid.nil?
         ret_cur = 0; ret_nxt = 0;
         idx = (tid == 0 ? 0 : $task_queue.index(tid)) || 0
-        if next_preorder = (@user.unaccepted_preorders || []).first
+        if next_preorder = (current_user.unaccepted_preorders || []).first
           ret_nxt = $task_queue[idx]
           ret_cur = next_preorder
         else
@@ -144,9 +144,10 @@ module Api
         return_ok
       end
 
-      # POST /tasks/comment
+      # POST /tasks/:id/comment
       def send_comment
         return unprocessable_entity if @task.closed?
+        @user = current_user
         target = nil
         target = @task.author if @user.id == @task.driver_id
         target = @task.driver_id if @user.id == @task.author_id
@@ -169,6 +170,7 @@ module Api
       end
 
       def validate_timelock
+        return true
         current_user.mutex.synchronize do
           lct = current_user.tasks.last.created_at.to_i rescue 0
           if (Time.now.to_i - lct).abs < 180

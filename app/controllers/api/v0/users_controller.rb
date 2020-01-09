@@ -149,9 +149,10 @@ module Api
         target = User.find(params[:id])
         return not_found unless target
         return bad_request if target.licensed? || target.driver_license.nil?
-        target.accept_driver
+        $unlicensed_drivers.delete(target.id)
+        target.accept_license
         PushNotificationsController.send_license_accepted(target)
-        return_ok
+        redirect_to '/'
       end
 
       # POST /reject_license
@@ -159,6 +160,7 @@ module Api
         return forbidden unless RoleManager.match?(@user.roles, :admin)
         target = User.find(params[:id])
         return not_found unless target
+        $unlicensed_drivers.delete(target.id)
         target.revoke_license
         PushNotificationsController.send_license_rejected(target)
         return_ok

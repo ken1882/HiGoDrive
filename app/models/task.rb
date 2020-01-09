@@ -57,6 +57,7 @@ class Task
         _params[:id] = @@next_id
         @@next_id += 1
       }
+      _params.delete(:preorder)
     end
     super
   end
@@ -79,16 +80,16 @@ class Task
   end
 
   def accept(_did)
+    self.update({
+      status: ProgressStatus[:accepted],
+      driver_id: _did
+    })
     if preorder?
       driver.accept_preorder(self.id)
     else
       @@mutex.synchronize{$task_queue.delete(self.id.to_i)}
       driver.engage_task(self.id)
     end
-    self.update({
-      status: ProgressStatus[:accepted],
-      driver_id: _did
-    })
   end
 
   def engage
