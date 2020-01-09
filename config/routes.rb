@@ -54,7 +54,7 @@ Rails.application.routes.draw do
 
       match 'driver_info/:id', to: 'users#driver_info', via: [:get]
       post '/notification_test', to: 'push_notifications#test_send'
-      post '/upload_license', to: 'users#accept_license'
+      post '/upload_license', to: 'users#upload_license'
       post '/accept_license', to: 'users#accept_license'
       post '/reject_license', to: 'users#reject_license'
       get '/unprocessed_licenses', to: 'users#unprocessed_licenses'

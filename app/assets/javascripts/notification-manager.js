@@ -92,6 +92,7 @@ class NotificationManager{
       const pushManager = serviceWorkerRegistration.pushManager
       pushManager.getSubscription()
       .then((subscription) => {
+        console.log("Process subscription")
         if (subscription) {
           NotificationManager.refreshSubscription(pushManager, subscription, onSubscribed);
         } else {
