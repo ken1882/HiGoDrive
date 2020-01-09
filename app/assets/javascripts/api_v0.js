@@ -189,17 +189,22 @@ function getTask(taskId) {
   return taskInfo;
 }
 
-function createTask(dest, departTime, equipments) {
+function createTask(dest, departTime, equipments, preorder, driverId) {
   let taskId = 0;
+  let taskInfo = {
+    authenticity_token: Util.AuthToken,
+    dest: JSON.stringify(dest),
+    depart_time: departTime,
+    equipments: equipments,
+    preorder: preorder
+  };
+  if (driverId) {
+    taskInfo.driver_id = driverId;
+  }
   $.ajax({
     method: "POST",
     url: "/api/v0/tasks",
-    data: {
-      authenticity_token: Util.AuthToken,
-      dest: JSON.stringify(dest),
-      depart_time: departTime,
-      equipments: equipments
-    },
+    data: taskInfo,
     dataType: "json",
     success: function (result) {
       taskId = result.id;
@@ -264,8 +269,7 @@ function getTaskHistory() {
     },
     async: false
   });
-  tasks = Array.from(new Set(tasks));
-  tasks.sort(function(a, b) { return b - a; });
+  tasks.sort(function(a, b) { return b.id - a.id; });
   return tasks;
 }
 
@@ -457,6 +461,24 @@ function getReportList() {
     async: false
   });
   return reports;
+}
+
+function getUnprocessedLicenses() {
+  let licenses = undefined;
+  $.ajax({
+    method: "GET",
+    url: "/api/v0/unprocessed_licenses",
+    data: null,
+    dataType: "json",
+    success: function (result) {
+      licenses = result;
+    },
+    error: function(xhr) {
+      console.log("An error occured:", xhr.status, xhr.statusText);
+    },
+    async: false
+  });
+  return licenses;
 }
 
 function finishReport(taskId) {

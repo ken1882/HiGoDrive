@@ -63,7 +63,7 @@
             </div>
           </div>
         </div>
-        <div class="form-group">
+        <div class="form-group" id="orderDriverDiv" style="display: none;">
           <label for="orderDriver">預約司機</label>
           <input type="text" class="form-control" id="orderDriver" name="orderDriver">
         </div>
@@ -290,6 +290,7 @@
   //會把調整時間的選項顯示出來並把選項文字改成取消預約
   //如果按下取消預約 則會把 datepicker 的內容清除 並取消顯示
   function resv(item) {
+    document.getElementById('orderDriverDiv').style.display = "block";
     document.getElementById('datetimepickerDiv').style.display = "flex";
     console.log(document.getElementById('resvtime').value);
     if (item.innerHTML == "預約行程") {
@@ -299,6 +300,8 @@
       $('#datetimepicker').datetimepicker('clear');
       $('#datetimepicker').datetimepicker('date', new Date());
       document.getElementById('datetimepickerDiv').style.display = "none";
+      $('#orderDriver').val("");
+      document.getElementById('orderDriverDiv').style.display = "none";
     }
   }
 
@@ -378,17 +381,40 @@
     map.controls[google.maps.ControlPosition.LEFT_BOTTOM].push(document.getElementById('resvtask'));
     let depart_time = parseInt(Date.parse(dest.datetimepicker) / 1000);
     let equipments = (dest.helmet ? 1 : 0) + (dest.raincoat ? 2 : 0);
-    let taskId = createTask(dest, depart_time, equipments);
+    let orderDriver = document.getElementById('orderDriver').value;
+    let driverId = undefined;
+    let preorder = 0;
 
+    if (orderDriver.length > 0) {
+      preorder = 1;
+      let driver = getUserInfo(orderDriver);
+      if (driver && driver.roles == 2) {
+        driverId = driver.id;
+      } else {
+        alert("Driver " + orderDriver + " not found");
+        document.getElementById('taskLoading').style.display = "none";
+        window.location.href = "/";
+        return false;
+      }
+    }
+
+    let taskId = createTask(dest, depart_time, equipments, preorder, driverId);
     if (taskId) {
       taskid.nowid = taskId;
       console.log("errand start!");
-      waitUntil(taskStatus.ACCEPTED, function() {
-        console.log("task has been received by driver");
-        driverReceive();
-      });
+      if (preorder) {
+        document.getElementById('taskLoading').style.display = "none";
+        window.location.href = "/task";
+      } else {
+        waitUntil(taskStatus.ACCEPTED, function() {
+          console.log("task has been received by driver");
+          driverReceive();
+        });
+      }
+      return true;
     } else {
       // createTask failed
+      document.getElementById('taskLoading').style.display = "none";
       alert("Failed to create new task, since you are in 3 minute cooldown");
       window.location.href = "/";
     }
@@ -468,14 +494,14 @@
     let msg;
     if (isDriver) {
       msg = "<p class='my-0'><span>你說 : " + $("#errand_text_send_driver").val() + "</span></p>";
-        $("#errand_text_send_driver").val("");
-        $("#psText_driver").append(msg);
-        $("#psText_driver").scrollTop($("#psText_driver").get(0).scrollHeight)
-      } else {
-        msg = "<p class='my-0'><span>你說 : " + $("#errand_text_send_passenger").val() + "</span></p>";
-        $("#errand_text_send_passenger").val("");
-        $("#psText_passenger").append(msg);
-        $("#psText_passenger").scrollTop($("#psText_passenger").get(0).scrollHeight)
+      $("#errand_text_send_driver").val("");
+      $("#psText_driver").append(msg);
+      $("#psText_driver").scrollTop($("#psText_driver").get(0).scrollHeight)
+    } else {
+      msg = "<p class='my-0'><span>你說 : " + $("#errand_text_send_passenger").val() + "</span></p>";
+      $("#errand_text_send_passenger").val("");
+      $("#psText_passenger").append(msg);
+      $("#psText_passenger").scrollTop($("#psText_passenger").get(0).scrollHeight)
     }
     //test getmsg
     setTimeout(function () { getMessages(); }, 10000);

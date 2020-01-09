@@ -95,10 +95,11 @@
 
 <script>
 
-function renderTaskToPage(taskId) {
-  let task = getTask(taskId);
-  let placeName = task.dest.placeName;
-  let departTime = task.dest.datetimepicker;
+function renderTaskToPage(task) {
+  let taskId = task.id;
+  let dest = JSON.parse(task.dest);
+  let placeName = dest.placeName;
+  let departTime = dest.datetimepicker;
   let [author, driver] = [task.author_name, task.driver_name];
   let isPassenger = <%= current_user.roles == 1 %>;
   let status = task.status;
@@ -164,7 +165,7 @@ function renderTaskToPage(taskId) {
 $(document).ready(function() {
   let myTasks = getTaskHistory();
   if (myTasks && myTasks.length) {
-    myTasks.slice(0, 8).forEach(taskId => { renderTaskToPage(taskId); });
+    myTasks.slice(0, 8).forEach(task => { renderTaskToPage(task); });
     $('.score').raty({
       number: 5,
       targetType: 'score',

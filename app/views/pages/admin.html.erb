@@ -45,53 +45,51 @@
       </div>
     </div>
 
-    <template>
-      <div class="card">
-        <div class="card-header" id="headingTwo">
-          <button class="btn btn-block" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false"
-            aria-controls="collapseTwo">
-            <div class="row">
-              <div class="col-5">
-                <span name="id" class="text-primary text-left">用戶：58586</span>
-              </div>
-              <div class="col-5">
-                <span name="type" class="text-warning">司機資格審核</span>
-              </div>
-              <div class="col-2">
-                <i class="fas fa-sort-down fa-lg"></i>
-              </div>
+    <div class="card" id="template-license">
+      <div class="card-header" id="headingLicense">
+        <button id="licenseBtn" class="btn btn-block" data-toggle="collapse" data-target="#collapseLicense"
+          aria-expanded="false" aria-controls="collapseLicense">
+          <div class="row">
+            <div class="col-5">
+              <span name="id" class="text-primary text-left">用戶：58586</span>
             </div>
-          </button>
-        </div>
-        <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
-          <div class="card-body">
-            <p>
-              駕照正面照片
-              <img src="#" alt="駕照正面照片">
-            </p>
-            <p>
-              行照正片照片
-              <img src="#" alt="行照正片照片">
-            </p>
-            <p>
-              車身照片
-              <img src="#" alt="車身照片">
-            </p>
-            <p>車牌：</p>
-            <p>車型：</p>
-            <br>
-            <div class="row">
-              <div class="col">
-                <button type="button" class="btn btn-danger btn-block">不通過</button>
-              </div>
-              <div class="col">
-                <button type="button" class="btn btn-success btn-block">通過</button>
-              </div>
+            <div class="col-5">
+              <span name="type" class="text-warning">司機資格審核</span>
+            </div>
+            <div class="col-2">
+              <i class="fas fa-sort-down fa-lg"></i>
+            </div>
+          </div>
+        </button>
+      </div>
+      <div id="collapseLicense" class="collapse" aria-labelledby="headingLicense" data-parent="#accordion">
+        <div class="card-body">
+          <p>
+            駕照正面照片
+            <img id="driver_license" alt="駕照正面照片">
+          </p>
+          <p>
+            行照正片照片
+            <img id="vehicle_license" alt="行照正片照片">
+          </p>
+          <p>
+            車身照片
+            <img id="exterior" alt="車身照片">
+          </p>
+          <p>車牌：<span id="palte"></span></p>
+          <p>車型：<span id="module"></span></p>
+          <br>
+          <div class="row">
+            <div class="col">
+              <button type="button" class="btn btn-danger btn-block">不通過</button>
+            </div>
+            <div class="col">
+              <button type="button" class="btn btn-success btn-block">通過</button>
             </div>
           </div>
         </div>
       </div>
-    </template>
+    </div>
 
   </div>
 </div>
@@ -142,11 +140,52 @@
     $("#accordion").append(card);
   }
 
+  function renderLicenses(license) {
+    let card = $("#template-license").clone();
+
+    console.log(license);
+
+    let taskId;
+    let applyId;
+    let driver_licenseImg;
+    let vehicle_licenseImg;
+    let exteriorImg;
+    let palteText;
+    let moduleText;
+
+    card.find("#headingLicense").attr("id", "headingLicense" + taskId);
+    card.find("#licenseBtn").attr("data-target", "#" + "collapseLicense" + taskId);
+    card.find("#licenseBtn").attr("aria-controls", "collapseLicense" + taskId);
+    card.find("#licenseBtn").attr("id", "licenseBtn" + taskId);
+    card.find("#headingLicense").text(applyId);
+    card.find("#headingLicense").attr("id", "headingLicense" + taskId);
+    card.find("#collapseLicense").attr("aria-labelledby", "headingLicense" + taskId);
+    card.find("#collapseLicense").attr("id", "collapseLicense" + taskId);
+    card.find("#driver_license").attr("src", driver_licenseImg);
+    card.find("#driver_license").attr("id", "driver_license" + taskId);
+    card.find("#vehicle_license").attr("src", vehicle_licenseImg);
+    card.find("#vehicle_license").attr("id", "vehicle_license" + taskId);
+    card.find("#exterior").attr("src", exteriorImg);
+    card.find("#exterior").attr("id", "exterior" + taskId);
+    card.find("#palte").text(palteText);
+    card.find("#palte").attr("id", "palte" + taskId);
+    card.find("#module").text(moduleText);
+    card.find("#module").attr("id", "palte" + taskId);
+
+    $("#accordion").append(card);
+  }
+
   $(document).ready(function() {
     let reportList = getReportList();
     reportList.forEach(report => {
       renderReport(report);
     });
     $("#template-report").remove();
+
+    let licenseList = getUnprocessedLicenses();
+    licenseList.forEach(license => {
+      renderLicenses(license);
+    });
+    $("#template-license").remove();
   });
 </script>
