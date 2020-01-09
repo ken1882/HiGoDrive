@@ -5,8 +5,10 @@ class NotificationManager{
 
   static initialize(){
     this.messages = [];
-    this.refreshServiceWorker();
-    $(document).ready(this.ready);
+    // this.refreshServiceWorker();
+    setTimeout(()=>{
+      $(document).ready(this.ready);
+    }, 1000);
   }
 
   static isSupported(){
@@ -43,9 +45,10 @@ class NotificationManager{
   }
 
   static refreshServiceWorker(){
+    console.log("Refresh ServiceWorkers")
     navigator.serviceWorker.getRegistrations().then(function(registrations){
       for(let registration of registrations){
-       registration.unregister()
+       registration.unregister();
       }
     });
   }
@@ -88,7 +91,9 @@ class NotificationManager{
   }
 
   static subscribe(onSubscribed) {
+    console.log("Waiting for ServiceWorker Ready...");
     navigator.serviceWorker.ready.then((serviceWorkerRegistration) => {
+      console.log("Service Worker is ready!");
       const pushManager = serviceWorkerRegistration.pushManager
       pushManager.getSubscription()
       .then((subscription) => {

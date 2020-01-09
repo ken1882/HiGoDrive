@@ -9,7 +9,7 @@ module Api
 
       def create
         log_out if logged_in?
-        user = log_in(_params[:username_or_email], _params[:password])
+        user = log_in(login_params[:username_or_email], login_params[:password])
         set_user(user)
         if logged_in?
           login_params[:remember_me] == '1' ? remember(user) : forget(user)

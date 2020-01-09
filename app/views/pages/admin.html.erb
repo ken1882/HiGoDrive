@@ -51,7 +51,7 @@
           aria-expanded="false" aria-controls="collapseLicense">
           <div class="row">
             <div class="col-5">
-              <span name="id" class="text-primary text-left">用戶：58586</span>
+              <span name="id" class="text-primary text-left">用戶：</span>
             </div>
             <div class="col-5">
               <span name="type" class="text-warning">司機資格審核</span>
@@ -79,14 +79,19 @@
           <p>車牌：<span id="palte"></span></p>
           <p>車型：<span id="module"></span></p>
           <br>
-          <div class="row">
-            <div class="col">
-              <button type="button" class="btn btn-danger btn-block">不通過</button>
+            <div class="row">
+            <form action="/api/v0/reject_license" class="reject-license-form" method="POST">
+              <div class="col">
+                <button type="submit" class="btn btn-danger btn-block">不通過</button>
+              </div>
+            </form>
+            <form action="/api/v0/accept_license" class="accept-license-form" method="POST">
+              <div class="col">
+                <button type="submit" class="btn btn-success btn-block">通過</button>
+              </div>
+            </form>
             </div>
-            <div class="col">
-              <button type="button" class="btn btn-success btn-block">通過</button>
-            </div>
-          </div>
+          </form>
         </div>
       </div>
     </div>
@@ -142,19 +147,21 @@
 
   function renderLicenses(license) {
     let card = $("#template-license").clone();
+
     let id = license.id;
-    let id = license.username;
+    let username = license.username;
     let driver_licenseImg = license.driver_license;
     let vehicle_licenseImg = license.vehicle_license;
     let exteriorImg = license.exterior;
     let plateText = license.plate;
     let modelText = license.model;
 
+    card.find("span[name='id']").get()[0].innerHTML += username;
     card.find("#headingLicense").attr("id", "headingLicense" + id);
     card.find("#licenseBtn").attr("data-target", "#" + "collapseLicense" + id);
     card.find("#licenseBtn").attr("aria-controls", "collapseLicense" + id);
     card.find("#licenseBtn").attr("id", "licenseBtn" + id);
-    card.find("#headingLicense").text(applyId);
+    card.find("#headingLicense").text(id);
     card.find("#headingLicense").attr("id", "headingLicense" + id);
     card.find("#collapseLicense").attr("aria-labelledby", "headingLicense" + id);
     card.find("#collapseLicense").attr("id", "collapseLicense" + id);
@@ -168,6 +175,14 @@
     card.find("#palte").attr("id", "palte" + id);
     card.find("#module").text(modelText);
     card.find("#module").attr("id", "palte" + id);
+
+    let acceptForm = card.find(".accept-license-form");
+    acceptForm.append('<input type="hidden" name="id" value="' + id + '">');
+    acceptForm.append('<input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">');
+
+    let rejectForm = card.find(".reject-license-form");
+    rejectForm.append('<input type="hidden" name="id" value="' + id + '">');
+    rejectForm.append('<input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">');
 
     $("#accordion").append(card);
   }
@@ -185,4 +200,7 @@
     });
     $("#template-license").remove();
   });
+
+
+
 </script>
