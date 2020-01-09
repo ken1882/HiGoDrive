@@ -140,9 +140,9 @@ module Api
       # POST /accept_license
       def accept_license
         return forbidden unless RoleManager.match?(@user.roles, :admin)
-        return bad_request if @user.licensed? || @user.driver_license.nil?
         target = User.find(params[:id])
         return not_found unless target
+        return bad_request if target.licensed? || target.driver_license.nil?
         target.accept_driver
         PushNotificationsController.send_license_accepted(target)
         return_ok
