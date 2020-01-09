@@ -5,7 +5,9 @@ class NotificationManager{
 
   static initialize(){
     this.messages = [];
-    // this.refreshServiceWorker();
+    setTimeout(()=>{
+      if(!window._flagSWready){this.refreshServiceWorker();}
+    }, 5000);
     setTimeout(()=>{
       $(document).ready(this.ready);
     }, 1000);
@@ -45,7 +47,7 @@ class NotificationManager{
   }
 
   static refreshServiceWorker(){
-    console.log("Refresh ServiceWorkers")
+    console.log("Refreshing ServiceWorkers")
     navigator.serviceWorker.getRegistrations().then(function(registrations){
       for(let registration of registrations){
        registration.unregister();
@@ -94,6 +96,7 @@ class NotificationManager{
     console.log("Waiting for ServiceWorker Ready...");
     navigator.serviceWorker.ready.then((serviceWorkerRegistration) => {
       console.log("Service Worker is ready!");
+      window._flagSWready = true;
       const pushManager = serviceWorkerRegistration.pushManager
       pushManager.getSubscription()
       .then((subscription) => {
