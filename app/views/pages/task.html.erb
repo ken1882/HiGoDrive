@@ -104,6 +104,7 @@ function renderTaskToPage(task) {
   let isPassenger = <%= current_user.roles == 1 %>;
   let status = task.status;
   let [statusMsg, statusClass] = {
+      -1: ["已預約", "text-primary tag"],
       0: ["等待中", "text-primary tag"],
       1: ["已接受", "text-primary tag"],
       2: ["接客中", "text-primary tag"],
@@ -152,6 +153,7 @@ function renderTaskToPage(task) {
     }
   } else {
     cardBody.html({
+        -1: '<span>預約：已預約</span>',
         0: '<span>狀態：尚無司機接單</span>',
         1: '<span>狀態：已被司機接單</span>',
         2: '<span>狀態：送客中</span>',

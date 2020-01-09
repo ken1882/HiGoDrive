@@ -1,4 +1,5 @@
 const taskStatus = Object.freeze({
+  "SCHEDULED": -1,
   "WAITING": 0,
   "ACCEPTED": 1,
   "ENGAGING": 2,
@@ -25,7 +26,7 @@ var taskid = {
   nextid: 0
 };
 var request;
-window.rejectedTask = [];
+window.rejectedTasks = [];
 
 var dest = {
   passengerlng: undefined,
@@ -100,7 +101,7 @@ function setIcon() {
   //seticon
   var centerControlDiv = document.createElement('div');
   var centerControl = new CenterControl(centerControlDiv, map);
-  centerControlDiv.index = 1;
+  centerControlDiv.index = 1;飲
   map.controls[google.maps.ControlPosition.RIGHT_CENTER].push(centerControlDiv);
 }
 
@@ -351,7 +352,7 @@ function onlineTask() {
   taskid.nowid = taskinfo.task_id;
   taskid.nextid = taskinfo.next_id;
 
-  if (window.rejectedTask.indexOf(taskid.nowid) != -1 || taskid.nowid == 0) {
+  if (window.rejectedTasks.indexOf(taskid.nowid) != -1 || taskid.nowid == 0) {
     console.log("no task available");
     return setTimeout('onlineTask()', 5000); // fail request or no task
   }
@@ -471,7 +472,7 @@ function rejectTask_(reason) {  // TODO: rename
     reason = "empty reason";
   }
   rejectTask(taskid.nowid, reason);
-  window.rejectedTask.push(taskid.nowid);
+  window.rejectedTasks.push(taskid.nowid);
 
   //set user view
   directionsDisplay.set('directions', null);
@@ -491,5 +492,5 @@ function initDriver() {
   map.controls[google.maps.ControlPosition.BOTTOM_CENTER].push(offlineState);
   map.controls[google.maps.ControlPosition.LEFT_BOTTOM].push(task);
   taskid = {nowid: 0, nextid: 0};
-  window.rejectedTask = [];
+  window.rejectedTasks = [];
 }

@@ -94,14 +94,15 @@
     });
 
     $("#driver-license-form").submit(function() {
-      let driver = {
+      let license = {
         driverLicense: $("#driver_license").attr("value"),
         vehicleLicense: $("#vehicle_license").attr("value"),
         exterior: $("#exterior").attr("value"),
         plate: $("#plate").val(),
         model: $("#model").val()
       };
-      verifyDriver(driver);
+      uploadLicense(license);
+      // location.href = '/';
       return false;
     });
 </script>

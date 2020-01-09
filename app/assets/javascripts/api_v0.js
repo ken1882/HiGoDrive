@@ -122,17 +122,51 @@ function searchUser(username) {
   return targetUserId;
 }
 
-function verifyDriver(driver) {
+function uploadLicense(license) {
   $.ajax({
     method: "POST",
-    url: "/api/v0/verify_driver",
+    url: "/api/v0/upload_license",
     data: {
       authenticity_token: Util.AuthToken,
-      driver_license: driver.driverLicense,
-      vehicle_license: driver.vehicleLicense,
-      exterior: driver.exterior,
-      plate: driver.plate,
-      model: driver.model
+      driver_license: license.driverLicense,
+      vehicle_license: license.vehicleLicense,
+      exterior: license.exterior,
+      plate: license.plate,
+      model: license.model
+    },
+    dataType: "json",
+    success: null,
+    error: function(xhr) {
+      console.log("An error occured:", xhr.status, xhr.statusText);
+    },
+    async: true
+  });
+}
+
+function acceptLicense(uid) {
+  $.ajax({
+    method: "POST",
+    url: "/api/v0/accept_license",
+    data: {
+      authenticity_token: Util.AuthToken,
+      id: uid
+    },
+    dataType: "json",
+    success: null,
+    error: function(xhr) {
+      console.log("An error occured:", xhr.status, xhr.statusText);
+    },
+    async: true
+  });
+}
+
+function rejectLicense(uid) {
+  $.ajax({
+    method: "POST",
+    url: "/api/v0/reject_license",
+    data: {
+      authenticity_token: Util.AuthToken,
+      id: uid
     },
     dataType: "json",
     success: null,

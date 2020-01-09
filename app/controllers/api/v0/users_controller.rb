@@ -61,7 +61,13 @@ module Api
         @user = User.new(user_init_params)
         respond_to do |format|
           if @user.save
-            format.html { redirect_to '/', notice: 'User was successfully created.' }
+            format.html do
+              if RoleManager.match?(params[:roles].to_i, :driver)
+                redirect_to '/signup/driver', notice: 'Please upload your licenses'
+              else
+                redirect_to '/', notice: 'User was successfully created.'
+              end
+            end
             format.json { render json: {message: 'created'}, status: :created}
           else
             format.html { unprocessable_entity }
@@ -101,13 +107,13 @@ module Api
       def forgot_password
         token = @user.generate_reset_token(params["authenticity_token"])
         UserMailer.reset_email(request.domain, @user, token).deliver!
-        return_ok
+        redirect_to '/'
       end
 
       # POST /resetpassword
       def reset_password
         @user.reset_password(user_reset_fields)
-        return_ok
+        redirect_to '/'
       end
 
       # GET /mytasks
@@ -195,12 +201,12 @@ module Api
       end
 
       def validate_resetpwd_params
-        tme = @user.fotgot_timestamp || 0
+        tme = @user.forgot_timestamp || 0
         return bad_request if logged_in?
         return unprocessable_entity if tme == 0
         # return gone if Time.now - tme > ForgotDuration
         return unauthorized if params[:token] != @user.password_reset_token
-        return unprocessable_entity unless password_reset_ok?(_params)
+        return unprocessable_entity unless password_reset_ok?(params)
         return true
       end
 
