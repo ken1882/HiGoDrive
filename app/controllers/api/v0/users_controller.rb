@@ -163,7 +163,7 @@ module Api
         $unlicensed_drivers.delete(target.id)
         target.revoke_license
         PushNotificationsController.send_license_rejected(target)
-        return_ok
+        redirect_to '/'
       end
 
       # GET /driver_info/:uid

@@ -298,7 +298,7 @@ function cancelDest() {
   map.setZoom(zoom)
 }
 
-function taskrunning() { //if driver accept task call back
+function taskRunning() { //if driver accept task call back
   var task = getTask(taskid.nowid);
   var driverId = task.driver_id;
   var driverUsername = driverId ? getUserInfo(driverId).username : "DRIVER";
@@ -310,7 +310,6 @@ function taskrunning() { //if driver accept task call back
   document.getElementById("fareTask").innerHTML = dest.fare + '元'
 
   var ps = document.getElementById("psText_driver").innerHTML // web get driver ps text
-  // driverReceive();
 
   waitUntil(taskStatus.FINISHED, function() {
     console.log("task finished");
@@ -348,9 +347,16 @@ function taskFinish() { //if task done
 
 //driver on line
 function onlineTask() {
-  var taskinfo = getNextTask(taskid.nextid); // first time give 0
-  taskid.nowid = taskinfo.task_id;
-  taskid.nextid = taskinfo.next_id;
+  var engagingTask = getEngagingTask();
+
+  if (engagingTask.length > 0) {
+    taskid.nowid = engagingTask[0];
+    taskid.nextid = 0;
+  } else {
+    var taskinfo = getNextTask(taskid.nextid); // first time give 0
+    taskid.nowid = taskinfo.task_id;
+    taskid.nextid = taskinfo.next_id;
+  }
 
   if (window.rejectedTasks.indexOf(taskid.nowid) != -1 || taskid.nowid == 0) {
     console.log("no task available");
@@ -362,13 +368,16 @@ function onlineTask() {
     taskid.nowid = 0;
     taskid.nextid = 0;
     console.log("getTask error");
-    //setTimeout('onlineTask()', 5000);
     return setTimeout('onlineTask()', 5000);  // fail request or no task
   }
 
   dest = request.dest;
 
-  setTimeout((() => onReceiveTask(dest)), 500);
+  if (engagingTask.length) {
+    errandDriver();
+  } else {
+    setTimeout((() => onReceiveTask(dest)), 500);
+  }
 
   //done
 }
@@ -386,27 +395,28 @@ function onReceiveTask(dest) {
   document.getElementById("distDriver").innerHTML = dest.placeName;
   document.getElementById("distanceDriver").innerHTML = dest.distance.text;
 
-  window.setTimeout(function () { directionDrive(dest.lat, dest.lng, dest.passengerlat, dest.passengerlng) }, 300)
+  window.setTimeout(function () {
+    directionDrive(dest.lat, dest.lng, dest.passengerlat, dest.passengerlng)
+  }, 300);
 
   var sec = 30;
   var secHtml = document.getElementById("sec");
   isaccept = false;
   clearInterval(timesetInterval);
   timesetInterval = window.setInterval(function () {
-
     secHtml.innerHTML = sec + ' 秒';
-    if (sec > 0) sec--;
-    else {
+    if (sec > 0) {
+      sec--;
+    } else {
       clearInterval(timesetInterval);
       if (isaccept == false) {
-        rejectTask_("time out");
-        console.log("auto reject")
+        taskReject("time out");
+        console.log("auto reject");
         return setTimeout('onlineTask()', 1000); // fail request or no task
       }
       return;
-      //return onlineTask();
     }
-  }, 1000)
+  }, 1000);
 }
 
 // preview route between passenger position and destination
@@ -433,11 +443,12 @@ function directionDrive(destlat, destlng, passengerlat, passengerlng) {
 
 //check api /api/v0/task status task_id = taskid.nowid
 //司機接受差事
-function acceptTask_() {  // TODO: rename
+function taskAccept() {
   var task_ = getTask(taskid.nowid);
   var status = task_.status;
   console.log("task status", status);
-  if (status == 0) {
+  if (status != taskStatus.FINISHED &&
+      status != taskStatus.CANCELLED) {
     console.log("taskid.nowid", taskid.nowid) //set api status = 1; give driver id
     let successCallback = function() {
       isaccept = true;
@@ -453,21 +464,20 @@ function acceptTask_() {  // TODO: rename
       document.getElementById("distance").innerHTML = request.dest.distance.text
       document.getElementById("fare").innerHTML = request.dest.fare + '元'
       var ps = document.getElementById("psText_driver").innerHTML // web get driver ps text
-      taskrunning();
-      // TODO: update ps to database
+      taskRunning();
     };
     let errorCallback = function() {
-      rejectTask_("task is accepted by other driver");
+      taskReject("task is accepted by other driver");
     };
     acceptTask(taskid.nowid, successCallback, errorCallback);
   } else {
-    rejectTask_("task is accepted by other driver");
+    taskReject("task is accepted by other driver");
     return;
   }
 }
 
 //司機拒絕訂單 且送出原因後 會使用此 function
-function rejectTask_(reason) {  // TODO: rename
+function taskReject(reason) {
   if (reason.length == 0) {
     reason = "empty reason";
   }

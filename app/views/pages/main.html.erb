@@ -350,7 +350,7 @@
   //首先會把拒絕原因送出 接者會關閉顯示拒絕畫面 並重新繼續詢問新訂單
   function rejectTaskbtn() {
     console.log(document.getElementById('rejectText').value);
-    rejectTask_(document.getElementById('rejectText').value);
+    taskReject(document.getElementById('rejectText').value);
     document.getElementById('option').style.display = "block";
     document.getElementById('reject').style.display = "none";
     console.log("reject btn click")
@@ -366,7 +366,7 @@
     document.getElementById('errand').style.display = "block";
     document.getElementById('finish').style.display = "none";
     console.log("errand start!");
-    acceptTask_();
+    taskAccept();
   }
 
   //乘客確認訂單資訊後 點選開始行程會進入此 function
@@ -426,7 +426,7 @@
   function driverReceive() {
     document.getElementById('taskLoading').style.display = "none";
     document.getElementById('taskGoing').style.display = "block";
-    taskrunning();
+    taskRunning();
   }
 
   //司機點選拒絕原因按鈕 “太遠了” 會使用此 function 把值自動填入 input
@@ -470,41 +470,36 @@
     //需傳id給伺服器使差事狀態完成
   }
 
-  //以下為備註傳送
-  //首先使用者確認要送出的訊息後 點選送出備註按鈕 會進入 sendMessage function
-  //會在上方備註欄顯示剛剛送出的話
-  //測試會使用 getMessage 接受對方傳的訊息 並顯示出來 目前只有接測試狀況
+  function getMessage(messageObj) {
+    let task = getTask(taskid.nowid);
+    let name = isDriver ? task.author_name : task.driver_name;
+    let block = isDriver ? $("#psText_driver") : $("#psText_passenger");
+    msg = "<p class='my-0'><span>" + name + ": " + messageObj.message + "</span></p>";
+    block.append(msg);
+    block.scrollTop(block.get(0).scrollHeight);
+  }
 
-  function getMessages() {
-      //test
-      // let message = "TEST";
-      // let msg;
-      // if (isDriver) {
-      //   msg = "<p class='my-0'><span>乘客 : " + message + "</span></p>";
-      //   $("#psText_driver").append(msg);
-      //   $("#psText_driver").scrollTop($("#psText_driver").get(0).scrollHeight)
-      // } else {
-      //   msg = "<p class='my-0'><span>司機 : " + message + "</span></p>";
-      //   $("#psText_passenger").append(msg);
-      //   $("#psText_passenger").scrollTop($("#psText_passenger").get(0).scrollHeight)
-      // }
-    }
+  function appendMessage(content) {
+    let block = isDriver ? $("#psText_driver") : $("#psText_passenger");
+    msg = "<p class='my-0'><span>" + getUserInfo(getCurrentUser()).username + ": " + content + "</span></p>";
+    block.append(msg);
+    block.scrollTop(block.get(0).scrollHeight);
+  }
 
   function sendMessage() {
-    let msg;
+    let msg, content;
     if (isDriver) {
-      msg = "<p class='my-0'><span>你說 : " + $("#errand_text_send_driver").val() + "</span></p>";
+      content = $("#errand_text_send_driver").val();
+      appendMessage(content);
       $("#errand_text_send_driver").val("");
-      $("#psText_driver").append(msg);
-      $("#psText_driver").scrollTop($("#psText_driver").get(0).scrollHeight)
     } else {
-      msg = "<p class='my-0'><span>你說 : " + $("#errand_text_send_passenger").val() + "</span></p>";
+      content = $("#errand_text_send_passenger").val();
+      appendMessage(content);
       $("#errand_text_send_passenger").val("");
-      $("#psText_passenger").append(msg);
-      $("#psText_passenger").scrollTop($("#psText_passenger").get(0).scrollHeight)
     }
+    sendComment(taskid.nowid, content);
     //test getmsg
-    setTimeout(function () { getMessages(); }, 10000);
+    // setTimeout(function () { getMessages(); }, 10000);
     return false;
   }
 </script>
@@ -516,8 +511,20 @@
       minDate: new Date(),
       defaultDate: new Date()
     });
-    if (isDriver && isOnline) {
-      online();
+    if (isDriver) {
+      if (getEngagingTask().length > 0) {
+        isOnline = true;
+      }
+      if (isOnline) {
+        online();
+      }
     }
+    let mLen = 0;
+    let messages = NotificationManager.messages;
+    setInterval(() => {
+      if (NotificationManager.messages.length != mLen) {
+        getMessage(NotificationManager.messages[mLen++]);
+      }
+    }, 1000);
   });
 </script>

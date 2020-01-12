@@ -192,15 +192,13 @@
     reportList.forEach(report => {
       renderReport(report);
     });
-    $("#template-report").remove();
 
     let licenseList = getUnprocessedLicenses();
     licenseList.forEach(license => {
       renderLicenses(license);
     });
+
+    $("#template-report").remove();
     $("#template-license").remove();
   });
-
-
-
 </script>

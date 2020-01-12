@@ -195,7 +195,7 @@ class User
   end
 
   def get_gravatar_url(size = 360)
-    return "https://s.gravatar.com/avatar/" + Digest::MD5.hexdigest(email) + "?s=#{size}"
+    return "https://s.gravatar.com/avatar/" + SecurityManager.md5(email) + "?s=#{size}"
   end
 
   def generate_reset_token(auth_token)
