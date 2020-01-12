@@ -16,7 +16,7 @@ module Api
       before_action :validate_resetpwd_params, only: [:reset_password]
 
       BioMaxLen = 2000
-
+      
       # GET /users
       # GET /users.json
       def index
@@ -109,7 +109,7 @@ module Api
       # POST /forgotpassword
       def forgot_password
         token = @user.generate_reset_token(params["authenticity_token"])
-        UserMailer.reset_email(request.domain, @user, token).deliver!
+        UserMailer.reset_email(request.base_url, @user, token).deliver!
         redirect_to '/'
       end
 
@@ -163,7 +163,7 @@ module Api
         $unlicensed_drivers.delete(target.id)
         target.revoke_license
         PushNotificationsController.send_license_rejected(target)
-        redirect_to '/'
+        return_ok
       end
 
       # GET /driver_info/:uid
