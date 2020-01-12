@@ -341,7 +341,6 @@ function acceptTask(taskId,
       if (typeof successCallback == "function") {
         successCallback();
       }
-      console.log(result);
     },
     error: function(xhr) {
       console.log("An error occured:", xhr.status, xhr.statusText);
@@ -385,6 +384,24 @@ function engageTask(taskId) {
     success: function (result) {
       console.log(result);
     },
+    error: function(xhr) {
+      console.log("An error occured:", xhr.status, xhr.statusText);
+    },
+    async: true
+  });
+}
+
+function sendComment(taskId, commentContent) {
+  $.ajax({
+    method: "POST",
+    url: "/api/v0/tasks/" + taskId + "/comment",
+    data: {
+      authenticity_token: Util.AuthToken,
+      id: taskId,
+      message: commentContent
+    },
+    dataType: "json",
+    success: null,
     error: function(xhr) {
       console.log("An error occured:", xhr.status, xhr.statusText);
     },
