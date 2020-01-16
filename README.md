@@ -1,32 +1,19 @@
-# README
+# HiGoDrive
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+1081 軟工期末專題
 
-Things you may want to cover:
+### 網址
+https://higodrive.herokuapp.com
 
-* Ruby version
+### 分工
+   * 前端: 林子平、郭垣佑、黃爾群
+   * 後端: 趙俊凱、王傳傑
+   * 整合: 鄭煒騰
+   * 文書: 王傳傑
 
-* System dependencies
+### 品質改進措施
+   * 無
 
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ----期末報告內容----
-    * 1.分工:  
-        * 前端: 林子平、郭垣佑、黃爾群
-        * 後端: 趙俊凱、王傳傑
-        * 整合: 鄭煒騰
-        * 文書: 王傳傑
-    * 3.回覆問題:
-        * 1. 修復bug
-        * 2. 操作概念以手機體驗為主所以不會改為列表
+### 問題回覆
+   1. 基本操作所遇到的 Bug 已在最終版修復
+   2. 操作概念以手機體驗為主所以不會改為列表
