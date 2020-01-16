@@ -114,13 +114,13 @@ module Api
         if @task.preorder?
           @task.accept(current_user.id)
           TimerManager.add_preorder(@task.id, @task.depart_time.to_i)
-          PushNotificationsController.send_task_accepted(@task)
+          PushNotificationsController.send_preorder_accepted(@task)
         else
           @mutex.synchronize{
             @task.accept(current_user.id)
             @mutex.target = nil
           }
-          PushNotificationsController.send_preorder_accepted(@task)
+          PushNotificationsController.send_task_accepted(@task)
         end
         return_ok
       end
