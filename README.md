@@ -23,4 +23,6 @@ https://higodrive.herokuapp.com
   * HTTPS
   * XSS-proof based on session authenticity token validation
   * Salted, hashed password and cookie keys
+  * Race-condition proof network (based on mutex)
+
   
