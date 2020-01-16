@@ -17,3 +17,10 @@ https://higodrive.herokuapp.com
 ### 問題回覆
    1. 基本操作所遇到的 Bug 已在最終版修復
    2. 操作概念以手機體驗為主所以不會改為列表
+
+### 其他進階功能
+  * Payload Based Push Notification (RFC-8292)
+  * HTTPS
+  * XSS-proof based on session authenticity token validation
+  * Salted, hashed password and cookie keys
+  
